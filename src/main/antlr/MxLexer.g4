@@ -88,11 +88,7 @@ LBrace: '{';
 RBrace: '}';
 
 // Special symbol
-Space: ' ';
-Newline: '\n';
-Enter: '\r';
-Tab: '\t';
-Blank: (Space|Newline|Enter|Tab)+ -> skip;
+Blank: [ \n\r\t]+ -> skip;
 
 // Comments
 CommentLine: '//' ~[\r\n]* -> skip;

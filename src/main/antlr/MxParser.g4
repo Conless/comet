@@ -14,7 +14,7 @@ typeName
   ;
 
 expression
-  : New typeName                                                          # newExpression
+  : New typeName ('(' ')')?                                               # newExpression
   
   // Expressions that MAY result with lvalue
   | '(' expression ')'                                                    # subExpression
@@ -40,8 +40,8 @@ expression
   | expression op=BitAnd expression                                       # binaryArithExpression
   | expression op=BitXor expression                                       # binaryArithExpression
   | expression op=BitOr expression                                        # binaryArithExpression
-  | expression op=LogicAnd                                                # binaryArithExpression
-  | expression op=LogicOr                                                 # binaryArithExpression
+  | expression op=LogicAnd expression                                     # binaryArithExpression
+  | expression op=LogicOr expression                                      # binaryArithExpression
 
   // Conditionall expression
   | expression '?' expression ':' expression                              # conditionalExpression
@@ -55,10 +55,10 @@ expression
           | Identifier | This)                                            # atomExpression
   ;
 
-variableDefinition: typeName variableConstructor (',' variableConstructor)*;
+variableDefinition: typeName variableConstructor (',' variableConstructor)* ';';
 variableConstructor: varName=Identifier ('=' expression)?;
 
-classDefinition: Class className=Identifier '{' (variableDefinition | functionDefinition | classConstructor)* '}';
+classDefinition: Class className=Identifier '{' (variableDefinition | functionDefinition | classConstructor)* '}' ';';
 classConstructor: className=Identifier '(' ')' suite;
 
 functionDefinition: returnType funcName=Identifier '(' functionParaList? ')' suite;
