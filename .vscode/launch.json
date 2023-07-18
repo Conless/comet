@@ -1,0 +1,19 @@
+{
+  // 使用 IntelliSense 了解相关属性。 
+  // 悬停以查看现有属性的描述。
+  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "antlr-debug",
+      "request": "launch",
+      "name": "Debug Comet Grammar",
+      // "grammar": "../tmp/Mx-Compiler-2022/src/grammar/MxParser.g4",
+      "grammar": "src/main/antlr/MxParser.g4",
+      "input": "src/test/input.mx",
+      "startRule": "program",
+      "printParseTree": true,
+      "visualParseTree": true
+    }
+  ]
+}
