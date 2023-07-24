@@ -1,4 +1,4 @@
-// Generated from MxLexer.g4 by ANTLR 4.13.0
+// Generated from Meteor.g4 by ANTLR 4.13.0
 package dev.conless.comet.frontend.grammar;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue"})
-public class MxLexer extends Lexer {
+public class Meteor extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.13.0", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -114,13 +114,13 @@ public class MxLexer extends Lexer {
 	}
 
 
-	public MxLexer(CharStream input) {
+	public Meteor(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "MxLexer.g4"; }
+	public String getGrammarFileName() { return "Meteor.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

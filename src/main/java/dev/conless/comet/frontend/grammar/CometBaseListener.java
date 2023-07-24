@@ -1,4 +1,4 @@
-// Generated from MxParser.g4 by ANTLR 4.13.0
+// Generated from Comet.g4 by ANTLR 4.13.0
 package dev.conless.comet.frontend.grammar;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -6,432 +6,432 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
- * This class provides an empty implementation of {@link MxParserListener},
+ * This class provides an empty implementation of {@link CometListener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
 @SuppressWarnings("CheckReturnValue")
-public class MxParserBaseListener implements MxParserListener {
+public class CometBaseListener implements CometListener {
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProgram(MxParser.ProgramContext ctx) { }
+	@Override public void enterProgram(Comet.ProgramContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProgram(MxParser.ProgramContext ctx) { }
+	@Override public void exitProgram(Comet.ProgramContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCustomType(MxParser.CustomTypeContext ctx) { }
+	@Override public void enterCustomType(Comet.CustomTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCustomType(MxParser.CustomTypeContext ctx) { }
+	@Override public void exitCustomType(Comet.CustomTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArrayType(MxParser.ArrayTypeContext ctx) { }
+	@Override public void enterArrayType(Comet.ArrayTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArrayType(MxParser.ArrayTypeContext ctx) { }
+	@Override public void exitArrayType(Comet.ArrayTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBuiltInType(MxParser.BuiltInTypeContext ctx) { }
+	@Override public void enterBuiltInType(Comet.BuiltInTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBuiltInType(MxParser.BuiltInTypeContext ctx) { }
+	@Override public void exitBuiltInType(Comet.BuiltInTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterUnaryArithExpression(MxParser.UnaryArithExpressionContext ctx) { }
+	@Override public void enterUnaryArithExpression(Comet.UnaryArithExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitUnaryArithExpression(MxParser.UnaryArithExpressionContext ctx) { }
+	@Override public void exitUnaryArithExpression(Comet.UnaryArithExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConditionalExpression(MxParser.ConditionalExpressionContext ctx) { }
+	@Override public void enterConditionalExpression(Comet.ConditionalExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConditionalExpression(MxParser.ConditionalExpressionContext ctx) { }
+	@Override public void exitConditionalExpression(Comet.ConditionalExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNewExpression(MxParser.NewExpressionContext ctx) { }
+	@Override public void enterNewExpression(Comet.NewExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNewExpression(MxParser.NewExpressionContext ctx) { }
+	@Override public void exitNewExpression(Comet.NewExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignExpression(MxParser.AssignExpressionContext ctx) { }
+	@Override public void enterAssignExpression(Comet.AssignExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignExpression(MxParser.AssignExpressionContext ctx) { }
+	@Override public void exitAssignExpression(Comet.AssignExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPreSelfExpression(MxParser.PreSelfExpressionContext ctx) { }
+	@Override public void enterPreSelfExpression(Comet.PreSelfExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPreSelfExpression(MxParser.PreSelfExpressionContext ctx) { }
+	@Override public void exitPreSelfExpression(Comet.PreSelfExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBinaryArithExpression(MxParser.BinaryArithExpressionContext ctx) { }
+	@Override public void enterBinaryArithExpression(Comet.BinaryArithExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBinaryArithExpression(MxParser.BinaryArithExpressionContext ctx) { }
+	@Override public void exitBinaryArithExpression(Comet.BinaryArithExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariableExpression(MxParser.VariableExpressionContext ctx) { }
+	@Override public void enterVariableExpression(Comet.VariableExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariableExpression(MxParser.VariableExpressionContext ctx) { }
+	@Override public void exitVariableExpression(Comet.VariableExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunctionExpression(MxParser.FunctionExpressionContext ctx) { }
+	@Override public void enterFunctionExpression(Comet.FunctionExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunctionExpression(MxParser.FunctionExpressionContext ctx) { }
+	@Override public void exitFunctionExpression(Comet.FunctionExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAtomExpression(MxParser.AtomExpressionContext ctx) { }
+	@Override public void enterAtomExpression(Comet.AtomExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAtomExpression(MxParser.AtomExpressionContext ctx) { }
+	@Override public void exitAtomExpression(Comet.AtomExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMemberAccessExpression(MxParser.MemberAccessExpressionContext ctx) { }
+	@Override public void enterMemberAccessExpression(Comet.MemberAccessExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMemberAccessExpression(MxParser.MemberAccessExpressionContext ctx) { }
+	@Override public void exitMemberAccessExpression(Comet.MemberAccessExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIndexAccessExpression(MxParser.IndexAccessExpressionContext ctx) { }
+	@Override public void enterIndexAccessExpression(Comet.IndexAccessExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIndexAccessExpression(MxParser.IndexAccessExpressionContext ctx) { }
+	@Override public void exitIndexAccessExpression(Comet.IndexAccessExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSubExpression(MxParser.SubExpressionContext ctx) { }
+	@Override public void enterSubExpression(Comet.SubExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSubExpression(MxParser.SubExpressionContext ctx) { }
+	@Override public void exitSubExpression(Comet.SubExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMethodAccessExpression(MxParser.MethodAccessExpressionContext ctx) { }
+	@Override public void enterMethodAccessExpression(Comet.MethodAccessExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMethodAccessExpression(MxParser.MethodAccessExpressionContext ctx) { }
+	@Override public void exitMethodAccessExpression(Comet.MethodAccessExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariableDefinition(MxParser.VariableDefinitionContext ctx) { }
+	@Override public void enterVariableDefinition(Comet.VariableDefinitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariableDefinition(MxParser.VariableDefinitionContext ctx) { }
+	@Override public void exitVariableDefinition(Comet.VariableDefinitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariableConstructor(MxParser.VariableConstructorContext ctx) { }
+	@Override public void enterVariableConstructor(Comet.VariableConstructorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariableConstructor(MxParser.VariableConstructorContext ctx) { }
+	@Override public void exitVariableConstructor(Comet.VariableConstructorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClassDefinition(MxParser.ClassDefinitionContext ctx) { }
+	@Override public void enterClassDefinition(Comet.ClassDefinitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClassDefinition(MxParser.ClassDefinitionContext ctx) { }
+	@Override public void exitClassDefinition(Comet.ClassDefinitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClassConstructor(MxParser.ClassConstructorContext ctx) { }
+	@Override public void enterClassConstructor(Comet.ClassConstructorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClassConstructor(MxParser.ClassConstructorContext ctx) { }
+	@Override public void exitClassConstructor(Comet.ClassConstructorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunctionDefinition(MxParser.FunctionDefinitionContext ctx) { }
+	@Override public void enterFunctionDefinition(Comet.FunctionDefinitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunctionDefinition(MxParser.FunctionDefinitionContext ctx) { }
+	@Override public void exitFunctionDefinition(Comet.FunctionDefinitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunctionParaList(MxParser.FunctionParaListContext ctx) { }
+	@Override public void enterFunctionParaList(Comet.FunctionParaListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunctionParaList(MxParser.FunctionParaListContext ctx) { }
+	@Override public void exitFunctionParaList(Comet.FunctionParaListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunctionArgList(MxParser.FunctionArgListContext ctx) { }
+	@Override public void enterFunctionArgList(Comet.FunctionArgListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunctionArgList(MxParser.FunctionArgListContext ctx) { }
+	@Override public void exitFunctionArgList(Comet.FunctionArgListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterReturnType(MxParser.ReturnTypeContext ctx) { }
+	@Override public void enterReturnType(Comet.ReturnTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitReturnType(MxParser.ReturnTypeContext ctx) { }
+	@Override public void exitReturnType(Comet.ReturnTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSuite(MxParser.SuiteContext ctx) { }
+	@Override public void enterSuite(Comet.SuiteContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSuite(MxParser.SuiteContext ctx) { }
+	@Override public void exitSuite(Comet.SuiteContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStatement(MxParser.StatementContext ctx) { }
+	@Override public void enterStatement(Comet.StatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStatement(MxParser.StatementContext ctx) { }
+	@Override public void exitStatement(Comet.StatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIfStatement(MxParser.IfStatementContext ctx) { }
+	@Override public void enterIfStatement(Comet.IfStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIfStatement(MxParser.IfStatementContext ctx) { }
+	@Override public void exitIfStatement(Comet.IfStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterForInitStatement(MxParser.ForInitStatementContext ctx) { }
+	@Override public void enterForInitStatement(Comet.ForInitStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitForInitStatement(MxParser.ForInitStatementContext ctx) { }
+	@Override public void exitForInitStatement(Comet.ForInitStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterForStatement(MxParser.ForStatementContext ctx) { }
+	@Override public void enterForStatement(Comet.ForStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitForStatement(MxParser.ForStatementContext ctx) { }
+	@Override public void exitForStatement(Comet.ForStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWhileStatement(MxParser.WhileStatementContext ctx) { }
+	@Override public void enterWhileStatement(Comet.WhileStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitWhileStatement(MxParser.WhileStatementContext ctx) { }
+	@Override public void exitWhileStatement(Comet.WhileStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterContinueStatement(MxParser.ContinueStatementContext ctx) { }
+	@Override public void enterContinueStatement(Comet.ContinueStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitContinueStatement(MxParser.ContinueStatementContext ctx) { }
+	@Override public void exitContinueStatement(Comet.ContinueStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBreakStatement(MxParser.BreakStatementContext ctx) { }
+	@Override public void enterBreakStatement(Comet.BreakStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBreakStatement(MxParser.BreakStatementContext ctx) { }
+	@Override public void exitBreakStatement(Comet.BreakStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterReturnStatement(MxParser.ReturnStatementContext ctx) { }
+	@Override public void enterReturnStatement(Comet.ReturnStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitReturnStatement(MxParser.ReturnStatementContext ctx) { }
+	@Override public void exitReturnStatement(Comet.ReturnStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpressionStatement(MxParser.ExpressionStatementContext ctx) { }
+	@Override public void enterExpressionStatement(Comet.ExpressionStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpressionStatement(MxParser.ExpressionStatementContext ctx) { }
+	@Override public void exitExpressionStatement(Comet.ExpressionStatementContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

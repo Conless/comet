@@ -1,4 +1,4 @@
-lexer grammar MxLexer;
+lexer grammar Meteor;
 
 @header {package dev.conless.comet.frontend.grammar;}
 

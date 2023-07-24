@@ -1,6 +1,6 @@
-parser grammar MxParser;
+parser grammar Comet;
 options {
-	tokenVocab = MxLexer;
+	tokenVocab = Meteor;
 }
 
 @header {package dev.conless.comet.frontend.grammar;}

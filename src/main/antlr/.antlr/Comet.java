@@ -1,4 +1,4 @@
-// Generated from /Users/conless/Desktop/study/system/sjtu-cs2966/comet/src/main/antlr/MxParser.g4 by ANTLR 4.9.2
+// Generated from /Users/conless/Desktop/study/system/sjtu-cs2966/comet/src/main/antlr/Comet.g4 by ANTLR 4.9.2
 package dev.conless.comet.frontend.grammar;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class MxParser extends Parser {
+public class Comet extends Parser {
 	static { RuntimeMetaData.checkVersion("4.9.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -109,7 +109,7 @@ public class MxParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "MxParser.g4"; }
+	public String getGrammarFileName() { return "Comet.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -120,13 +120,13 @@ public class MxParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
-	public MxParser(TokenStream input) {
+	public Comet(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	public static class ProgramContext extends ParserRuleContext {
-		public TerminalNode EOF() { return getToken(MxParser.EOF, 0); }
+		public TerminalNode EOF() { return getToken(Comet.EOF, 0); }
 		public List<VariableDefinitionContext> variableDefinition() {
 			return getRuleContexts(VariableDefinitionContext.class);
 		}
@@ -218,23 +218,23 @@ public class MxParser extends Parser {
 	}
 	public static class CustomTypeContext extends TypeNameContext {
 		public Token type;
-		public TerminalNode Identifier() { return getToken(MxParser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public CustomTypeContext(TypeNameContext ctx) { copyFrom(ctx); }
 	}
 	public static class ArrayTypeContext extends TypeNameContext {
 		public TypeNameContext typeName() {
 			return getRuleContext(TypeNameContext.class,0);
 		}
-		public TerminalNode LBracket() { return getToken(MxParser.LBracket, 0); }
-		public TerminalNode RBracket() { return getToken(MxParser.RBracket, 0); }
+		public TerminalNode LBracket() { return getToken(Comet.LBracket, 0); }
+		public TerminalNode RBracket() { return getToken(Comet.RBracket, 0); }
 		public ArrayTypeContext(TypeNameContext ctx) { copyFrom(ctx); }
 	}
 	public static class BuiltInTypeContext extends TypeNameContext {
 		public Token type;
-		public TerminalNode Int() { return getToken(MxParser.Int, 0); }
-		public TerminalNode Bool() { return getToken(MxParser.Bool, 0); }
-		public TerminalNode String() { return getToken(MxParser.String, 0); }
-		public TerminalNode Void() { return getToken(MxParser.Void, 0); }
+		public TerminalNode Int() { return getToken(Comet.Int, 0); }
+		public TerminalNode Bool() { return getToken(Comet.Bool, 0); }
+		public TerminalNode String() { return getToken(Comet.String, 0); }
+		public TerminalNode Void() { return getToken(Comet.Void, 0); }
 		public BuiltInTypeContext(TypeNameContext ctx) { copyFrom(ctx); }
 	}
 
@@ -345,12 +345,12 @@ public class MxParser extends Parser {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode LogicNot() { return getToken(MxParser.LogicNot, 0); }
-		public TerminalNode BitNot() { return getToken(MxParser.BitNot, 0); }
-		public TerminalNode Add() { return getToken(MxParser.Add, 0); }
-		public TerminalNode Sub() { return getToken(MxParser.Sub, 0); }
-		public TerminalNode SelfAdd() { return getToken(MxParser.SelfAdd, 0); }
-		public TerminalNode SelfSub() { return getToken(MxParser.SelfSub, 0); }
+		public TerminalNode LogicNot() { return getToken(Comet.LogicNot, 0); }
+		public TerminalNode BitNot() { return getToken(Comet.BitNot, 0); }
+		public TerminalNode Add() { return getToken(Comet.Add, 0); }
+		public TerminalNode Sub() { return getToken(Comet.Sub, 0); }
+		public TerminalNode SelfAdd() { return getToken(Comet.SelfAdd, 0); }
+		public TerminalNode SelfSub() { return getToken(Comet.SelfSub, 0); }
 		public UnaryArithExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class ConditionalExpressionContext extends ExpressionContext {
@@ -360,17 +360,17 @@ public class MxParser extends Parser {
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public TerminalNode QMark() { return getToken(MxParser.QMark, 0); }
-		public TerminalNode Colon() { return getToken(MxParser.Colon, 0); }
+		public TerminalNode QMark() { return getToken(Comet.QMark, 0); }
+		public TerminalNode Colon() { return getToken(Comet.Colon, 0); }
 		public ConditionalExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class NewExpressionContext extends ExpressionContext {
-		public TerminalNode New() { return getToken(MxParser.New, 0); }
+		public TerminalNode New() { return getToken(Comet.New, 0); }
 		public TypeNameContext typeName() {
 			return getRuleContext(TypeNameContext.class,0);
 		}
-		public TerminalNode LParen() { return getToken(MxParser.LParen, 0); }
-		public TerminalNode RParen() { return getToken(MxParser.RParen, 0); }
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
 		public NewExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class AssignExpressionContext extends ExpressionContext {
@@ -381,17 +381,17 @@ public class MxParser extends Parser {
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public TerminalNode Assign() { return getToken(MxParser.Assign, 0); }
-		public TerminalNode AddAssign() { return getToken(MxParser.AddAssign, 0); }
-		public TerminalNode SubAssign() { return getToken(MxParser.SubAssign, 0); }
-		public TerminalNode MulAssign() { return getToken(MxParser.MulAssign, 0); }
-		public TerminalNode DivAssign() { return getToken(MxParser.DivAssign, 0); }
-		public TerminalNode ModAssign() { return getToken(MxParser.ModAssign, 0); }
-		public TerminalNode AndAssign() { return getToken(MxParser.AndAssign, 0); }
-		public TerminalNode XorAssign() { return getToken(MxParser.XorAssign, 0); }
-		public TerminalNode OrAssign() { return getToken(MxParser.OrAssign, 0); }
-		public TerminalNode BitLShiftAssign() { return getToken(MxParser.BitLShiftAssign, 0); }
-		public TerminalNode BitRShiftAssign() { return getToken(MxParser.BitRShiftAssign, 0); }
+		public TerminalNode Assign() { return getToken(Comet.Assign, 0); }
+		public TerminalNode AddAssign() { return getToken(Comet.AddAssign, 0); }
+		public TerminalNode SubAssign() { return getToken(Comet.SubAssign, 0); }
+		public TerminalNode MulAssign() { return getToken(Comet.MulAssign, 0); }
+		public TerminalNode DivAssign() { return getToken(Comet.DivAssign, 0); }
+		public TerminalNode ModAssign() { return getToken(Comet.ModAssign, 0); }
+		public TerminalNode AndAssign() { return getToken(Comet.AndAssign, 0); }
+		public TerminalNode XorAssign() { return getToken(Comet.XorAssign, 0); }
+		public TerminalNode OrAssign() { return getToken(Comet.OrAssign, 0); }
+		public TerminalNode BitLShiftAssign() { return getToken(Comet.BitLShiftAssign, 0); }
+		public TerminalNode BitRShiftAssign() { return getToken(Comet.BitRShiftAssign, 0); }
 		public AssignExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class PreSelfExpressionContext extends ExpressionContext {
@@ -399,8 +399,8 @@ public class MxParser extends Parser {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode SelfAdd() { return getToken(MxParser.SelfAdd, 0); }
-		public TerminalNode SelfSub() { return getToken(MxParser.SelfSub, 0); }
+		public TerminalNode SelfAdd() { return getToken(Comet.SelfAdd, 0); }
+		public TerminalNode SelfSub() { return getToken(Comet.SelfSub, 0); }
 		public PreSelfExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class BinaryArithExpressionContext extends ExpressionContext {
@@ -411,36 +411,36 @@ public class MxParser extends Parser {
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public TerminalNode Mul() { return getToken(MxParser.Mul, 0); }
-		public TerminalNode Div() { return getToken(MxParser.Div, 0); }
-		public TerminalNode Mod() { return getToken(MxParser.Mod, 0); }
-		public TerminalNode Add() { return getToken(MxParser.Add, 0); }
-		public TerminalNode Sub() { return getToken(MxParser.Sub, 0); }
-		public TerminalNode BitLShift() { return getToken(MxParser.BitLShift, 0); }
-		public TerminalNode BitRShift() { return getToken(MxParser.BitRShift, 0); }
-		public TerminalNode Less() { return getToken(MxParser.Less, 0); }
-		public TerminalNode Greater() { return getToken(MxParser.Greater, 0); }
-		public TerminalNode LessEqual() { return getToken(MxParser.LessEqual, 0); }
-		public TerminalNode GreaterEqual() { return getToken(MxParser.GreaterEqual, 0); }
-		public TerminalNode Eqaul() { return getToken(MxParser.Eqaul, 0); }
-		public TerminalNode NotEqual() { return getToken(MxParser.NotEqual, 0); }
-		public TerminalNode BitAnd() { return getToken(MxParser.BitAnd, 0); }
-		public TerminalNode BitXor() { return getToken(MxParser.BitXor, 0); }
-		public TerminalNode BitOr() { return getToken(MxParser.BitOr, 0); }
-		public TerminalNode LogicAnd() { return getToken(MxParser.LogicAnd, 0); }
-		public TerminalNode LogicOr() { return getToken(MxParser.LogicOr, 0); }
+		public TerminalNode Mul() { return getToken(Comet.Mul, 0); }
+		public TerminalNode Div() { return getToken(Comet.Div, 0); }
+		public TerminalNode Mod() { return getToken(Comet.Mod, 0); }
+		public TerminalNode Add() { return getToken(Comet.Add, 0); }
+		public TerminalNode Sub() { return getToken(Comet.Sub, 0); }
+		public TerminalNode BitLShift() { return getToken(Comet.BitLShift, 0); }
+		public TerminalNode BitRShift() { return getToken(Comet.BitRShift, 0); }
+		public TerminalNode Less() { return getToken(Comet.Less, 0); }
+		public TerminalNode Greater() { return getToken(Comet.Greater, 0); }
+		public TerminalNode LessEqual() { return getToken(Comet.LessEqual, 0); }
+		public TerminalNode GreaterEqual() { return getToken(Comet.GreaterEqual, 0); }
+		public TerminalNode Eqaul() { return getToken(Comet.Eqaul, 0); }
+		public TerminalNode NotEqual() { return getToken(Comet.NotEqual, 0); }
+		public TerminalNode BitAnd() { return getToken(Comet.BitAnd, 0); }
+		public TerminalNode BitXor() { return getToken(Comet.BitXor, 0); }
+		public TerminalNode BitOr() { return getToken(Comet.BitOr, 0); }
+		public TerminalNode LogicAnd() { return getToken(Comet.LogicAnd, 0); }
+		public TerminalNode LogicOr() { return getToken(Comet.LogicOr, 0); }
 		public BinaryArithExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class VariableExpressionContext extends ExpressionContext {
 		public Token varibleName;
-		public TerminalNode Identifier() { return getToken(MxParser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public VariableExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class FunctionExpressionContext extends ExpressionContext {
 		public Token functionName;
-		public TerminalNode LParen() { return getToken(MxParser.LParen, 0); }
-		public TerminalNode RParen() { return getToken(MxParser.RParen, 0); }
-		public TerminalNode Identifier() { return getToken(MxParser.Identifier, 0); }
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public FunctionArgListContext functionArgList() {
 			return getRuleContext(FunctionArgListContext.class,0);
 		}
@@ -448,13 +448,13 @@ public class MxParser extends Parser {
 	}
 	public static class AtomExpressionContext extends ExpressionContext {
 		public Token value;
-		public TerminalNode IntegerConst() { return getToken(MxParser.IntegerConst, 0); }
-		public TerminalNode StringConst() { return getToken(MxParser.StringConst, 0); }
-		public TerminalNode True() { return getToken(MxParser.True, 0); }
-		public TerminalNode False() { return getToken(MxParser.False, 0); }
-		public TerminalNode Null() { return getToken(MxParser.Null, 0); }
-		public TerminalNode Identifier() { return getToken(MxParser.Identifier, 0); }
-		public TerminalNode This() { return getToken(MxParser.This, 0); }
+		public TerminalNode IntegerConst() { return getToken(Comet.IntegerConst, 0); }
+		public TerminalNode StringConst() { return getToken(Comet.StringConst, 0); }
+		public TerminalNode True() { return getToken(Comet.True, 0); }
+		public TerminalNode False() { return getToken(Comet.False, 0); }
+		public TerminalNode Null() { return getToken(Comet.Null, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
+		public TerminalNode This() { return getToken(Comet.This, 0); }
 		public AtomExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class MemberAccessExpressionContext extends ExpressionContext {
@@ -462,8 +462,8 @@ public class MxParser extends Parser {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode Member() { return getToken(MxParser.Member, 0); }
-		public TerminalNode Identifier() { return getToken(MxParser.Identifier, 0); }
+		public TerminalNode Member() { return getToken(Comet.Member, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public MemberAccessExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class IndexAccessExpressionContext extends ExpressionContext {
@@ -473,16 +473,16 @@ public class MxParser extends Parser {
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public TerminalNode LBracket() { return getToken(MxParser.LBracket, 0); }
-		public TerminalNode RBracket() { return getToken(MxParser.RBracket, 0); }
+		public TerminalNode LBracket() { return getToken(Comet.LBracket, 0); }
+		public TerminalNode RBracket() { return getToken(Comet.RBracket, 0); }
 		public IndexAccessExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class SubExpressionContext extends ExpressionContext {
-		public TerminalNode LParen() { return getToken(MxParser.LParen, 0); }
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode RParen() { return getToken(MxParser.RParen, 0); }
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
 		public SubExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class MethodAccessExpressionContext extends ExpressionContext {
@@ -490,10 +490,10 @@ public class MxParser extends Parser {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode Member() { return getToken(MxParser.Member, 0); }
-		public TerminalNode LParen() { return getToken(MxParser.LParen, 0); }
-		public TerminalNode RParen() { return getToken(MxParser.RParen, 0); }
-		public TerminalNode Identifier() { return getToken(MxParser.Identifier, 0); }
+		public TerminalNode Member() { return getToken(Comet.Member, 0); }
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public FunctionArgListContext functionArgList() {
 			return getRuleContext(FunctionArgListContext.class,0);
 		}
@@ -962,10 +962,10 @@ public class MxParser extends Parser {
 		public VariableConstructorContext variableConstructor(int i) {
 			return getRuleContext(VariableConstructorContext.class,i);
 		}
-		public TerminalNode Semi() { return getToken(MxParser.Semi, 0); }
-		public List<TerminalNode> Comma() { return getTokens(MxParser.Comma); }
+		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
+		public List<TerminalNode> Comma() { return getTokens(Comet.Comma); }
 		public TerminalNode Comma(int i) {
-			return getToken(MxParser.Comma, i);
+			return getToken(Comet.Comma, i);
 		}
 		public VariableDefinitionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1017,8 +1017,8 @@ public class MxParser extends Parser {
 
 	public static class VariableConstructorContext extends ParserRuleContext {
 		public Token varName;
-		public TerminalNode Identifier() { return getToken(MxParser.Identifier, 0); }
-		public TerminalNode Assign() { return getToken(MxParser.Assign, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
+		public TerminalNode Assign() { return getToken(Comet.Assign, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
@@ -1064,11 +1064,11 @@ public class MxParser extends Parser {
 
 	public static class ClassDefinitionContext extends ParserRuleContext {
 		public Token className;
-		public TerminalNode Class() { return getToken(MxParser.Class, 0); }
-		public TerminalNode LBrace() { return getToken(MxParser.LBrace, 0); }
-		public TerminalNode RBrace() { return getToken(MxParser.RBrace, 0); }
-		public TerminalNode Semi() { return getToken(MxParser.Semi, 0); }
-		public TerminalNode Identifier() { return getToken(MxParser.Identifier, 0); }
+		public TerminalNode Class() { return getToken(Comet.Class, 0); }
+		public TerminalNode LBrace() { return getToken(Comet.LBrace, 0); }
+		public TerminalNode RBrace() { return getToken(Comet.RBrace, 0); }
+		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public List<VariableDefinitionContext> variableDefinition() {
 			return getRuleContexts(VariableDefinitionContext.class);
 		}
@@ -1157,12 +1157,12 @@ public class MxParser extends Parser {
 
 	public static class ClassConstructorContext extends ParserRuleContext {
 		public Token className;
-		public TerminalNode LParen() { return getToken(MxParser.LParen, 0); }
-		public TerminalNode RParen() { return getToken(MxParser.RParen, 0); }
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
 		public SuiteContext suite() {
 			return getRuleContext(SuiteContext.class,0);
 		}
-		public TerminalNode Identifier() { return getToken(MxParser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public ClassConstructorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1201,12 +1201,12 @@ public class MxParser extends Parser {
 		public ReturnTypeContext returnType() {
 			return getRuleContext(ReturnTypeContext.class,0);
 		}
-		public TerminalNode LParen() { return getToken(MxParser.LParen, 0); }
-		public TerminalNode RParen() { return getToken(MxParser.RParen, 0); }
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
 		public SuiteContext suite() {
 			return getRuleContext(SuiteContext.class,0);
 		}
-		public TerminalNode Identifier() { return getToken(MxParser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public FunctionParaListContext functionParaList() {
 			return getRuleContext(FunctionParaListContext.class,0);
 		}
@@ -1269,9 +1269,9 @@ public class MxParser extends Parser {
 		public VariableConstructorContext variableConstructor(int i) {
 			return getRuleContext(VariableConstructorContext.class,i);
 		}
-		public List<TerminalNode> Comma() { return getTokens(MxParser.Comma); }
+		public List<TerminalNode> Comma() { return getTokens(Comet.Comma); }
 		public TerminalNode Comma(int i) {
-			return getToken(MxParser.Comma, i);
+			return getToken(Comet.Comma, i);
 		}
 		public FunctionParaListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1328,9 +1328,9 @@ public class MxParser extends Parser {
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public List<TerminalNode> Comma() { return getTokens(MxParser.Comma); }
+		public List<TerminalNode> Comma() { return getTokens(Comet.Comma); }
 		public TerminalNode Comma(int i) {
-			return getToken(MxParser.Comma, i);
+			return getToken(Comet.Comma, i);
 		}
 		public FunctionArgListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1408,8 +1408,8 @@ public class MxParser extends Parser {
 	}
 
 	public static class SuiteContext extends ParserRuleContext {
-		public TerminalNode LBrace() { return getToken(MxParser.LBrace, 0); }
-		public TerminalNode RBrace() { return getToken(MxParser.RBrace, 0); }
+		public TerminalNode LBrace() { return getToken(Comet.LBrace, 0); }
+		public TerminalNode RBrace() { return getToken(Comet.RBrace, 0); }
 		public List<StatementContext> statement() {
 			return getRuleContexts(StatementContext.class);
 		}
@@ -1578,19 +1578,19 @@ public class MxParser extends Parser {
 	}
 
 	public static class IfStatementContext extends ParserRuleContext {
-		public TerminalNode If() { return getToken(MxParser.If, 0); }
-		public TerminalNode LParen() { return getToken(MxParser.LParen, 0); }
+		public TerminalNode If() { return getToken(Comet.If, 0); }
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode RParen() { return getToken(MxParser.RParen, 0); }
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
 		public List<StatementContext> statement() {
 			return getRuleContexts(StatementContext.class);
 		}
 		public StatementContext statement(int i) {
 			return getRuleContext(StatementContext.class,i);
 		}
-		public TerminalNode Else() { return getToken(MxParser.Else, 0); }
+		public TerminalNode Else() { return getToken(Comet.Else, 0); }
 		public IfStatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1688,9 +1688,9 @@ public class MxParser extends Parser {
 	public static class ForStatementContext extends ParserRuleContext {
 		public ForInitStatementContext init;
 		public ExpressionStatementContext condition;
-		public TerminalNode For() { return getToken(MxParser.For, 0); }
-		public TerminalNode LParen() { return getToken(MxParser.LParen, 0); }
-		public TerminalNode RParen() { return getToken(MxParser.RParen, 0); }
+		public TerminalNode For() { return getToken(Comet.For, 0); }
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
 		public StatementContext statement() {
 			return getRuleContext(StatementContext.class,0);
 		}
@@ -1753,9 +1753,9 @@ public class MxParser extends Parser {
 
 	public static class WhileStatementContext extends ParserRuleContext {
 		public ExpressionContext condition;
-		public TerminalNode While() { return getToken(MxParser.While, 0); }
-		public TerminalNode LParen() { return getToken(MxParser.LParen, 0); }
-		public TerminalNode RParen() { return getToken(MxParser.RParen, 0); }
+		public TerminalNode While() { return getToken(Comet.While, 0); }
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
 		public StatementContext statement() {
 			return getRuleContext(StatementContext.class,0);
 		}
@@ -1798,8 +1798,8 @@ public class MxParser extends Parser {
 	}
 
 	public static class ContinueStatementContext extends ParserRuleContext {
-		public TerminalNode Continue() { return getToken(MxParser.Continue, 0); }
-		public TerminalNode Semi() { return getToken(MxParser.Semi, 0); }
+		public TerminalNode Continue() { return getToken(Comet.Continue, 0); }
+		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
 		public ContinueStatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1830,8 +1830,8 @@ public class MxParser extends Parser {
 	}
 
 	public static class BreakStatementContext extends ParserRuleContext {
-		public TerminalNode Break() { return getToken(MxParser.Break, 0); }
-		public TerminalNode Semi() { return getToken(MxParser.Semi, 0); }
+		public TerminalNode Break() { return getToken(Comet.Break, 0); }
+		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
 		public BreakStatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1862,11 +1862,11 @@ public class MxParser extends Parser {
 	}
 
 	public static class ReturnStatementContext extends ParserRuleContext {
-		public TerminalNode Return() { return getToken(MxParser.Return, 0); }
+		public TerminalNode Return() { return getToken(Comet.Return, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode Semi() { return getToken(MxParser.Semi, 0); }
+		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
 		public ReturnStatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1899,7 +1899,7 @@ public class MxParser extends Parser {
 	}
 
 	public static class ExpressionStatementContext extends ParserRuleContext {
-		public TerminalNode Semi() { return getToken(MxParser.Semi, 0); }
+		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
