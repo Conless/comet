@@ -290,15 +290,15 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitReturnType(Comet.ReturnTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#suite}.
+	 * Enter a parse tree produced by {@link Comet#blockStatement}.
 	 * @param ctx the parse tree
 	 */
-	void enterSuite(Comet.SuiteContext ctx);
+	void enterBlockStatement(Comet.BlockStatementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#suite}.
+	 * Exit a parse tree produced by {@link Comet#blockStatement}.
 	 * @param ctx the parse tree
 	 */
-	void exitSuite(Comet.SuiteContext ctx);
+	void exitBlockStatement(Comet.BlockStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Comet#statement}.
 	 * @param ctx the parse tree

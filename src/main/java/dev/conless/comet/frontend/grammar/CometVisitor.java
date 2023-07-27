@@ -177,11 +177,11 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitReturnType(Comet.ReturnTypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#suite}.
+	 * Visit a parse tree produced by {@link Comet#blockStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSuite(Comet.SuiteContext ctx);
+	T visitBlockStatement(Comet.BlockStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Comet#statement}.
 	 * @param ctx the parse tree

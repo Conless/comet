@@ -55,34 +55,39 @@ expression
           | Identifier | This)                                            # atomExpression
   ;
 
-variableDefinition: typeName variableConstructor (',' variableConstructor)* ';';
+variableDefinition: typeName variableConstructor (',' variableConstructor)*;
 variableConstructor: varName=Identifier ('=' expression)?;
 
-classDefinition: Class className=Identifier '{' (variableDefinition | functionDefinition | classConstructor)* '}' ';';
-classConstructor: className=Identifier '(' ')' suite;
+classDefinition: Class className=Identifier '{' (variableDefinition | functionDefinition | classConstructor)* '}';
+classConstructor: className=Identifier '(' ')' blockStatement;
 
-functionDefinition: returnType funcName=Identifier '(' functionParaList? ')' suite;
+functionDefinition: returnType funcName=Identifier '(' functionParaList? ')' blockStatement;
 functionParaList: typeName variableConstructor (',' typeName variableConstructor)*;
 functionArgList: expression (',' expression)*;
 returnType: typeName;
 
 
-suite: '{' statement* '}';
+blockStatement: '{' statement* '}';
 statement
-  : suite
-  | variableDefinition
-  | ifStatement | forStatement | whileStatement
-  | continueStatement | breakStatement | returnStatement
-  | expressionStatement
+  : blockStatement
+  | ifStatement
+  | forStatement
+  | whileStatement
+  | variableDefinition ';'
+  | classDefinition ';'
+  | continueStatement ';'
+  | breakStatement ';'
+  | returnStatement ';'
+  | expressionStatement ';'
   ;
 
 ifStatement: If '(' expression ')' statement (Else statement)?;
 forInitStatement: variableDefinition | expressionStatement;
-forStatement: For '(' init=forInitStatement condition=expressionStatement expression? ')' statement;
+forStatement: For '(' init=forInitStatement ';' condition=expressionStatement ';' expressionStatement')' statement;
 whileStatement: While '(' condition=expression ')' statement;
 
-continueStatement: Continue ';';
-breakStatement: Break ';';
-returnStatement: Return expression ';';
+continueStatement: Continue;
+breakStatement: Break;
+returnStatement: Return expression;
 
-expressionStatement: expression? ()';';
+expressionStatement: expression (',' expression)*;

@@ -317,13 +317,13 @@ public class CometBaseListener implements CometListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSuite(Comet.SuiteContext ctx) { }
+	@Override public void enterBlockStatement(Comet.BlockStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSuite(Comet.SuiteContext ctx) { }
+	@Override public void exitBlockStatement(Comet.BlockStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
