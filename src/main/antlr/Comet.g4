@@ -5,7 +5,7 @@ options {
 
 @header {package dev.conless.comet.frontend.grammar;}
 
-program: (variableDefinition | classDefinition | functionDefinition)* EOF;
+program: ((variableDefinition ';') | (classDefinition ';') | functionDefinition)* EOF;
 
 typeName
   : type = (Int | Bool | String | Void)                                   # builtInType
@@ -17,12 +17,12 @@ expression
   : New typeName ('(' ')')?                                               # newExpression
   
   // Expressions that MAY result with lvalue
-  | '(' expression ')'                                                    # subExpression
+  | '(' expression ')'                                                    # parenExpression
   | varibleName=Identifier                                                # variableExpression
-  | functionName=Identifier '(' functionArgList? ')'                      # functionExpression
-  | expression '[' expression ']'                                         # indexAccessExpression
-  | expression '.' memberName=Identifier                                  # memberAccessExpression
-  | expression '.' methodName=Identifier '(' functionArgList? ')'         # methodAccessExpression 
+  | expression '.' memberName=Identifier                                  # variableExpression
+  | functionName=Identifier '(' functionArgList? ')'                      # callExpression
+  | expression '.' methodName=Identifier '(' functionArgList? ')'         # callExpression 
+  | expression '[' expression ']'                                         # indexExpression
 
   // Unary expressions that result with rvalue
   | <assoc=right> expression op=(SelfAdd | SelfSub)                       # unaryArithExpression
@@ -58,14 +58,13 @@ expression
 variableDefinition: typeName variableConstructor (',' variableConstructor)*;
 variableConstructor: varName=Identifier ('=' expression)?;
 
-classDefinition: Class className=Identifier '{' (variableDefinition | functionDefinition | classConstructor)* '}';
+classDefinition: Class className=Identifier '{' ((variableDefinition ';')| functionDefinition | classConstructor)* '}';
 classConstructor: className=Identifier '(' ')' blockStatement;
 
 functionDefinition: returnType funcName=Identifier '(' functionParaList? ')' blockStatement;
 functionParaList: typeName variableConstructor (',' typeName variableConstructor)*;
 functionArgList: expression (',' expression)*;
 returnType: typeName;
-
 
 blockStatement: '{' statement* '}';
 statement
@@ -79,15 +78,15 @@ statement
   | breakStatement ';'
   | returnStatement ';'
   | expressionStatement ';'
+  | ';'
   ;
 
 ifStatement: If '(' expression ')' statement (Else statement)?;
-forInitStatement: variableDefinition | expressionStatement;
-forStatement: For '(' init=forInitStatement ';' condition=expressionStatement ';' expressionStatement')' statement;
+forStatement: For '(' init=statement condition=statement update=expressionStatement?')' statement;
 whileStatement: While '(' condition=expression ')' statement;
 
 continueStatement: Continue;
 breakStatement: Break;
-returnStatement: Return expression;
+returnStatement: Return expression?;
 
 expressionStatement: expression (',' expression)*;
