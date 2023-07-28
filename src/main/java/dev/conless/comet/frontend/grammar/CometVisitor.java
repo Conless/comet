@@ -38,124 +38,124 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBuiltInType(Comet.BuiltInTypeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code callExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code newExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCallExpression(Comet.CallExpressionContext ctx);
+	T visitNewExpr(Comet.NewExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code unaryArithExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code indexExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitUnaryArithExpression(Comet.UnaryArithExpressionContext ctx);
+	T visitIndexExpr(Comet.IndexExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code atomExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code varExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAtomExpression(Comet.AtomExpressionContext ctx);
+	T visitVarExpr(Comet.VarExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code conditionalExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code binaryArithExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitConditionalExpression(Comet.ConditionalExpressionContext ctx);
+	T visitBinaryArithExpr(Comet.BinaryArithExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code newExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code preSelfExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNewExpression(Comet.NewExpressionContext ctx);
+	T visitPreSelfExpr(Comet.PreSelfExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code assignExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code atomExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssignExpression(Comet.AssignExpressionContext ctx);
+	T visitAtomExpr(Comet.AtomExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code preSelfExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code unaryArithExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPreSelfExpression(Comet.PreSelfExpressionContext ctx);
+	T visitUnaryArithExpr(Comet.UnaryArithExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code parenExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code callExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParenExpression(Comet.ParenExpressionContext ctx);
+	T visitCallExpr(Comet.CallExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code indexExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code assignExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIndexExpression(Comet.IndexExpressionContext ctx);
+	T visitAssignExpr(Comet.AssignExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code binaryArithExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code parenExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBinaryArithExpression(Comet.BinaryArithExpressionContext ctx);
+	T visitParenExpr(Comet.ParenExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code variableExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Visit a parse tree produced by the {@code conditionalExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableExpression(Comet.VariableExpressionContext ctx);
+	T visitConditionalExpr(Comet.ConditionalExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#variableDefinition}.
+	 * Visit a parse tree produced by {@link Comet#varDef}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableDefinition(Comet.VariableDefinitionContext ctx);
+	T visitVarDef(Comet.VarDefContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#variableConstructor}.
+	 * Visit a parse tree produced by {@link Comet#varCtor}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableConstructor(Comet.VariableConstructorContext ctx);
+	T visitVarCtor(Comet.VarCtorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#classDefinition}.
+	 * Visit a parse tree produced by {@link Comet#classDef}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitClassDefinition(Comet.ClassDefinitionContext ctx);
+	T visitClassDef(Comet.ClassDefContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#classConstructor}.
+	 * Visit a parse tree produced by {@link Comet#classCtor}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitClassConstructor(Comet.ClassConstructorContext ctx);
+	T visitClassCtor(Comet.ClassCtorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#functionDefinition}.
+	 * Visit a parse tree produced by {@link Comet#funcDef}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionDefinition(Comet.FunctionDefinitionContext ctx);
+	T visitFuncDef(Comet.FuncDefContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#functionParaList}.
+	 * Visit a parse tree produced by {@link Comet#funcParaList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionParaList(Comet.FunctionParaListContext ctx);
+	T visitFuncParaList(Comet.FuncParaListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#functionArgList}.
+	 * Visit a parse tree produced by {@link Comet#funcArgList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionArgList(Comet.FunctionArgListContext ctx);
+	T visitFuncArgList(Comet.FuncArgListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Comet#returnType}.
 	 * @param ctx the parse tree
@@ -163,57 +163,57 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitReturnType(Comet.ReturnTypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#blockStatement}.
+	 * Visit a parse tree produced by {@link Comet#blockStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBlockStatement(Comet.BlockStatementContext ctx);
+	T visitBlockStmt(Comet.BlockStmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#statement}.
+	 * Visit a parse tree produced by {@link Comet#stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatement(Comet.StatementContext ctx);
+	T visitStmt(Comet.StmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#ifStatement}.
+	 * Visit a parse tree produced by {@link Comet#ifStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIfStatement(Comet.IfStatementContext ctx);
+	T visitIfStmt(Comet.IfStmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#forStatement}.
+	 * Visit a parse tree produced by {@link Comet#forStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitForStatement(Comet.ForStatementContext ctx);
+	T visitForStmt(Comet.ForStmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#whileStatement}.
+	 * Visit a parse tree produced by {@link Comet#whileStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitWhileStatement(Comet.WhileStatementContext ctx);
+	T visitWhileStmt(Comet.WhileStmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#continueStatement}.
+	 * Visit a parse tree produced by {@link Comet#continueStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitContinueStatement(Comet.ContinueStatementContext ctx);
+	T visitContinueStmt(Comet.ContinueStmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#breakStatement}.
+	 * Visit a parse tree produced by {@link Comet#breakStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBreakStatement(Comet.BreakStatementContext ctx);
+	T visitBreakStmt(Comet.BreakStmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#returnStatement}.
+	 * Visit a parse tree produced by {@link Comet#returnStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitReturnStatement(Comet.ReturnStatementContext ctx);
+	T visitReturnStmt(Comet.ReturnStmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#expressionStatement}.
+	 * Visit a parse tree produced by {@link Comet#exprStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpressionStatement(Comet.ExpressionStatementContext ctx);
+	T visitExprStmt(Comet.ExprStmtContext ctx);
 }

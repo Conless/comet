@@ -29,19 +29,17 @@ public class Comet extends Parser {
 		Blank=62, CommentLine=63, CommentPara=64, Identifier=65, IntegerConst=66, 
 		StringCharacter=67, StringConst=68;
 	public static final int
-		RULE_program = 0, RULE_typeName = 1, RULE_expression = 2, RULE_variableDefinition = 3, 
-		RULE_variableConstructor = 4, RULE_classDefinition = 5, RULE_classConstructor = 6, 
-		RULE_functionDefinition = 7, RULE_functionParaList = 8, RULE_functionArgList = 9, 
-		RULE_returnType = 10, RULE_blockStatement = 11, RULE_statement = 12, RULE_ifStatement = 13, 
-		RULE_forStatement = 14, RULE_whileStatement = 15, RULE_continueStatement = 16, 
-		RULE_breakStatement = 17, RULE_returnStatement = 18, RULE_expressionStatement = 19;
+		RULE_program = 0, RULE_typeName = 1, RULE_expr = 2, RULE_varDef = 3, RULE_varCtor = 4, 
+		RULE_classDef = 5, RULE_classCtor = 6, RULE_funcDef = 7, RULE_funcParaList = 8, 
+		RULE_funcArgList = 9, RULE_returnType = 10, RULE_blockStmt = 11, RULE_stmt = 12, 
+		RULE_ifStmt = 13, RULE_forStmt = 14, RULE_whileStmt = 15, RULE_continueStmt = 16, 
+		RULE_breakStmt = 17, RULE_returnStmt = 18, RULE_exprStmt = 19;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"program", "typeName", "expression", "variableDefinition", "variableConstructor", 
-			"classDefinition", "classConstructor", "functionDefinition", "functionParaList", 
-			"functionArgList", "returnType", "blockStatement", "statement", "ifStatement", 
-			"forStatement", "whileStatement", "continueStatement", "breakStatement", 
-			"returnStatement", "expressionStatement"
+			"program", "typeName", "expr", "varDef", "varCtor", "classDef", "classCtor", 
+			"funcDef", "funcParaList", "funcArgList", "returnType", "blockStmt", 
+			"stmt", "ifStmt", "forStmt", "whileStmt", "continueStmt", "breakStmt", 
+			"returnStmt", "exprStmt"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -126,27 +124,27 @@ public class Comet extends Parser {
 
 	public static class ProgramContext extends ParserRuleContext {
 		public TerminalNode EOF() { return getToken(Comet.EOF, 0); }
-		public List<FunctionDefinitionContext> functionDefinition() {
-			return getRuleContexts(FunctionDefinitionContext.class);
+		public List<FuncDefContext> funcDef() {
+			return getRuleContexts(FuncDefContext.class);
 		}
-		public FunctionDefinitionContext functionDefinition(int i) {
-			return getRuleContext(FunctionDefinitionContext.class,i);
+		public FuncDefContext funcDef(int i) {
+			return getRuleContext(FuncDefContext.class,i);
 		}
-		public List<VariableDefinitionContext> variableDefinition() {
-			return getRuleContexts(VariableDefinitionContext.class);
+		public List<VarDefContext> varDef() {
+			return getRuleContexts(VarDefContext.class);
 		}
-		public VariableDefinitionContext variableDefinition(int i) {
-			return getRuleContext(VariableDefinitionContext.class,i);
+		public VarDefContext varDef(int i) {
+			return getRuleContext(VarDefContext.class,i);
 		}
 		public List<TerminalNode> Semi() { return getTokens(Comet.Semi); }
 		public TerminalNode Semi(int i) {
 			return getToken(Comet.Semi, i);
 		}
-		public List<ClassDefinitionContext> classDefinition() {
-			return getRuleContexts(ClassDefinitionContext.class);
+		public List<ClassDefContext> classDef() {
+			return getRuleContexts(ClassDefContext.class);
 		}
-		public ClassDefinitionContext classDefinition(int i) {
-			return getRuleContext(ClassDefinitionContext.class,i);
+		public ClassDefContext classDef(int i) {
+			return getRuleContext(ClassDefContext.class,i);
 		}
 		public ProgramContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -173,7 +171,7 @@ public class Comet extends Parser {
 					{
 					{
 					setState(40);
-					variableDefinition();
+					varDef();
 					setState(41);
 					match(Semi);
 					}
@@ -183,7 +181,7 @@ public class Comet extends Parser {
 					{
 					{
 					setState(43);
-					classDefinition();
+					classDef();
 					setState(44);
 					match(Semi);
 					}
@@ -192,7 +190,7 @@ public class Comet extends Parser {
 				case 3:
 					{
 					setState(46);
-					functionDefinition();
+					funcDef();
 					}
 					break;
 				}
@@ -340,132 +338,53 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class ExpressionContext extends ParserRuleContext {
-		public ExpressionContext(ParserRuleContext parent, int invokingState) {
+	public static class ExprContext extends ParserRuleContext {
+		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_expression; }
+		@Override public int getRuleIndex() { return RULE_expr; }
 	 
-		public ExpressionContext() { }
-		public void copyFrom(ExpressionContext ctx) {
+		public ExprContext() { }
+		public void copyFrom(ExprContext ctx) {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class CallExpressionContext extends ExpressionContext {
-		public Token functionName;
-		public Token methodName;
-		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
-		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public FunctionArgListContext functionArgList() {
-			return getRuleContext(FunctionArgListContext.class,0);
-		}
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public TerminalNode Member() { return getToken(Comet.Member, 0); }
-		public CallExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class UnaryArithExpressionContext extends ExpressionContext {
-		public Token op;
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public TerminalNode LogicNot() { return getToken(Comet.LogicNot, 0); }
-		public TerminalNode BitNot() { return getToken(Comet.BitNot, 0); }
-		public TerminalNode Add() { return getToken(Comet.Add, 0); }
-		public TerminalNode Sub() { return getToken(Comet.Sub, 0); }
-		public TerminalNode SelfAdd() { return getToken(Comet.SelfAdd, 0); }
-		public TerminalNode SelfSub() { return getToken(Comet.SelfSub, 0); }
-		public UnaryArithExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class AtomExpressionContext extends ExpressionContext {
-		public Token value;
-		public TerminalNode IntegerConst() { return getToken(Comet.IntegerConst, 0); }
-		public TerminalNode StringConst() { return getToken(Comet.StringConst, 0); }
-		public TerminalNode True() { return getToken(Comet.True, 0); }
-		public TerminalNode False() { return getToken(Comet.False, 0); }
-		public TerminalNode Null() { return getToken(Comet.Null, 0); }
-		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public TerminalNode This() { return getToken(Comet.This, 0); }
-		public AtomExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class ConditionalExpressionContext extends ExpressionContext {
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
-		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
-		}
-		public TerminalNode QMark() { return getToken(Comet.QMark, 0); }
-		public TerminalNode Colon() { return getToken(Comet.Colon, 0); }
-		public ConditionalExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class NewExpressionContext extends ExpressionContext {
+	public static class NewExprContext extends ExprContext {
 		public TerminalNode New() { return getToken(Comet.New, 0); }
 		public TypeNameContext typeName() {
 			return getRuleContext(TypeNameContext.class,0);
 		}
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public NewExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public NewExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
-	public static class AssignExpressionContext extends ExpressionContext {
-		public Token op;
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
+	public static class IndexExprContext extends ExprContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
 		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
-		}
-		public TerminalNode Assign() { return getToken(Comet.Assign, 0); }
-		public TerminalNode AddAssign() { return getToken(Comet.AddAssign, 0); }
-		public TerminalNode SubAssign() { return getToken(Comet.SubAssign, 0); }
-		public TerminalNode MulAssign() { return getToken(Comet.MulAssign, 0); }
-		public TerminalNode DivAssign() { return getToken(Comet.DivAssign, 0); }
-		public TerminalNode ModAssign() { return getToken(Comet.ModAssign, 0); }
-		public TerminalNode AndAssign() { return getToken(Comet.AndAssign, 0); }
-		public TerminalNode XorAssign() { return getToken(Comet.XorAssign, 0); }
-		public TerminalNode OrAssign() { return getToken(Comet.OrAssign, 0); }
-		public TerminalNode BitLShiftAssign() { return getToken(Comet.BitLShiftAssign, 0); }
-		public TerminalNode BitRShiftAssign() { return getToken(Comet.BitRShiftAssign, 0); }
-		public AssignExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class PreSelfExpressionContext extends ExpressionContext {
-		public Token op;
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public TerminalNode SelfAdd() { return getToken(Comet.SelfAdd, 0); }
-		public TerminalNode SelfSub() { return getToken(Comet.SelfSub, 0); }
-		public PreSelfExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class ParenExpressionContext extends ExpressionContext {
-		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public ParenExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class IndexExpressionContext extends ExpressionContext {
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
-		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
 		}
 		public TerminalNode LBracket() { return getToken(Comet.LBracket, 0); }
 		public TerminalNode RBracket() { return getToken(Comet.RBracket, 0); }
-		public IndexExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public IndexExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
-	public static class BinaryArithExpressionContext extends ExpressionContext {
-		public Token op;
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
+	public static class VarExprContext extends ExprContext {
+		public Token varName;
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
 		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
+		public TerminalNode Member() { return getToken(Comet.Member, 0); }
+		public VarExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	public static class BinaryArithExprContext extends ExprContext {
+		public Token op;
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
 		}
 		public TerminalNode Mul() { return getToken(Comet.Mul, 0); }
 		public TerminalNode Div() { return getToken(Comet.Div, 0); }
@@ -485,30 +404,107 @@ public class Comet extends Parser {
 		public TerminalNode BitOr() { return getToken(Comet.BitOr, 0); }
 		public TerminalNode LogicAnd() { return getToken(Comet.LogicAnd, 0); }
 		public TerminalNode LogicOr() { return getToken(Comet.LogicOr, 0); }
-		public BinaryArithExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public BinaryArithExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
-	public static class VariableExpressionContext extends ExpressionContext {
-		public Token varibleName;
-		public Token memberName;
+	public static class PreSelfExprContext extends ExprContext {
+		public Token op;
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode SelfAdd() { return getToken(Comet.SelfAdd, 0); }
+		public TerminalNode SelfSub() { return getToken(Comet.SelfSub, 0); }
+		public PreSelfExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	public static class AtomExprContext extends ExprContext {
+		public Token value;
+		public TerminalNode IntegerConst() { return getToken(Comet.IntegerConst, 0); }
+		public TerminalNode StringConst() { return getToken(Comet.StringConst, 0); }
+		public TerminalNode True() { return getToken(Comet.True, 0); }
+		public TerminalNode False() { return getToken(Comet.False, 0); }
+		public TerminalNode Null() { return getToken(Comet.Null, 0); }
 		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
+		public TerminalNode This() { return getToken(Comet.This, 0); }
+		public AtomExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	public static class UnaryArithExprContext extends ExprContext {
+		public Token op;
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode LogicNot() { return getToken(Comet.LogicNot, 0); }
+		public TerminalNode BitNot() { return getToken(Comet.BitNot, 0); }
+		public TerminalNode Add() { return getToken(Comet.Add, 0); }
+		public TerminalNode Sub() { return getToken(Comet.Sub, 0); }
+		public TerminalNode SelfAdd() { return getToken(Comet.SelfAdd, 0); }
+		public TerminalNode SelfSub() { return getToken(Comet.SelfSub, 0); }
+		public UnaryArithExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	public static class CallExprContext extends ExprContext {
+		public Token funcName;
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
+		public FuncArgListContext funcArgList() {
+			return getRuleContext(FuncArgListContext.class,0);
+		}
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
 		}
 		public TerminalNode Member() { return getToken(Comet.Member, 0); }
-		public VariableExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public CallExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	public static class AssignExprContext extends ExprContext {
+		public Token op;
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public TerminalNode Assign() { return getToken(Comet.Assign, 0); }
+		public TerminalNode AddAssign() { return getToken(Comet.AddAssign, 0); }
+		public TerminalNode SubAssign() { return getToken(Comet.SubAssign, 0); }
+		public TerminalNode MulAssign() { return getToken(Comet.MulAssign, 0); }
+		public TerminalNode DivAssign() { return getToken(Comet.DivAssign, 0); }
+		public TerminalNode ModAssign() { return getToken(Comet.ModAssign, 0); }
+		public TerminalNode AndAssign() { return getToken(Comet.AndAssign, 0); }
+		public TerminalNode XorAssign() { return getToken(Comet.XorAssign, 0); }
+		public TerminalNode OrAssign() { return getToken(Comet.OrAssign, 0); }
+		public TerminalNode BitLShiftAssign() { return getToken(Comet.BitLShiftAssign, 0); }
+		public TerminalNode BitRShiftAssign() { return getToken(Comet.BitRShiftAssign, 0); }
+		public AssignExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	public static class ParenExprContext extends ExprContext {
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
+		public ParenExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	public static class ConditionalExprContext extends ExprContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public TerminalNode QMark() { return getToken(Comet.QMark, 0); }
+		public TerminalNode Colon() { return getToken(Comet.Colon, 0); }
+		public ConditionalExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 
-	public final ExpressionContext expression() throws RecognitionException {
-		return expression(0);
+	public final ExprContext expr() throws RecognitionException {
+		return expr(0);
 	}
 
-	private ExpressionContext expression(int _p) throws RecognitionException {
+	private ExprContext expr(int _p) throws RecognitionException {
 		ParserRuleContext _parentctx = _ctx;
 		int _parentState = getState();
-		ExpressionContext _localctx = new ExpressionContext(_ctx, _parentState);
-		ExpressionContext _prevctx = _localctx;
+		ExprContext _localctx = new ExprContext(_ctx, _parentState);
+		ExprContext _prevctx = _localctx;
 		int _startState = 4;
-		enterRecursionRule(_localctx, 4, RULE_expression, _p);
+		enterRecursionRule(_localctx, 4, RULE_expr, _p);
 		int _la;
 		try {
 			int _alt;
@@ -519,7 +515,7 @@ public class Comet extends Parser {
 			switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 			case 1:
 				{
-				_localctx = new NewExpressionContext(_localctx);
+				_localctx = new NewExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
@@ -543,33 +539,33 @@ public class Comet extends Parser {
 				break;
 			case 2:
 				{
-				_localctx = new ParenExpressionContext(_localctx);
+				_localctx = new ParenExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(74);
 				match(LParen);
 				setState(75);
-				expression(0);
+				expr(0);
 				setState(76);
 				match(RParen);
 				}
 				break;
 			case 3:
 				{
-				_localctx = new VariableExpressionContext(_localctx);
+				_localctx = new VarExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(78);
-				((VariableExpressionContext)_localctx).varibleName = match(Identifier);
+				((VarExprContext)_localctx).varName = match(Identifier);
 				}
 				break;
 			case 4:
 				{
-				_localctx = new CallExpressionContext(_localctx);
+				_localctx = new CallExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(79);
-				((CallExpressionContext)_localctx).functionName = match(Identifier);
+				((CallExprContext)_localctx).funcName = match(Identifier);
 				setState(80);
 				match(LParen);
 				setState(82);
@@ -578,7 +574,7 @@ public class Comet extends Parser {
 				if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
 					{
 					setState(81);
-					functionArgList();
+					funcArgList();
 					}
 				}
 
@@ -588,14 +584,14 @@ public class Comet extends Parser {
 				break;
 			case 5:
 				{
-				_localctx = new UnaryArithExpressionContext(_localctx);
+				_localctx = new UnaryArithExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(85);
-				((UnaryArithExpressionContext)_localctx).op = _input.LT(1);
+				((UnaryArithExprContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Add) | (1L << Sub) | (1L << LogicNot) | (1L << BitNot))) != 0)) ) {
-					((UnaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+					((UnaryArithExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				}
 				else {
 					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -603,19 +599,19 @@ public class Comet extends Parser {
 					consume();
 				}
 				setState(86);
-				expression(15);
+				expr(15);
 				}
 				break;
 			case 6:
 				{
-				_localctx = new PreSelfExpressionContext(_localctx);
+				_localctx = new PreSelfExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(87);
-				((PreSelfExpressionContext)_localctx).op = _input.LT(1);
+				((PreSelfExprContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==SelfAdd || _la==SelfSub) ) {
-					((PreSelfExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+					((PreSelfExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				}
 				else {
 					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -623,19 +619,19 @@ public class Comet extends Parser {
 					consume();
 				}
 				setState(88);
-				expression(14);
+				expr(14);
 				}
 				break;
 			case 7:
 				{
-				_localctx = new AtomExpressionContext(_localctx);
+				_localctx = new AtomExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(89);
-				((AtomExpressionContext)_localctx).value = _input.LT(1);
+				((AtomExprContext)_localctx).value = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(((((_la - 7)) & ~0x3f) == 0 && ((1L << (_la - 7)) & ((1L << (Null - 7)) | (1L << (True - 7)) | (1L << (False - 7)) | (1L << (This - 7)) | (1L << (Identifier - 7)) | (1L << (IntegerConst - 7)) | (1L << (StringConst - 7)))) != 0)) ) {
-					((AtomExpressionContext)_localctx).value = (Token)_errHandler.recoverInline(this);
+					((AtomExprContext)_localctx).value = (Token)_errHandler.recoverInline(this);
 				}
 				else {
 					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -659,15 +655,15 @@ public class Comet extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
 					case 1:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(92);
 						if (!(precpred(_ctx, 13))) throw new FailedPredicateException(this, "precpred(_ctx, 13)");
 						setState(93);
-						((BinaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((BinaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Mul) | (1L << Div) | (1L << Mod))) != 0)) ) {
-							((BinaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((BinaryArithExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -675,20 +671,20 @@ public class Comet extends Parser {
 							consume();
 						}
 						setState(94);
-						expression(14);
+						expr(14);
 						}
 						break;
 					case 2:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(95);
 						if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
 						setState(96);
-						((BinaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((BinaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==Add || _la==Sub) ) {
-							((BinaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((BinaryArithExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -696,20 +692,20 @@ public class Comet extends Parser {
 							consume();
 						}
 						setState(97);
-						expression(13);
+						expr(13);
 						}
 						break;
 					case 3:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(98);
 						if (!(precpred(_ctx, 11))) throw new FailedPredicateException(this, "precpred(_ctx, 11)");
 						setState(99);
-						((BinaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((BinaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==BitRShift || _la==BitLShift) ) {
-							((BinaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((BinaryArithExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -717,20 +713,20 @@ public class Comet extends Parser {
 							consume();
 						}
 						setState(100);
-						expression(12);
+						expr(12);
 						}
 						break;
 					case 4:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(101);
 						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
 						setState(102);
-						((BinaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((BinaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Greater) | (1L << Less) | (1L << GreaterEqual) | (1L << LessEqual))) != 0)) ) {
-							((BinaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((BinaryArithExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -738,20 +734,20 @@ public class Comet extends Parser {
 							consume();
 						}
 						setState(103);
-						expression(11);
+						expr(11);
 						}
 						break;
 					case 5:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(104);
 						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
 						setState(105);
-						((BinaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((BinaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==NotEqual || _la==Eqaul) ) {
-							((BinaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((BinaryArithExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -759,96 +755,96 @@ public class Comet extends Parser {
 							consume();
 						}
 						setState(106);
-						expression(10);
+						expr(10);
 						}
 						break;
 					case 6:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(107);
 						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
 						setState(108);
-						((BinaryArithExpressionContext)_localctx).op = match(BitAnd);
+						((BinaryArithExprContext)_localctx).op = match(BitAnd);
 						setState(109);
-						expression(9);
+						expr(9);
 						}
 						break;
 					case 7:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(110);
 						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
 						setState(111);
-						((BinaryArithExpressionContext)_localctx).op = match(BitXor);
+						((BinaryArithExprContext)_localctx).op = match(BitXor);
 						setState(112);
-						expression(8);
+						expr(8);
 						}
 						break;
 					case 8:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(113);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
 						setState(114);
-						((BinaryArithExpressionContext)_localctx).op = match(BitOr);
+						((BinaryArithExprContext)_localctx).op = match(BitOr);
 						setState(115);
-						expression(7);
+						expr(7);
 						}
 						break;
 					case 9:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(116);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(117);
-						((BinaryArithExpressionContext)_localctx).op = match(LogicAnd);
+						((BinaryArithExprContext)_localctx).op = match(LogicAnd);
 						setState(118);
-						expression(6);
+						expr(6);
 						}
 						break;
 					case 10:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(119);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(120);
-						((BinaryArithExpressionContext)_localctx).op = match(LogicOr);
+						((BinaryArithExprContext)_localctx).op = match(LogicOr);
 						setState(121);
-						expression(5);
+						expr(5);
 						}
 						break;
 					case 11:
 						{
-						_localctx = new ConditionalExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new ConditionalExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(122);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(123);
 						match(QMark);
 						setState(124);
-						expression(0);
+						expr(0);
 						setState(125);
 						match(Colon);
 						setState(126);
-						expression(4);
+						expr(4);
 						}
 						break;
 					case 12:
 						{
-						_localctx = new AssignExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new AssignExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(128);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 						setState(129);
-						((AssignExpressionContext)_localctx).op = _input.LT(1);
+						((AssignExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Assign) | (1L << AddAssign) | (1L << SubAssign) | (1L << MulAssign) | (1L << DivAssign) | (1L << ModAssign) | (1L << AndAssign) | (1L << XorAssign) | (1L << OrAssign) | (1L << BitLShiftAssign) | (1L << BitRShiftAssign))) != 0)) ) {
-							((AssignExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((AssignExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -856,31 +852,31 @@ public class Comet extends Parser {
 							consume();
 						}
 						setState(130);
-						expression(3);
+						expr(3);
 						}
 						break;
 					case 13:
 						{
-						_localctx = new VariableExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new VarExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(131);
 						if (!(precpred(_ctx, 20))) throw new FailedPredicateException(this, "precpred(_ctx, 20)");
 						setState(132);
 						match(Member);
 						setState(133);
-						((VariableExpressionContext)_localctx).memberName = match(Identifier);
+						((VarExprContext)_localctx).varName = match(Identifier);
 						}
 						break;
 					case 14:
 						{
-						_localctx = new CallExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new CallExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(134);
 						if (!(precpred(_ctx, 18))) throw new FailedPredicateException(this, "precpred(_ctx, 18)");
 						setState(135);
 						match(Member);
 						setState(136);
-						((CallExpressionContext)_localctx).methodName = match(Identifier);
+						((CallExprContext)_localctx).funcName = match(Identifier);
 						setState(137);
 						match(LParen);
 						setState(139);
@@ -889,7 +885,7 @@ public class Comet extends Parser {
 						if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
 							{
 							setState(138);
-							functionArgList();
+							funcArgList();
 							}
 						}
 
@@ -899,29 +895,29 @@ public class Comet extends Parser {
 						break;
 					case 15:
 						{
-						_localctx = new IndexExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new IndexExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(142);
 						if (!(precpred(_ctx, 17))) throw new FailedPredicateException(this, "precpred(_ctx, 17)");
 						setState(143);
 						match(LBracket);
 						setState(144);
-						expression(0);
+						expr(0);
 						setState(145);
 						match(RBracket);
 						}
 						break;
 					case 16:
 						{
-						_localctx = new UnaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						_localctx = new UnaryArithExprContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(147);
 						if (!(precpred(_ctx, 16))) throw new FailedPredicateException(this, "precpred(_ctx, 16)");
 						setState(148);
-						((UnaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((UnaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==SelfAdd || _la==SelfSub) ) {
-							((UnaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((UnaryArithExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -950,29 +946,29 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class VariableDefinitionContext extends ParserRuleContext {
+	public static class VarDefContext extends ParserRuleContext {
 		public TypeNameContext typeName() {
 			return getRuleContext(TypeNameContext.class,0);
 		}
-		public List<VariableConstructorContext> variableConstructor() {
-			return getRuleContexts(VariableConstructorContext.class);
+		public List<VarCtorContext> varCtor() {
+			return getRuleContexts(VarCtorContext.class);
 		}
-		public VariableConstructorContext variableConstructor(int i) {
-			return getRuleContext(VariableConstructorContext.class,i);
+		public VarCtorContext varCtor(int i) {
+			return getRuleContext(VarCtorContext.class,i);
 		}
 		public List<TerminalNode> Comma() { return getTokens(Comet.Comma); }
 		public TerminalNode Comma(int i) {
 			return getToken(Comet.Comma, i);
 		}
-		public VariableDefinitionContext(ParserRuleContext parent, int invokingState) {
+		public VarDefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_variableDefinition; }
+		@Override public int getRuleIndex() { return RULE_varDef; }
 	}
 
-	public final VariableDefinitionContext variableDefinition() throws RecognitionException {
-		VariableDefinitionContext _localctx = new VariableDefinitionContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_variableDefinition);
+	public final VarDefContext varDef() throws RecognitionException {
+		VarDefContext _localctx = new VarDefContext(_ctx, getState());
+		enterRule(_localctx, 6, RULE_varDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -980,7 +976,7 @@ public class Comet extends Parser {
 			setState(154);
 			typeName(0);
 			setState(155);
-			variableConstructor();
+			varCtor();
 			setState(160);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -990,7 +986,7 @@ public class Comet extends Parser {
 				setState(156);
 				match(Comma);
 				setState(157);
-				variableConstructor();
+				varCtor();
 				}
 				}
 				setState(162);
@@ -1010,28 +1006,28 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class VariableConstructorContext extends ParserRuleContext {
+	public static class VarCtorContext extends ParserRuleContext {
 		public Token varName;
 		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public TerminalNode Assign() { return getToken(Comet.Assign, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
 		}
-		public VariableConstructorContext(ParserRuleContext parent, int invokingState) {
+		public VarCtorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_variableConstructor; }
+		@Override public int getRuleIndex() { return RULE_varCtor; }
 	}
 
-	public final VariableConstructorContext variableConstructor() throws RecognitionException {
-		VariableConstructorContext _localctx = new VariableConstructorContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_variableConstructor);
+	public final VarCtorContext varCtor() throws RecognitionException {
+		VarCtorContext _localctx = new VarCtorContext(_ctx, getState());
+		enterRule(_localctx, 8, RULE_varCtor);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(163);
-			((VariableConstructorContext)_localctx).varName = match(Identifier);
+			((VarCtorContext)_localctx).varName = match(Identifier);
 			setState(166);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -1040,7 +1036,7 @@ public class Comet extends Parser {
 				setState(164);
 				match(Assign);
 				setState(165);
-				expression(0);
+				expr(0);
 				}
 			}
 
@@ -1057,43 +1053,43 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class ClassDefinitionContext extends ParserRuleContext {
+	public static class ClassDefContext extends ParserRuleContext {
 		public Token className;
 		public TerminalNode Class() { return getToken(Comet.Class, 0); }
 		public TerminalNode LBrace() { return getToken(Comet.LBrace, 0); }
 		public TerminalNode RBrace() { return getToken(Comet.RBrace, 0); }
 		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public List<FunctionDefinitionContext> functionDefinition() {
-			return getRuleContexts(FunctionDefinitionContext.class);
+		public List<FuncDefContext> funcDef() {
+			return getRuleContexts(FuncDefContext.class);
 		}
-		public FunctionDefinitionContext functionDefinition(int i) {
-			return getRuleContext(FunctionDefinitionContext.class,i);
+		public FuncDefContext funcDef(int i) {
+			return getRuleContext(FuncDefContext.class,i);
 		}
-		public List<ClassConstructorContext> classConstructor() {
-			return getRuleContexts(ClassConstructorContext.class);
+		public List<ClassCtorContext> classCtor() {
+			return getRuleContexts(ClassCtorContext.class);
 		}
-		public ClassConstructorContext classConstructor(int i) {
-			return getRuleContext(ClassConstructorContext.class,i);
+		public ClassCtorContext classCtor(int i) {
+			return getRuleContext(ClassCtorContext.class,i);
 		}
-		public List<VariableDefinitionContext> variableDefinition() {
-			return getRuleContexts(VariableDefinitionContext.class);
+		public List<VarDefContext> varDef() {
+			return getRuleContexts(VarDefContext.class);
 		}
-		public VariableDefinitionContext variableDefinition(int i) {
-			return getRuleContext(VariableDefinitionContext.class,i);
+		public VarDefContext varDef(int i) {
+			return getRuleContext(VarDefContext.class,i);
 		}
 		public List<TerminalNode> Semi() { return getTokens(Comet.Semi); }
 		public TerminalNode Semi(int i) {
 			return getToken(Comet.Semi, i);
 		}
-		public ClassDefinitionContext(ParserRuleContext parent, int invokingState) {
+		public ClassDefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_classDefinition; }
+		@Override public int getRuleIndex() { return RULE_classDef; }
 	}
 
-	public final ClassDefinitionContext classDefinition() throws RecognitionException {
-		ClassDefinitionContext _localctx = new ClassDefinitionContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_classDefinition);
+	public final ClassDefContext classDef() throws RecognitionException {
+		ClassDefContext _localctx = new ClassDefContext(_ctx, getState());
+		enterRule(_localctx, 10, RULE_classDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1101,7 +1097,7 @@ public class Comet extends Parser {
 			setState(168);
 			match(Class);
 			setState(169);
-			((ClassDefinitionContext)_localctx).className = match(Identifier);
+			((ClassDefContext)_localctx).className = match(Identifier);
 			setState(170);
 			match(LBrace);
 			setState(178);
@@ -1116,7 +1112,7 @@ public class Comet extends Parser {
 					{
 					{
 					setState(171);
-					variableDefinition();
+					varDef();
 					setState(172);
 					match(Semi);
 					}
@@ -1125,13 +1121,13 @@ public class Comet extends Parser {
 				case 2:
 					{
 					setState(174);
-					functionDefinition();
+					funcDef();
 					}
 					break;
 				case 3:
 					{
 					setState(175);
-					classConstructor();
+					classCtor();
 					}
 					break;
 				}
@@ -1155,34 +1151,34 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class ClassConstructorContext extends ParserRuleContext {
+	public static class ClassCtorContext extends ParserRuleContext {
 		public Token className;
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public BlockStatementContext blockStatement() {
-			return getRuleContext(BlockStatementContext.class,0);
+		public BlockStmtContext blockStmt() {
+			return getRuleContext(BlockStmtContext.class,0);
 		}
 		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public ClassConstructorContext(ParserRuleContext parent, int invokingState) {
+		public ClassCtorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_classConstructor; }
+		@Override public int getRuleIndex() { return RULE_classCtor; }
 	}
 
-	public final ClassConstructorContext classConstructor() throws RecognitionException {
-		ClassConstructorContext _localctx = new ClassConstructorContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_classConstructor);
+	public final ClassCtorContext classCtor() throws RecognitionException {
+		ClassCtorContext _localctx = new ClassCtorContext(_ctx, getState());
+		enterRule(_localctx, 12, RULE_classCtor);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(183);
-			((ClassConstructorContext)_localctx).className = match(Identifier);
+			((ClassCtorContext)_localctx).className = match(Identifier);
 			setState(184);
 			match(LParen);
 			setState(185);
 			match(RParen);
 			setState(186);
-			blockStatement();
+			blockStmt();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1196,29 +1192,29 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class FunctionDefinitionContext extends ParserRuleContext {
+	public static class FuncDefContext extends ParserRuleContext {
 		public Token funcName;
 		public ReturnTypeContext returnType() {
 			return getRuleContext(ReturnTypeContext.class,0);
 		}
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public BlockStatementContext blockStatement() {
-			return getRuleContext(BlockStatementContext.class,0);
+		public BlockStmtContext blockStmt() {
+			return getRuleContext(BlockStmtContext.class,0);
 		}
 		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public FunctionParaListContext functionParaList() {
-			return getRuleContext(FunctionParaListContext.class,0);
+		public FuncParaListContext funcParaList() {
+			return getRuleContext(FuncParaListContext.class,0);
 		}
-		public FunctionDefinitionContext(ParserRuleContext parent, int invokingState) {
+		public FuncDefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_functionDefinition; }
+		@Override public int getRuleIndex() { return RULE_funcDef; }
 	}
 
-	public final FunctionDefinitionContext functionDefinition() throws RecognitionException {
-		FunctionDefinitionContext _localctx = new FunctionDefinitionContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_functionDefinition);
+	public final FuncDefContext funcDef() throws RecognitionException {
+		FuncDefContext _localctx = new FuncDefContext(_ctx, getState());
+		enterRule(_localctx, 14, RULE_funcDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1226,7 +1222,7 @@ public class Comet extends Parser {
 			setState(188);
 			returnType();
 			setState(189);
-			((FunctionDefinitionContext)_localctx).funcName = match(Identifier);
+			((FuncDefContext)_localctx).funcName = match(Identifier);
 			setState(190);
 			match(LParen);
 			setState(192);
@@ -1235,14 +1231,14 @@ public class Comet extends Parser {
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Void) | (1L << Bool) | (1L << Int) | (1L << String))) != 0) || _la==Identifier) {
 				{
 				setState(191);
-				functionParaList();
+				funcParaList();
 				}
 			}
 
 			setState(194);
 			match(RParen);
 			setState(195);
-			blockStatement();
+			blockStmt();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1256,32 +1252,32 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class FunctionParaListContext extends ParserRuleContext {
+	public static class FuncParaListContext extends ParserRuleContext {
 		public List<TypeNameContext> typeName() {
 			return getRuleContexts(TypeNameContext.class);
 		}
 		public TypeNameContext typeName(int i) {
 			return getRuleContext(TypeNameContext.class,i);
 		}
-		public List<VariableConstructorContext> variableConstructor() {
-			return getRuleContexts(VariableConstructorContext.class);
+		public List<VarCtorContext> varCtor() {
+			return getRuleContexts(VarCtorContext.class);
 		}
-		public VariableConstructorContext variableConstructor(int i) {
-			return getRuleContext(VariableConstructorContext.class,i);
+		public VarCtorContext varCtor(int i) {
+			return getRuleContext(VarCtorContext.class,i);
 		}
 		public List<TerminalNode> Comma() { return getTokens(Comet.Comma); }
 		public TerminalNode Comma(int i) {
 			return getToken(Comet.Comma, i);
 		}
-		public FunctionParaListContext(ParserRuleContext parent, int invokingState) {
+		public FuncParaListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_functionParaList; }
+		@Override public int getRuleIndex() { return RULE_funcParaList; }
 	}
 
-	public final FunctionParaListContext functionParaList() throws RecognitionException {
-		FunctionParaListContext _localctx = new FunctionParaListContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_functionParaList);
+	public final FuncParaListContext funcParaList() throws RecognitionException {
+		FuncParaListContext _localctx = new FuncParaListContext(_ctx, getState());
+		enterRule(_localctx, 16, RULE_funcParaList);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1289,7 +1285,7 @@ public class Comet extends Parser {
 			setState(197);
 			typeName(0);
 			setState(198);
-			variableConstructor();
+			varCtor();
 			setState(205);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -1301,7 +1297,7 @@ public class Comet extends Parser {
 				setState(200);
 				typeName(0);
 				setState(201);
-				variableConstructor();
+				varCtor();
 				}
 				}
 				setState(207);
@@ -1321,32 +1317,32 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class FunctionArgListContext extends ParserRuleContext {
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
+	public static class FuncArgListContext extends ParserRuleContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
 		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
 		}
 		public List<TerminalNode> Comma() { return getTokens(Comet.Comma); }
 		public TerminalNode Comma(int i) {
 			return getToken(Comet.Comma, i);
 		}
-		public FunctionArgListContext(ParserRuleContext parent, int invokingState) {
+		public FuncArgListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_functionArgList; }
+		@Override public int getRuleIndex() { return RULE_funcArgList; }
 	}
 
-	public final FunctionArgListContext functionArgList() throws RecognitionException {
-		FunctionArgListContext _localctx = new FunctionArgListContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_functionArgList);
+	public final FuncArgListContext funcArgList() throws RecognitionException {
+		FuncArgListContext _localctx = new FuncArgListContext(_ctx, getState());
+		enterRule(_localctx, 18, RULE_funcArgList);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(208);
-			expression(0);
+			expr(0);
 			setState(213);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -1356,7 +1352,7 @@ public class Comet extends Parser {
 				setState(209);
 				match(Comma);
 				setState(210);
-				expression(0);
+				expr(0);
 				}
 				}
 				setState(215);
@@ -1407,24 +1403,24 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class BlockStatementContext extends ParserRuleContext {
+	public static class BlockStmtContext extends ParserRuleContext {
 		public TerminalNode LBrace() { return getToken(Comet.LBrace, 0); }
 		public TerminalNode RBrace() { return getToken(Comet.RBrace, 0); }
-		public List<StatementContext> statement() {
-			return getRuleContexts(StatementContext.class);
+		public List<StmtContext> stmt() {
+			return getRuleContexts(StmtContext.class);
 		}
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
+		public StmtContext stmt(int i) {
+			return getRuleContext(StmtContext.class,i);
 		}
-		public BlockStatementContext(ParserRuleContext parent, int invokingState) {
+		public BlockStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_blockStatement; }
+		@Override public int getRuleIndex() { return RULE_blockStmt; }
 	}
 
-	public final BlockStatementContext blockStatement() throws RecognitionException {
-		BlockStatementContext _localctx = new BlockStatementContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_blockStatement);
+	public final BlockStmtContext blockStmt() throws RecognitionException {
+		BlockStmtContext _localctx = new BlockStmtContext(_ctx, getState());
+		enterRule(_localctx, 22, RULE_blockStmt);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1438,7 +1434,7 @@ public class Comet extends Parser {
 				{
 				{
 				setState(219);
-				statement();
+				stmt();
 				}
 				}
 				setState(224);
@@ -1460,47 +1456,47 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class StatementContext extends ParserRuleContext {
-		public BlockStatementContext blockStatement() {
-			return getRuleContext(BlockStatementContext.class,0);
+	public static class StmtContext extends ParserRuleContext {
+		public BlockStmtContext blockStmt() {
+			return getRuleContext(BlockStmtContext.class,0);
 		}
-		public IfStatementContext ifStatement() {
-			return getRuleContext(IfStatementContext.class,0);
+		public IfStmtContext ifStmt() {
+			return getRuleContext(IfStmtContext.class,0);
 		}
-		public ForStatementContext forStatement() {
-			return getRuleContext(ForStatementContext.class,0);
+		public ForStmtContext forStmt() {
+			return getRuleContext(ForStmtContext.class,0);
 		}
-		public WhileStatementContext whileStatement() {
-			return getRuleContext(WhileStatementContext.class,0);
+		public WhileStmtContext whileStmt() {
+			return getRuleContext(WhileStmtContext.class,0);
 		}
-		public VariableDefinitionContext variableDefinition() {
-			return getRuleContext(VariableDefinitionContext.class,0);
+		public VarDefContext varDef() {
+			return getRuleContext(VarDefContext.class,0);
 		}
 		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
-		public ClassDefinitionContext classDefinition() {
-			return getRuleContext(ClassDefinitionContext.class,0);
+		public ClassDefContext classDef() {
+			return getRuleContext(ClassDefContext.class,0);
 		}
-		public ContinueStatementContext continueStatement() {
-			return getRuleContext(ContinueStatementContext.class,0);
+		public ContinueStmtContext continueStmt() {
+			return getRuleContext(ContinueStmtContext.class,0);
 		}
-		public BreakStatementContext breakStatement() {
-			return getRuleContext(BreakStatementContext.class,0);
+		public BreakStmtContext breakStmt() {
+			return getRuleContext(BreakStmtContext.class,0);
 		}
-		public ReturnStatementContext returnStatement() {
-			return getRuleContext(ReturnStatementContext.class,0);
+		public ReturnStmtContext returnStmt() {
+			return getRuleContext(ReturnStmtContext.class,0);
 		}
-		public ExpressionStatementContext expressionStatement() {
-			return getRuleContext(ExpressionStatementContext.class,0);
+		public ExprStmtContext exprStmt() {
+			return getRuleContext(ExprStmtContext.class,0);
 		}
-		public StatementContext(ParserRuleContext parent, int invokingState) {
+		public StmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_statement; }
+		@Override public int getRuleIndex() { return RULE_stmt; }
 	}
 
-	public final StatementContext statement() throws RecognitionException {
-		StatementContext _localctx = new StatementContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_statement);
+	public final StmtContext stmt() throws RecognitionException {
+		StmtContext _localctx = new StmtContext(_ctx, getState());
+		enterRule(_localctx, 24, RULE_stmt);
 		try {
 			setState(250);
 			_errHandler.sync(this);
@@ -1509,35 +1505,35 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(227);
-				blockStatement();
+				blockStmt();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(228);
-				ifStatement();
+				ifStmt();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(229);
-				forStatement();
+				forStmt();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(230);
-				whileStatement();
+				whileStmt();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(231);
-				variableDefinition();
+				varDef();
 				setState(232);
 				match(Semi);
 				}
@@ -1546,7 +1542,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(234);
-				classDefinition();
+				classDef();
 				setState(235);
 				match(Semi);
 				}
@@ -1555,7 +1551,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(237);
-				continueStatement();
+				continueStmt();
 				setState(238);
 				match(Semi);
 				}
@@ -1564,7 +1560,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 8);
 				{
 				setState(240);
-				breakStatement();
+				breakStmt();
 				setState(241);
 				match(Semi);
 				}
@@ -1573,7 +1569,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 9);
 				{
 				setState(243);
-				returnStatement();
+				returnStmt();
 				setState(244);
 				match(Semi);
 				}
@@ -1582,7 +1578,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 10);
 				{
 				setState(246);
-				expressionStatement();
+				exprStmt();
 				setState(247);
 				match(Semi);
 				}
@@ -1607,29 +1603,29 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class IfStatementContext extends ParserRuleContext {
+	public static class IfStmtContext extends ParserRuleContext {
 		public TerminalNode If() { return getToken(Comet.If, 0); }
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
 		}
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public List<StatementContext> statement() {
-			return getRuleContexts(StatementContext.class);
+		public List<StmtContext> stmt() {
+			return getRuleContexts(StmtContext.class);
 		}
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
+		public StmtContext stmt(int i) {
+			return getRuleContext(StmtContext.class,i);
 		}
 		public TerminalNode Else() { return getToken(Comet.Else, 0); }
-		public IfStatementContext(ParserRuleContext parent, int invokingState) {
+		public IfStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_ifStatement; }
+		@Override public int getRuleIndex() { return RULE_ifStmt; }
 	}
 
-	public final IfStatementContext ifStatement() throws RecognitionException {
-		IfStatementContext _localctx = new IfStatementContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_ifStatement);
+	public final IfStmtContext ifStmt() throws RecognitionException {
+		IfStmtContext _localctx = new IfStmtContext(_ctx, getState());
+		enterRule(_localctx, 26, RULE_ifStmt);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1638,11 +1634,11 @@ public class Comet extends Parser {
 			setState(253);
 			match(LParen);
 			setState(254);
-			expression(0);
+			expr(0);
 			setState(255);
 			match(RParen);
 			setState(256);
-			statement();
+			stmt();
 			setState(259);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,19,_ctx) ) {
@@ -1651,7 +1647,7 @@ public class Comet extends Parser {
 				setState(257);
 				match(Else);
 				setState(258);
-				statement();
+				stmt();
 				}
 				break;
 			}
@@ -1668,31 +1664,31 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class ForStatementContext extends ParserRuleContext {
-		public StatementContext init;
-		public StatementContext condition;
-		public ExpressionStatementContext update;
+	public static class ForStmtContext extends ParserRuleContext {
+		public StmtContext init;
+		public StmtContext condition;
+		public ExprStmtContext update;
 		public TerminalNode For() { return getToken(Comet.For, 0); }
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public List<StatementContext> statement() {
-			return getRuleContexts(StatementContext.class);
+		public List<StmtContext> stmt() {
+			return getRuleContexts(StmtContext.class);
 		}
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
+		public StmtContext stmt(int i) {
+			return getRuleContext(StmtContext.class,i);
 		}
-		public ExpressionStatementContext expressionStatement() {
-			return getRuleContext(ExpressionStatementContext.class,0);
+		public ExprStmtContext exprStmt() {
+			return getRuleContext(ExprStmtContext.class,0);
 		}
-		public ForStatementContext(ParserRuleContext parent, int invokingState) {
+		public ForStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_forStatement; }
+		@Override public int getRuleIndex() { return RULE_forStmt; }
 	}
 
-	public final ForStatementContext forStatement() throws RecognitionException {
-		ForStatementContext _localctx = new ForStatementContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_forStatement);
+	public final ForStmtContext forStmt() throws RecognitionException {
+		ForStmtContext _localctx = new ForStmtContext(_ctx, getState());
+		enterRule(_localctx, 28, RULE_forStmt);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1702,23 +1698,23 @@ public class Comet extends Parser {
 			setState(262);
 			match(LParen);
 			setState(263);
-			((ForStatementContext)_localctx).init = statement();
+			((ForStmtContext)_localctx).init = stmt();
 			setState(264);
-			((ForStatementContext)_localctx).condition = statement();
+			((ForStmtContext)_localctx).condition = stmt();
 			setState(266);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
 				{
 				setState(265);
-				((ForStatementContext)_localctx).update = expressionStatement();
+				((ForStmtContext)_localctx).update = exprStmt();
 				}
 			}
 
 			setState(268);
 			match(RParen);
 			setState(269);
-			statement();
+			stmt();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1732,26 +1728,26 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class WhileStatementContext extends ParserRuleContext {
-		public ExpressionContext condition;
+	public static class WhileStmtContext extends ParserRuleContext {
+		public ExprContext condition;
 		public TerminalNode While() { return getToken(Comet.While, 0); }
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public StatementContext statement() {
-			return getRuleContext(StatementContext.class,0);
+		public StmtContext stmt() {
+			return getRuleContext(StmtContext.class,0);
 		}
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
 		}
-		public WhileStatementContext(ParserRuleContext parent, int invokingState) {
+		public WhileStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_whileStatement; }
+		@Override public int getRuleIndex() { return RULE_whileStmt; }
 	}
 
-	public final WhileStatementContext whileStatement() throws RecognitionException {
-		WhileStatementContext _localctx = new WhileStatementContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_whileStatement);
+	public final WhileStmtContext whileStmt() throws RecognitionException {
+		WhileStmtContext _localctx = new WhileStmtContext(_ctx, getState());
+		enterRule(_localctx, 30, RULE_whileStmt);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1760,11 +1756,11 @@ public class Comet extends Parser {
 			setState(272);
 			match(LParen);
 			setState(273);
-			((WhileStatementContext)_localctx).condition = expression(0);
+			((WhileStmtContext)_localctx).condition = expr(0);
 			setState(274);
 			match(RParen);
 			setState(275);
-			statement();
+			stmt();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1778,17 +1774,17 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class ContinueStatementContext extends ParserRuleContext {
+	public static class ContinueStmtContext extends ParserRuleContext {
 		public TerminalNode Continue() { return getToken(Comet.Continue, 0); }
-		public ContinueStatementContext(ParserRuleContext parent, int invokingState) {
+		public ContinueStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_continueStatement; }
+		@Override public int getRuleIndex() { return RULE_continueStmt; }
 	}
 
-	public final ContinueStatementContext continueStatement() throws RecognitionException {
-		ContinueStatementContext _localctx = new ContinueStatementContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_continueStatement);
+	public final ContinueStmtContext continueStmt() throws RecognitionException {
+		ContinueStmtContext _localctx = new ContinueStmtContext(_ctx, getState());
+		enterRule(_localctx, 32, RULE_continueStmt);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1807,17 +1803,17 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class BreakStatementContext extends ParserRuleContext {
+	public static class BreakStmtContext extends ParserRuleContext {
 		public TerminalNode Break() { return getToken(Comet.Break, 0); }
-		public BreakStatementContext(ParserRuleContext parent, int invokingState) {
+		public BreakStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_breakStatement; }
+		@Override public int getRuleIndex() { return RULE_breakStmt; }
 	}
 
-	public final BreakStatementContext breakStatement() throws RecognitionException {
-		BreakStatementContext _localctx = new BreakStatementContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_breakStatement);
+	public final BreakStmtContext breakStmt() throws RecognitionException {
+		BreakStmtContext _localctx = new BreakStmtContext(_ctx, getState());
+		enterRule(_localctx, 34, RULE_breakStmt);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1836,20 +1832,20 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class ReturnStatementContext extends ParserRuleContext {
+	public static class ReturnStmtContext extends ParserRuleContext {
 		public TerminalNode Return() { return getToken(Comet.Return, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
 		}
-		public ReturnStatementContext(ParserRuleContext parent, int invokingState) {
+		public ReturnStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_returnStatement; }
+		@Override public int getRuleIndex() { return RULE_returnStmt; }
 	}
 
-	public final ReturnStatementContext returnStatement() throws RecognitionException {
-		ReturnStatementContext _localctx = new ReturnStatementContext(_ctx, getState());
-		enterRule(_localctx, 36, RULE_returnStatement);
+	public final ReturnStmtContext returnStmt() throws RecognitionException {
+		ReturnStmtContext _localctx = new ReturnStmtContext(_ctx, getState());
+		enterRule(_localctx, 36, RULE_returnStmt);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1862,7 +1858,7 @@ public class Comet extends Parser {
 			if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
 				{
 				setState(282);
-				expression(0);
+				expr(0);
 				}
 			}
 
@@ -1879,32 +1875,32 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class ExpressionStatementContext extends ParserRuleContext {
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
+	public static class ExprStmtContext extends ParserRuleContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
 		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
 		}
 		public List<TerminalNode> Comma() { return getTokens(Comet.Comma); }
 		public TerminalNode Comma(int i) {
 			return getToken(Comet.Comma, i);
 		}
-		public ExpressionStatementContext(ParserRuleContext parent, int invokingState) {
+		public ExprStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_expressionStatement; }
+		@Override public int getRuleIndex() { return RULE_exprStmt; }
 	}
 
-	public final ExpressionStatementContext expressionStatement() throws RecognitionException {
-		ExpressionStatementContext _localctx = new ExpressionStatementContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_expressionStatement);
+	public final ExprStmtContext exprStmt() throws RecognitionException {
+		ExprStmtContext _localctx = new ExprStmtContext(_ctx, getState());
+		enterRule(_localctx, 38, RULE_exprStmt);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(285);
-			expression(0);
+			expr(0);
 			setState(290);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -1914,7 +1910,7 @@ public class Comet extends Parser {
 				setState(286);
 				match(Comma);
 				setState(287);
-				expression(0);
+				expr(0);
 				}
 				}
 				setState(292);
@@ -1939,7 +1935,7 @@ public class Comet extends Parser {
 		case 1:
 			return typeName_sempred((TypeNameContext)_localctx, predIndex);
 		case 2:
-			return expression_sempred((ExpressionContext)_localctx, predIndex);
+			return expr_sempred((ExprContext)_localctx, predIndex);
 		}
 		return true;
 	}
@@ -1950,7 +1946,7 @@ public class Comet extends Parser {
 		}
 		return true;
 	}
-	private boolean expression_sempred(ExpressionContext _localctx, int predIndex) {
+	private boolean expr_sempred(ExprContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 1:
 			return precpred(_ctx, 13);

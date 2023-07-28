@@ -54,207 +54,207 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitBuiltInType(Comet.BuiltInTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code callExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code newExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterCallExpression(Comet.CallExpressionContext ctx);
+	void enterNewExpr(Comet.NewExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code callExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code newExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitCallExpression(Comet.CallExpressionContext ctx);
+	void exitNewExpr(Comet.NewExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code unaryArithExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code indexExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterUnaryArithExpression(Comet.UnaryArithExpressionContext ctx);
+	void enterIndexExpr(Comet.IndexExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code unaryArithExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code indexExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitUnaryArithExpression(Comet.UnaryArithExpressionContext ctx);
+	void exitIndexExpr(Comet.IndexExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code atomExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code varExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterAtomExpression(Comet.AtomExpressionContext ctx);
+	void enterVarExpr(Comet.VarExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code atomExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code varExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitAtomExpression(Comet.AtomExpressionContext ctx);
+	void exitVarExpr(Comet.VarExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code conditionalExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code binaryArithExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterConditionalExpression(Comet.ConditionalExpressionContext ctx);
+	void enterBinaryArithExpr(Comet.BinaryArithExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code conditionalExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code binaryArithExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitConditionalExpression(Comet.ConditionalExpressionContext ctx);
+	void exitBinaryArithExpr(Comet.BinaryArithExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code newExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code preSelfExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterNewExpression(Comet.NewExpressionContext ctx);
+	void enterPreSelfExpr(Comet.PreSelfExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code newExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code preSelfExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitNewExpression(Comet.NewExpressionContext ctx);
+	void exitPreSelfExpr(Comet.PreSelfExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code assignExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code atomExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterAssignExpression(Comet.AssignExpressionContext ctx);
+	void enterAtomExpr(Comet.AtomExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code assignExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code atomExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitAssignExpression(Comet.AssignExpressionContext ctx);
+	void exitAtomExpr(Comet.AtomExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code preSelfExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code unaryArithExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterPreSelfExpression(Comet.PreSelfExpressionContext ctx);
+	void enterUnaryArithExpr(Comet.UnaryArithExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code preSelfExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code unaryArithExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitPreSelfExpression(Comet.PreSelfExpressionContext ctx);
+	void exitUnaryArithExpr(Comet.UnaryArithExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code parenExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code callExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterParenExpression(Comet.ParenExpressionContext ctx);
+	void enterCallExpr(Comet.CallExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code parenExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code callExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitParenExpression(Comet.ParenExpressionContext ctx);
+	void exitCallExpr(Comet.CallExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code indexExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code assignExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterIndexExpression(Comet.IndexExpressionContext ctx);
+	void enterAssignExpr(Comet.AssignExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code indexExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code assignExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitIndexExpression(Comet.IndexExpressionContext ctx);
+	void exitAssignExpr(Comet.AssignExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code binaryArithExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code parenExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterBinaryArithExpression(Comet.BinaryArithExpressionContext ctx);
+	void enterParenExpr(Comet.ParenExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code binaryArithExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code parenExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitBinaryArithExpression(Comet.BinaryArithExpressionContext ctx);
+	void exitParenExpr(Comet.ParenExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code variableExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Enter a parse tree produced by the {@code conditionalExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableExpression(Comet.VariableExpressionContext ctx);
+	void enterConditionalExpr(Comet.ConditionalExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code variableExpression}
-	 * labeled alternative in {@link Comet#expression}.
+	 * Exit a parse tree produced by the {@code conditionalExpr}
+	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableExpression(Comet.VariableExpressionContext ctx);
+	void exitConditionalExpr(Comet.ConditionalExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#variableDefinition}.
+	 * Enter a parse tree produced by {@link Comet#varDef}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableDefinition(Comet.VariableDefinitionContext ctx);
+	void enterVarDef(Comet.VarDefContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#variableDefinition}.
+	 * Exit a parse tree produced by {@link Comet#varDef}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableDefinition(Comet.VariableDefinitionContext ctx);
+	void exitVarDef(Comet.VarDefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#variableConstructor}.
+	 * Enter a parse tree produced by {@link Comet#varCtor}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableConstructor(Comet.VariableConstructorContext ctx);
+	void enterVarCtor(Comet.VarCtorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#variableConstructor}.
+	 * Exit a parse tree produced by {@link Comet#varCtor}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableConstructor(Comet.VariableConstructorContext ctx);
+	void exitVarCtor(Comet.VarCtorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#classDefinition}.
+	 * Enter a parse tree produced by {@link Comet#classDef}.
 	 * @param ctx the parse tree
 	 */
-	void enterClassDefinition(Comet.ClassDefinitionContext ctx);
+	void enterClassDef(Comet.ClassDefContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#classDefinition}.
+	 * Exit a parse tree produced by {@link Comet#classDef}.
 	 * @param ctx the parse tree
 	 */
-	void exitClassDefinition(Comet.ClassDefinitionContext ctx);
+	void exitClassDef(Comet.ClassDefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#classConstructor}.
+	 * Enter a parse tree produced by {@link Comet#classCtor}.
 	 * @param ctx the parse tree
 	 */
-	void enterClassConstructor(Comet.ClassConstructorContext ctx);
+	void enterClassCtor(Comet.ClassCtorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#classConstructor}.
+	 * Exit a parse tree produced by {@link Comet#classCtor}.
 	 * @param ctx the parse tree
 	 */
-	void exitClassConstructor(Comet.ClassConstructorContext ctx);
+	void exitClassCtor(Comet.ClassCtorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#functionDefinition}.
+	 * Enter a parse tree produced by {@link Comet#funcDef}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunctionDefinition(Comet.FunctionDefinitionContext ctx);
+	void enterFuncDef(Comet.FuncDefContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#functionDefinition}.
+	 * Exit a parse tree produced by {@link Comet#funcDef}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunctionDefinition(Comet.FunctionDefinitionContext ctx);
+	void exitFuncDef(Comet.FuncDefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#functionParaList}.
+	 * Enter a parse tree produced by {@link Comet#funcParaList}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunctionParaList(Comet.FunctionParaListContext ctx);
+	void enterFuncParaList(Comet.FuncParaListContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#functionParaList}.
+	 * Exit a parse tree produced by {@link Comet#funcParaList}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunctionParaList(Comet.FunctionParaListContext ctx);
+	void exitFuncParaList(Comet.FuncParaListContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#functionArgList}.
+	 * Enter a parse tree produced by {@link Comet#funcArgList}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunctionArgList(Comet.FunctionArgListContext ctx);
+	void enterFuncArgList(Comet.FuncArgListContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#functionArgList}.
+	 * Exit a parse tree produced by {@link Comet#funcArgList}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunctionArgList(Comet.FunctionArgListContext ctx);
+	void exitFuncArgList(Comet.FuncArgListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Comet#returnType}.
 	 * @param ctx the parse tree
@@ -266,93 +266,93 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitReturnType(Comet.ReturnTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#blockStatement}.
+	 * Enter a parse tree produced by {@link Comet#blockStmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterBlockStatement(Comet.BlockStatementContext ctx);
+	void enterBlockStmt(Comet.BlockStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#blockStatement}.
+	 * Exit a parse tree produced by {@link Comet#blockStmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitBlockStatement(Comet.BlockStatementContext ctx);
+	void exitBlockStmt(Comet.BlockStmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#statement}.
+	 * Enter a parse tree produced by {@link Comet#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterStatement(Comet.StatementContext ctx);
+	void enterStmt(Comet.StmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#statement}.
+	 * Exit a parse tree produced by {@link Comet#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitStatement(Comet.StatementContext ctx);
+	void exitStmt(Comet.StmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#ifStatement}.
+	 * Enter a parse tree produced by {@link Comet#ifStmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterIfStatement(Comet.IfStatementContext ctx);
+	void enterIfStmt(Comet.IfStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#ifStatement}.
+	 * Exit a parse tree produced by {@link Comet#ifStmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitIfStatement(Comet.IfStatementContext ctx);
+	void exitIfStmt(Comet.IfStmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#forStatement}.
+	 * Enter a parse tree produced by {@link Comet#forStmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterForStatement(Comet.ForStatementContext ctx);
+	void enterForStmt(Comet.ForStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#forStatement}.
+	 * Exit a parse tree produced by {@link Comet#forStmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitForStatement(Comet.ForStatementContext ctx);
+	void exitForStmt(Comet.ForStmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#whileStatement}.
+	 * Enter a parse tree produced by {@link Comet#whileStmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterWhileStatement(Comet.WhileStatementContext ctx);
+	void enterWhileStmt(Comet.WhileStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#whileStatement}.
+	 * Exit a parse tree produced by {@link Comet#whileStmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitWhileStatement(Comet.WhileStatementContext ctx);
+	void exitWhileStmt(Comet.WhileStmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#continueStatement}.
+	 * Enter a parse tree produced by {@link Comet#continueStmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterContinueStatement(Comet.ContinueStatementContext ctx);
+	void enterContinueStmt(Comet.ContinueStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#continueStatement}.
+	 * Exit a parse tree produced by {@link Comet#continueStmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitContinueStatement(Comet.ContinueStatementContext ctx);
+	void exitContinueStmt(Comet.ContinueStmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#breakStatement}.
+	 * Enter a parse tree produced by {@link Comet#breakStmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterBreakStatement(Comet.BreakStatementContext ctx);
+	void enterBreakStmt(Comet.BreakStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#breakStatement}.
+	 * Exit a parse tree produced by {@link Comet#breakStmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitBreakStatement(Comet.BreakStatementContext ctx);
+	void exitBreakStmt(Comet.BreakStmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#returnStatement}.
+	 * Enter a parse tree produced by {@link Comet#returnStmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterReturnStatement(Comet.ReturnStatementContext ctx);
+	void enterReturnStmt(Comet.ReturnStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#returnStatement}.
+	 * Exit a parse tree produced by {@link Comet#returnStmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitReturnStatement(Comet.ReturnStatementContext ctx);
+	void exitReturnStmt(Comet.ReturnStmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#expressionStatement}.
+	 * Enter a parse tree produced by {@link Comet#exprStmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpressionStatement(Comet.ExpressionStatementContext ctx);
+	void enterExprStmt(Comet.ExprStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#expressionStatement}.
+	 * Exit a parse tree produced by {@link Comet#exprStmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpressionStatement(Comet.ExpressionStatementContext ctx);
+	void exitExprStmt(Comet.ExprStmtContext ctx);
 }

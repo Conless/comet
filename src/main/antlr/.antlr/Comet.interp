@@ -143,24 +143,24 @@ StringConst
 rule names:
 program
 typeName
-expression
-variableDefinition
-variableConstructor
-classDefinition
-classConstructor
-functionDefinition
-functionParaList
-functionArgList
+expr
+varDef
+varCtor
+classDef
+classCtor
+funcDef
+funcParaList
+funcArgList
 returnType
-blockStatement
-statement
-ifStatement
-forStatement
-whileStatement
-continueStatement
-breakStatement
-returnStatement
-expressionStatement
+blockStmt
+stmt
+ifStmt
+forStmt
+whileStmt
+continueStmt
+breakStmt
+returnStmt
+exprStmt
 
 
 atn:

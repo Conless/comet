@@ -5,7 +5,7 @@ options {
 
 @header {package dev.conless.comet.frontend.grammar;}
 
-program: ((variableDefinition ';') | (classDefinition ';') | functionDefinition)* EOF;
+program: ((varDef ';') | (classDef ';') | funcDef)* EOF;
 
 typeName
   : type = (Int | Bool | String | Void)                                   # builtInType
@@ -13,80 +13,80 @@ typeName
   | typeName '[' ']'                                                      # arrayType
   ;
 
-expression
-  : New typeName ('(' ')')?                                               # newExpression
+expr
+  : New typeName ('(' ')')?                                               # newExpr
   
-  // Expressions that MAY result with lvalue
-  | '(' expression ')'                                                    # parenExpression
-  | varibleName=Identifier                                                # variableExpression
-  | expression '.' memberName=Identifier                                  # variableExpression
-  | functionName=Identifier '(' functionArgList? ')'                      # callExpression
-  | expression '.' methodName=Identifier '(' functionArgList? ')'         # callExpression 
-  | expression '[' expression ']'                                         # indexExpression
+  // Exprs that MAY result with lvalue
+  | '(' expr ')'                                                    # parenExpr
+  | varName=Identifier                                                # varExpr
+  | expr '.' varName=Identifier                                  # varExpr
+  | funcName=Identifier '(' funcArgList? ')'                      # callExpr
+  | expr '.' funcName=Identifier '(' funcArgList? ')'         # callExpr 
+  | expr '[' expr ']'                                         # indexExpr
 
-  // Unary expressions that result with rvalue
-  | <assoc=right> expression op=(SelfAdd | SelfSub)                       # unaryArithExpression
-  | <assoc=right> op=(LogicNot | BitNot | Add | Sub) expression           # unaryArithExpression
+  // Unary exprs that result with rvalue
+  | <assoc=right> expr op=(SelfAdd | SelfSub)                       # unaryArithExpr
+  | <assoc=right> op=(LogicNot | BitNot | Add | Sub) expr           # unaryArithExpr
 
   // Prefix self operation
-  | op=(SelfAdd | SelfSub) expression                                     # preSelfExpression
+  | op=(SelfAdd | SelfSub) expr                                     # preSelfExpr
 
-  // Binary expressions that results with rvalue
-  | expression op=(Mul | Div | Mod) expression                            # binaryArithExpression
-  | expression op=(Add | Sub) expression                                  # binaryArithExpression
-  | expression op=(BitLShift | BitRShift) expression                      # binaryArithExpression
-  | expression op=(Less | Greater | LessEqual | GreaterEqual) expression  # binaryArithExpression
-  | expression op=(Eqaul | NotEqual) expression                           # binaryArithExpression
-  | expression op=BitAnd expression                                       # binaryArithExpression
-  | expression op=BitXor expression                                       # binaryArithExpression
-  | expression op=BitOr expression                                        # binaryArithExpression
-  | expression op=LogicAnd expression                                     # binaryArithExpression
-  | expression op=LogicOr expression                                      # binaryArithExpression
+  // Binary exprs that results with rvalue
+  | expr op=(Mul | Div | Mod) expr                            # binaryArithExpr
+  | expr op=(Add | Sub) expr                                  # binaryArithExpr
+  | expr op=(BitLShift | BitRShift) expr                      # binaryArithExpr
+  | expr op=(Less | Greater | LessEqual | GreaterEqual) expr  # binaryArithExpr
+  | expr op=(Eqaul | NotEqual) expr                           # binaryArithExpr
+  | expr op=BitAnd expr                                       # binaryArithExpr
+  | expr op=BitXor expr                                       # binaryArithExpr
+  | expr op=BitOr expr                                        # binaryArithExpr
+  | expr op=LogicAnd expr                                     # binaryArithExpr
+  | expr op=LogicOr expr                                      # binaryArithExpr
 
-  // Conditionall expression
-  | expression '?' expression ':' expression                              # conditionalExpression
+  // Conditionall expr
+  | expr '?' expr ':' expr                              # conditionalExpr
 
-  // Assignment expressions, requires lvalue and results with lvalue
-  | expression op=(Assign | AddAssign | SubAssign | MulAssign | DivAssign 
+  // Assignment exprs, requires lvalue and results with lvalue
+  | expr op=(Assign | AddAssign | SubAssign | MulAssign | DivAssign 
                   | ModAssign | AndAssign | XorAssign | OrAssign 
-                  | BitLShiftAssign | BitRShiftAssign) expression         # assignExpression
+                  | BitLShiftAssign | BitRShiftAssign) expr         # assignExpr
 
   | value=(IntegerConst | StringConst | True | False | Null
-          | Identifier | This)                                            # atomExpression
+          | Identifier | This)                                            # atomExpr
   ;
 
-variableDefinition: typeName variableConstructor (',' variableConstructor)*;
-variableConstructor: varName=Identifier ('=' expression)?;
+varDef: typeName varCtor (',' varCtor)*;
+varCtor: varName=Identifier ('=' expr)?;
 
-classDefinition: Class className=Identifier '{' ((variableDefinition ';')| functionDefinition | classConstructor)* '}';
-classConstructor: className=Identifier '(' ')' blockStatement;
+classDef: Class className=Identifier '{' ((varDef ';')| funcDef | classCtor)* '}';
+classCtor: className=Identifier '(' ')' blockStmt;
 
-functionDefinition: returnType funcName=Identifier '(' functionParaList? ')' blockStatement;
-functionParaList: typeName variableConstructor (',' typeName variableConstructor)*;
-functionArgList: expression (',' expression)*;
+funcDef: returnType funcName=Identifier '(' funcParaList? ')' blockStmt;
+funcParaList: typeName varCtor (',' typeName varCtor)*;
+funcArgList: expr (',' expr)*;
 returnType: typeName;
 
-blockStatement: '{' statement* '}';
-statement
-  : blockStatement
-  | ifStatement
-  | forStatement
-  | whileStatement
-  | variableDefinition ';'
-  | classDefinition ';'
-  | continueStatement ';'
-  | breakStatement ';'
-  | returnStatement ';'
-  | expressionStatement ';'
+blockStmt: '{' stmt* '}';
+stmt
+  : blockStmt
+  | ifStmt
+  | forStmt
+  | whileStmt
+  | varDef ';'
+  | classDef ';'
+  | continueStmt ';'
+  | breakStmt ';'
+  | returnStmt ';'
+  | exprStmt ';'
   | ';'
   ;
 
-ifStatement: If '(' expression ')' statement (Else statement)?;
-forStatement: For '(' init=statement condition=statement update=expressionStatement?')' statement;
-whileStatement: While '(' condition=expression ')' statement;
+ifStmt: If '(' expr ')' stmt (Else stmt)?;
+forStmt: For '(' init=stmt condition=stmt update=exprStmt?')' stmt;
+whileStmt: While '(' condition=expr ')' stmt;
 
-continueStatement: Continue;
-breakStatement: Break;
-returnStatement: Return expression?;
+continueStmt: Continue;
+breakStmt: Break;
+returnStmt: Return expr?;
 
-expressionStatement: expression (',' expression)*;
+exprStmt: expr (',' expr)*;

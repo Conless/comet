@@ -65,217 +65,217 @@ public class CometBaseListener implements CometListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCallExpression(Comet.CallExpressionContext ctx) { }
+	@Override public void enterNewExpr(Comet.NewExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCallExpression(Comet.CallExpressionContext ctx) { }
+	@Override public void exitNewExpr(Comet.NewExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterUnaryArithExpression(Comet.UnaryArithExpressionContext ctx) { }
+	@Override public void enterIndexExpr(Comet.IndexExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitUnaryArithExpression(Comet.UnaryArithExpressionContext ctx) { }
+	@Override public void exitIndexExpr(Comet.IndexExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAtomExpression(Comet.AtomExpressionContext ctx) { }
+	@Override public void enterVarExpr(Comet.VarExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAtomExpression(Comet.AtomExpressionContext ctx) { }
+	@Override public void exitVarExpr(Comet.VarExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConditionalExpression(Comet.ConditionalExpressionContext ctx) { }
+	@Override public void enterBinaryArithExpr(Comet.BinaryArithExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConditionalExpression(Comet.ConditionalExpressionContext ctx) { }
+	@Override public void exitBinaryArithExpr(Comet.BinaryArithExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNewExpression(Comet.NewExpressionContext ctx) { }
+	@Override public void enterPreSelfExpr(Comet.PreSelfExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNewExpression(Comet.NewExpressionContext ctx) { }
+	@Override public void exitPreSelfExpr(Comet.PreSelfExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignExpression(Comet.AssignExpressionContext ctx) { }
+	@Override public void enterAtomExpr(Comet.AtomExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignExpression(Comet.AssignExpressionContext ctx) { }
+	@Override public void exitAtomExpr(Comet.AtomExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPreSelfExpression(Comet.PreSelfExpressionContext ctx) { }
+	@Override public void enterUnaryArithExpr(Comet.UnaryArithExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPreSelfExpression(Comet.PreSelfExpressionContext ctx) { }
+	@Override public void exitUnaryArithExpr(Comet.UnaryArithExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParenExpression(Comet.ParenExpressionContext ctx) { }
+	@Override public void enterCallExpr(Comet.CallExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitParenExpression(Comet.ParenExpressionContext ctx) { }
+	@Override public void exitCallExpr(Comet.CallExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIndexExpression(Comet.IndexExpressionContext ctx) { }
+	@Override public void enterAssignExpr(Comet.AssignExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIndexExpression(Comet.IndexExpressionContext ctx) { }
+	@Override public void exitAssignExpr(Comet.AssignExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBinaryArithExpression(Comet.BinaryArithExpressionContext ctx) { }
+	@Override public void enterParenExpr(Comet.ParenExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBinaryArithExpression(Comet.BinaryArithExpressionContext ctx) { }
+	@Override public void exitParenExpr(Comet.ParenExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariableExpression(Comet.VariableExpressionContext ctx) { }
+	@Override public void enterConditionalExpr(Comet.ConditionalExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariableExpression(Comet.VariableExpressionContext ctx) { }
+	@Override public void exitConditionalExpr(Comet.ConditionalExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariableDefinition(Comet.VariableDefinitionContext ctx) { }
+	@Override public void enterVarDef(Comet.VarDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariableDefinition(Comet.VariableDefinitionContext ctx) { }
+	@Override public void exitVarDef(Comet.VarDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariableConstructor(Comet.VariableConstructorContext ctx) { }
+	@Override public void enterVarCtor(Comet.VarCtorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariableConstructor(Comet.VariableConstructorContext ctx) { }
+	@Override public void exitVarCtor(Comet.VarCtorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClassDefinition(Comet.ClassDefinitionContext ctx) { }
+	@Override public void enterClassDef(Comet.ClassDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClassDefinition(Comet.ClassDefinitionContext ctx) { }
+	@Override public void exitClassDef(Comet.ClassDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClassConstructor(Comet.ClassConstructorContext ctx) { }
+	@Override public void enterClassCtor(Comet.ClassCtorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClassConstructor(Comet.ClassConstructorContext ctx) { }
+	@Override public void exitClassCtor(Comet.ClassCtorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunctionDefinition(Comet.FunctionDefinitionContext ctx) { }
+	@Override public void enterFuncDef(Comet.FuncDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunctionDefinition(Comet.FunctionDefinitionContext ctx) { }
+	@Override public void exitFuncDef(Comet.FuncDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunctionParaList(Comet.FunctionParaListContext ctx) { }
+	@Override public void enterFuncParaList(Comet.FuncParaListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunctionParaList(Comet.FunctionParaListContext ctx) { }
+	@Override public void exitFuncParaList(Comet.FuncParaListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunctionArgList(Comet.FunctionArgListContext ctx) { }
+	@Override public void enterFuncArgList(Comet.FuncArgListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunctionArgList(Comet.FunctionArgListContext ctx) { }
+	@Override public void exitFuncArgList(Comet.FuncArgListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -293,109 +293,109 @@ public class CometBaseListener implements CometListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBlockStatement(Comet.BlockStatementContext ctx) { }
+	@Override public void enterBlockStmt(Comet.BlockStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBlockStatement(Comet.BlockStatementContext ctx) { }
+	@Override public void exitBlockStmt(Comet.BlockStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStatement(Comet.StatementContext ctx) { }
+	@Override public void enterStmt(Comet.StmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStatement(Comet.StatementContext ctx) { }
+	@Override public void exitStmt(Comet.StmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIfStatement(Comet.IfStatementContext ctx) { }
+	@Override public void enterIfStmt(Comet.IfStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIfStatement(Comet.IfStatementContext ctx) { }
+	@Override public void exitIfStmt(Comet.IfStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterForStatement(Comet.ForStatementContext ctx) { }
+	@Override public void enterForStmt(Comet.ForStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitForStatement(Comet.ForStatementContext ctx) { }
+	@Override public void exitForStmt(Comet.ForStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWhileStatement(Comet.WhileStatementContext ctx) { }
+	@Override public void enterWhileStmt(Comet.WhileStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitWhileStatement(Comet.WhileStatementContext ctx) { }
+	@Override public void exitWhileStmt(Comet.WhileStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterContinueStatement(Comet.ContinueStatementContext ctx) { }
+	@Override public void enterContinueStmt(Comet.ContinueStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitContinueStatement(Comet.ContinueStatementContext ctx) { }
+	@Override public void exitContinueStmt(Comet.ContinueStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBreakStatement(Comet.BreakStatementContext ctx) { }
+	@Override public void enterBreakStmt(Comet.BreakStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBreakStatement(Comet.BreakStatementContext ctx) { }
+	@Override public void exitBreakStmt(Comet.BreakStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterReturnStatement(Comet.ReturnStatementContext ctx) { }
+	@Override public void enterReturnStmt(Comet.ReturnStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitReturnStatement(Comet.ReturnStatementContext ctx) { }
+	@Override public void exitReturnStmt(Comet.ReturnStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpressionStatement(Comet.ExpressionStatementContext ctx) { }
+	@Override public void enterExprStmt(Comet.ExprStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpressionStatement(Comet.ExpressionStatementContext ctx) { }
+	@Override public void exitExprStmt(Comet.ExprStmtContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

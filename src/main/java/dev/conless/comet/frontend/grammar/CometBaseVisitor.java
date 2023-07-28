@@ -46,126 +46,126 @@ public class CometBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitCallExpression(Comet.CallExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitNewExpr(Comet.NewExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitUnaryArithExpression(Comet.UnaryArithExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIndexExpr(Comet.IndexExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAtomExpression(Comet.AtomExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitVarExpr(Comet.VarExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitConditionalExpression(Comet.ConditionalExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBinaryArithExpr(Comet.BinaryArithExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitNewExpression(Comet.NewExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitPreSelfExpr(Comet.PreSelfExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAssignExpression(Comet.AssignExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAtomExpr(Comet.AtomExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPreSelfExpression(Comet.PreSelfExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitUnaryArithExpr(Comet.UnaryArithExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitParenExpression(Comet.ParenExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitCallExpr(Comet.CallExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIndexExpression(Comet.IndexExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAssignExpr(Comet.AssignExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBinaryArithExpression(Comet.BinaryArithExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitParenExpr(Comet.ParenExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitVariableExpression(Comet.VariableExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitConditionalExpr(Comet.ConditionalExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitVariableDefinition(Comet.VariableDefinitionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitVarDef(Comet.VarDefContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitVariableConstructor(Comet.VariableConstructorContext ctx) { return visitChildren(ctx); }
+	@Override public T visitVarCtor(Comet.VarCtorContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitClassDefinition(Comet.ClassDefinitionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitClassDef(Comet.ClassDefContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitClassConstructor(Comet.ClassConstructorContext ctx) { return visitChildren(ctx); }
+	@Override public T visitClassCtor(Comet.ClassCtorContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFunctionDefinition(Comet.FunctionDefinitionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFuncDef(Comet.FuncDefContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFunctionParaList(Comet.FunctionParaListContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFuncParaList(Comet.FuncParaListContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFunctionArgList(Comet.FunctionArgListContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFuncArgList(Comet.FuncArgListContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -179,61 +179,61 @@ public class CometBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBlockStatement(Comet.BlockStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBlockStmt(Comet.BlockStmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStatement(Comet.StatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStmt(Comet.StmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIfStatement(Comet.IfStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIfStmt(Comet.IfStmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitForStatement(Comet.ForStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitForStmt(Comet.ForStmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitWhileStatement(Comet.WhileStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitWhileStmt(Comet.WhileStmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitContinueStatement(Comet.ContinueStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitContinueStmt(Comet.ContinueStmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBreakStatement(Comet.BreakStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBreakStmt(Comet.BreakStmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitReturnStatement(Comet.ReturnStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitReturnStmt(Comet.ReturnStmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitExpressionStatement(Comet.ExpressionStatementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitExprStmt(Comet.ExprStmtContext ctx) { return visitChildren(ctx); }
 }
