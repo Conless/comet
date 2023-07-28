@@ -10,7 +10,7 @@ program: ((varDef ';') | (classDef ';') | funcDef)* EOF;
 typeName
   : type = (Int | Bool | String | Void)                                   # builtInType
   | type = Identifier                                                     # customType
-  | typeName '[' ']'                                                      # arrayType
+  | typeName '[' len=IntegerConst ']'                                                      # arrayType
   ;
 
 expr
@@ -19,9 +19,9 @@ expr
   // Exprs that MAY result with lvalue
   | '(' expr ')'                                                    # parenExpr
   | varName=Identifier                                                # varExpr
-  | expr '.' varName=Identifier                                  # varExpr
+  | expr '.' varName=Identifier                                  # memberVarExpr
   | funcName=Identifier '(' funcArgList? ')'                      # callExpr
-  | expr '.' funcName=Identifier '(' funcArgList? ')'         # callExpr 
+  | expr '.' funcName=Identifier '(' funcArgList? ')'         # memberCallExpr 
   | expr '[' expr ']'                                         # indexExpr
 
   // Unary exprs that result with rvalue

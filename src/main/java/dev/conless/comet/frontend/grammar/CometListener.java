@@ -66,29 +66,17 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitNewExpr(Comet.NewExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code indexExpr}
+	 * Enter a parse tree produced by the {@code memberCallExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterIndexExpr(Comet.IndexExprContext ctx);
+	void enterMemberCallExpr(Comet.MemberCallExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code indexExpr}
+	 * Exit a parse tree produced by the {@code memberCallExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitIndexExpr(Comet.IndexExprContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code varExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterVarExpr(Comet.VarExprContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code varExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitVarExpr(Comet.VarExprContext ctx);
+	void exitMemberCallExpr(Comet.MemberCallExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code binaryArithExpr}
 	 * labeled alternative in {@link Comet#expr}.
@@ -126,6 +114,54 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitAtomExpr(Comet.AtomExprContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code memberVarExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterMemberVarExpr(Comet.MemberVarExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code memberVarExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitMemberVarExpr(Comet.MemberVarExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code parenExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterParenExpr(Comet.ParenExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code parenExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitParenExpr(Comet.ParenExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code indexExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterIndexExpr(Comet.IndexExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code indexExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitIndexExpr(Comet.IndexExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code varExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarExpr(Comet.VarExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code varExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarExpr(Comet.VarExprContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code unaryArithExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
@@ -161,18 +197,6 @@ public interface CometListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssignExpr(Comet.AssignExprContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code parenExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterParenExpr(Comet.ParenExprContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code parenExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitParenExpr(Comet.ParenExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code conditionalExpr}
 	 * labeled alternative in {@link Comet#expr}.
