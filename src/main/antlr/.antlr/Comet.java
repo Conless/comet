@@ -29,17 +29,17 @@ public class Comet extends Parser {
 		Blank=62, CommentLine=63, CommentPara=64, Identifier=65, IntegerConst=66, 
 		StringCharacter=67, StringConst=68;
 	public static final int
-		RULE_program = 0, RULE_typeName = 1, RULE_expr = 2, RULE_varDef = 3, RULE_varCtor = 4, 
-		RULE_classDef = 5, RULE_classCtor = 6, RULE_funcDef = 7, RULE_funcParaList = 8, 
-		RULE_funcArgList = 9, RULE_returnType = 10, RULE_blockStmt = 11, RULE_stmt = 12, 
-		RULE_ifStmt = 13, RULE_forStmt = 14, RULE_whileStmt = 15, RULE_continueStmt = 16, 
-		RULE_breakStmt = 17, RULE_returnStmt = 18, RULE_exprStmt = 19;
+		RULE_program = 0, RULE_type = 1, RULE_typeName = 2, RULE_expr = 3, RULE_varDef = 4, 
+		RULE_varCtor = 5, RULE_classDef = 6, RULE_classCtor = 7, RULE_funcDef = 8, 
+		RULE_funcParaList = 9, RULE_funcArgList = 10, RULE_returnType = 11, RULE_blockStmt = 12, 
+		RULE_stmt = 13, RULE_ifStmt = 14, RULE_forStmt = 15, RULE_whileStmt = 16, 
+		RULE_continueStmt = 17, RULE_breakStmt = 18, RULE_returnStmt = 19, RULE_exprStmt = 20;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"program", "typeName", "expr", "varDef", "varCtor", "classDef", "classCtor", 
-			"funcDef", "funcParaList", "funcArgList", "returnType", "blockStmt", 
-			"stmt", "ifStmt", "forStmt", "whileStmt", "continueStmt", "breakStmt", 
-			"returnStmt", "exprStmt"
+			"program", "type", "typeName", "expr", "varDef", "varCtor", "classDef", 
+			"classCtor", "funcDef", "funcParaList", "funcArgList", "returnType", 
+			"blockStmt", "stmt", "ifStmt", "forStmt", "whileStmt", "continueStmt", 
+			"breakStmt", "returnStmt", "exprStmt"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -159,20 +159,20 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(49);
+			setState(51);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Void) | (1L << Bool) | (1L << Int) | (1L << String) | (1L << Class))) != 0) || _la==Identifier) {
 				{
-				setState(47);
+				setState(49);
 				_errHandler.sync(this);
 				switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 				case 1:
 					{
 					{
-					setState(40);
+					setState(42);
 					varDef();
-					setState(41);
+					setState(43);
 					match(Semi);
 					}
 					}
@@ -180,26 +180,26 @@ public class Comet extends Parser {
 				case 2:
 					{
 					{
-					setState(43);
+					setState(45);
 					classDef();
-					setState(44);
+					setState(46);
 					match(Semi);
 					}
 					}
 					break;
 				case 3:
 					{
-					setState(46);
+					setState(48);
 					funcDef();
 					}
 					break;
 				}
 				}
-				setState(51);
+				setState(53);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(52);
+			setState(54);
 			match(EOF);
 			}
 		}
@@ -214,120 +214,34 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class TypeNameContext extends ParserRuleContext {
-		public TypeNameContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_typeName; }
-	 
-		public TypeNameContext() { }
-		public void copyFrom(TypeNameContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class CustomTypeContext extends TypeNameContext {
-		public Token type;
-		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public CustomTypeContext(TypeNameContext ctx) { copyFrom(ctx); }
-	}
-	public static class ArrayTypeContext extends TypeNameContext {
-		public Token len;
-		public TypeNameContext typeName() {
-			return getRuleContext(TypeNameContext.class,0);
-		}
-		public TerminalNode LBracket() { return getToken(Comet.LBracket, 0); }
-		public TerminalNode RBracket() { return getToken(Comet.RBracket, 0); }
-		public TerminalNode IntegerConst() { return getToken(Comet.IntegerConst, 0); }
-		public ArrayTypeContext(TypeNameContext ctx) { copyFrom(ctx); }
-	}
-	public static class BuiltInTypeContext extends TypeNameContext {
-		public Token type;
+	public static class TypeContext extends ParserRuleContext {
 		public TerminalNode Int() { return getToken(Comet.Int, 0); }
 		public TerminalNode Bool() { return getToken(Comet.Bool, 0); }
 		public TerminalNode String() { return getToken(Comet.String, 0); }
 		public TerminalNode Void() { return getToken(Comet.Void, 0); }
-		public BuiltInTypeContext(TypeNameContext ctx) { copyFrom(ctx); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
+		public TypeContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_type; }
 	}
 
-	public final TypeNameContext typeName() throws RecognitionException {
-		return typeName(0);
-	}
-
-	private TypeNameContext typeName(int _p) throws RecognitionException {
-		ParserRuleContext _parentctx = _ctx;
-		int _parentState = getState();
-		TypeNameContext _localctx = new TypeNameContext(_ctx, _parentState);
-		TypeNameContext _prevctx = _localctx;
-		int _startState = 2;
-		enterRecursionRule(_localctx, 2, RULE_typeName, _p);
+	public final TypeContext type() throws RecognitionException {
+		TypeContext _localctx = new TypeContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_type);
 		int _la;
 		try {
-			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(57);
-			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case Void:
-			case Bool:
-			case Int:
-			case String:
-				{
-				_localctx = new BuiltInTypeContext(_localctx);
-				_ctx = _localctx;
-				_prevctx = _localctx;
-
-				setState(55);
-				((BuiltInTypeContext)_localctx).type = _input.LT(1);
-				_la = _input.LA(1);
-				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Void) | (1L << Bool) | (1L << Int) | (1L << String))) != 0)) ) {
-					((BuiltInTypeContext)_localctx).type = (Token)_errHandler.recoverInline(this);
-				}
-				else {
-					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
-				}
-				break;
-			case Identifier:
-				{
-				_localctx = new CustomTypeContext(_localctx);
-				_ctx = _localctx;
-				_prevctx = _localctx;
-				setState(56);
-				((CustomTypeContext)_localctx).type = match(Identifier);
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
+			setState(56);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Void) | (1L << Bool) | (1L << Int) | (1L << String))) != 0) || _la==Identifier) ) {
+			_errHandler.recoverInline(this);
 			}
-			_ctx.stop = _input.LT(-1);
-			setState(65);
-			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					if ( _parseListeners!=null ) triggerExitRuleEvent();
-					_prevctx = _localctx;
-					{
-					{
-					_localctx = new ArrayTypeContext(new TypeNameContext(_parentctx, _parentState));
-					pushNewRecursionContext(_localctx, _startState, RULE_typeName);
-					setState(59);
-					if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-					setState(60);
-					match(LBracket);
-					setState(61);
-					((ArrayTypeContext)_localctx).len = match(IntegerConst);
-					setState(62);
-					match(RBracket);
-					}
-					} 
-				}
-				setState(67);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
 			}
 			}
 		}
@@ -337,7 +251,63 @@ public class Comet extends Parser {
 			_errHandler.recover(this, re);
 		}
 		finally {
-			unrollRecursionContexts(_parentctx);
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class TypeNameContext extends ParserRuleContext {
+		public TypeContext type() {
+			return getRuleContext(TypeContext.class,0);
+		}
+		public List<TerminalNode> LBracket() { return getTokens(Comet.LBracket); }
+		public TerminalNode LBracket(int i) {
+			return getToken(Comet.LBracket, i);
+		}
+		public List<TerminalNode> RBracket() { return getTokens(Comet.RBracket); }
+		public TerminalNode RBracket(int i) {
+			return getToken(Comet.RBracket, i);
+		}
+		public TypeNameContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_typeName; }
+	}
+
+	public final TypeNameContext typeName() throws RecognitionException {
+		TypeNameContext _localctx = new TypeNameContext(_ctx, getState());
+		enterRule(_localctx, 4, RULE_typeName);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(58);
+			type();
+			setState(63);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==LBracket) {
+				{
+				{
+				setState(59);
+				match(LBracket);
+				setState(60);
+				match(RBracket);
+				}
+				}
+				setState(65);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
 		}
 		return _localctx;
 	}
@@ -355,26 +325,37 @@ public class Comet extends Parser {
 	}
 	public static class NewExprContext extends ExprContext {
 		public TerminalNode New() { return getToken(Comet.New, 0); }
-		public TypeNameContext typeName() {
-			return getRuleContext(TypeNameContext.class,0);
+		public TypeContext type() {
+			return getRuleContext(TypeContext.class,0);
+		}
+		public List<TerminalNode> LBracket() { return getTokens(Comet.LBracket); }
+		public TerminalNode LBracket(int i) {
+			return getToken(Comet.LBracket, i);
+		}
+		public List<TerminalNode> RBracket() { return getTokens(Comet.RBracket); }
+		public TerminalNode RBracket(int i) {
+			return getToken(Comet.RBracket, i);
 		}
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
 		public NewExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
-	public static class MemberCallExprContext extends ExprContext {
-		public Token funcName;
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
+	public static class IndexExprContext extends ExprContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
 		}
-		public TerminalNode Member() { return getToken(Comet.Member, 0); }
-		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
-		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public FuncArgListContext funcArgList() {
-			return getRuleContext(FuncArgListContext.class,0);
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
 		}
-		public MemberCallExprContext(ExprContext ctx) { copyFrom(ctx); }
+		public TerminalNode LBracket() { return getToken(Comet.LBracket, 0); }
+		public TerminalNode RBracket() { return getToken(Comet.RBracket, 0); }
+		public IndexExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	public static class BinaryArithExprContext extends ExprContext {
 		public Token op;
@@ -413,6 +394,15 @@ public class Comet extends Parser {
 		public TerminalNode SelfSub() { return getToken(Comet.SelfSub, 0); }
 		public PreSelfExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
+	public static class MemberExprContext extends ExprContext {
+		public Token member;
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode Member() { return getToken(Comet.Member, 0); }
+		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
+		public MemberExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
 	public static class AtomExprContext extends ExprContext {
 		public Token value;
 		public TerminalNode IntegerConst() { return getToken(Comet.IntegerConst, 0); }
@@ -423,39 +413,6 @@ public class Comet extends Parser {
 		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public TerminalNode This() { return getToken(Comet.This, 0); }
 		public AtomExprContext(ExprContext ctx) { copyFrom(ctx); }
-	}
-	public static class MemberVarExprContext extends ExprContext {
-		public Token varName;
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
-		}
-		public TerminalNode Member() { return getToken(Comet.Member, 0); }
-		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public MemberVarExprContext(ExprContext ctx) { copyFrom(ctx); }
-	}
-	public static class ParenExprContext extends ExprContext {
-		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
-		}
-		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public ParenExprContext(ExprContext ctx) { copyFrom(ctx); }
-	}
-	public static class IndexExprContext extends ExprContext {
-		public List<ExprContext> expr() {
-			return getRuleContexts(ExprContext.class);
-		}
-		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
-		}
-		public TerminalNode LBracket() { return getToken(Comet.LBracket, 0); }
-		public TerminalNode RBracket() { return getToken(Comet.RBracket, 0); }
-		public IndexExprContext(ExprContext ctx) { copyFrom(ctx); }
-	}
-	public static class VarExprContext extends ExprContext {
-		public Token varName;
-		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public VarExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	public static class UnaryArithExprContext extends ExprContext {
 		public Token op;
@@ -471,10 +428,11 @@ public class Comet extends Parser {
 		public UnaryArithExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	public static class CallExprContext extends ExprContext {
-		public Token funcName;
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
-		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public FuncArgListContext funcArgList() {
 			return getRuleContext(FuncArgListContext.class,0);
 		}
@@ -501,6 +459,14 @@ public class Comet extends Parser {
 		public TerminalNode BitRShiftAssign() { return getToken(Comet.BitRShiftAssign, 0); }
 		public AssignExprContext(ExprContext ctx) { copyFrom(ctx); }
 	}
+	public static class ParenExprContext extends ExprContext {
+		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
+		public ParenExprContext(ExprContext ctx) { copyFrom(ctx); }
+	}
 	public static class ConditionalExprContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -522,91 +488,90 @@ public class Comet extends Parser {
 		int _parentState = getState();
 		ExprContext _localctx = new ExprContext(_ctx, _parentState);
 		ExprContext _prevctx = _localctx;
-		int _startState = 4;
-		enterRecursionRule(_localctx, 4, RULE_expr, _p);
+		int _startState = 6;
+		enterRecursionRule(_localctx, 6, RULE_expr, _p);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(91);
+			setState(92);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
-			case 1:
+			switch (_input.LA(1)) {
+			case New:
 				{
 				_localctx = new NewExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(69);
+				setState(67);
 				match(New);
-				setState(70);
-				typeName(0);
-				setState(73);
+				setState(68);
+				type();
+				setState(76);
 				_errHandler.sync(this);
-				switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
+				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+				while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+					if ( _alt==1 ) {
+						{
+						{
+						setState(69);
+						match(LBracket);
+						setState(71);
+						_errHandler.sync(this);
+						_la = _input.LA(1);
+						if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
+							{
+							setState(70);
+							expr(0);
+							}
+						}
+
+						setState(73);
+						match(RBracket);
+						}
+						} 
+					}
+					setState(78);
+					_errHandler.sync(this);
+					_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+				}
+				setState(81);
+				_errHandler.sync(this);
+				switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 				case 1:
 					{
-					setState(71);
+					setState(79);
 					match(LParen);
-					setState(72);
+					setState(80);
 					match(RParen);
 					}
 					break;
 				}
 				}
 				break;
-			case 2:
+			case LParen:
 				{
 				_localctx = new ParenExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(75);
-				match(LParen);
-				setState(76);
-				expr(0);
-				setState(77);
-				match(RParen);
-				}
-				break;
-			case 3:
-				{
-				_localctx = new VarExprContext(_localctx);
-				_ctx = _localctx;
-				_prevctx = _localctx;
-				setState(79);
-				((VarExprContext)_localctx).varName = match(Identifier);
-				}
-				break;
-			case 4:
-				{
-				_localctx = new CallExprContext(_localctx);
-				_ctx = _localctx;
-				_prevctx = _localctx;
-				setState(80);
-				((CallExprContext)_localctx).funcName = match(Identifier);
-				setState(81);
-				match(LParen);
 				setState(83);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-				if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
-					{
-					setState(82);
-					funcArgList();
-					}
-				}
-
+				match(LParen);
+				setState(84);
+				expr(0);
 				setState(85);
 				match(RParen);
 				}
 				break;
-			case 5:
+			case Add:
+			case Sub:
+			case LogicNot:
+			case BitNot:
 				{
 				_localctx = new UnaryArithExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(86);
+				setState(87);
 				((UnaryArithExprContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Add) | (1L << Sub) | (1L << LogicNot) | (1L << BitNot))) != 0)) ) {
@@ -617,16 +582,17 @@ public class Comet extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(87);
+				setState(88);
 				expr(15);
 				}
 				break;
-			case 6:
+			case SelfAdd:
+			case SelfSub:
 				{
 				_localctx = new PreSelfExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(88);
+				setState(89);
 				((PreSelfExprContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==SelfAdd || _la==SelfSub) ) {
@@ -637,16 +603,22 @@ public class Comet extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(89);
+				setState(90);
 				expr(14);
 				}
 				break;
-			case 7:
+			case Null:
+			case True:
+			case False:
+			case This:
+			case Identifier:
+			case IntegerConst:
+			case StringConst:
 				{
 				_localctx = new AtomExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(90);
+				setState(91);
 				((AtomExprContext)_localctx).value = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(((((_la - 7)) & ~0x3f) == 0 && ((1L << (_la - 7)) & ((1L << (Null - 7)) | (1L << (True - 7)) | (1L << (False - 7)) | (1L << (This - 7)) | (1L << (Identifier - 7)) | (1L << (IntegerConst - 7)) | (1L << (StringConst - 7)))) != 0)) ) {
@@ -659,9 +631,11 @@ public class Comet extends Parser {
 				}
 				}
 				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(152);
+			setState(151);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -669,16 +643,16 @@ public class Comet extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(150);
+					setState(149);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
 					case 1:
 						{
 						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(93);
-						if (!(precpred(_ctx, 13))) throw new FailedPredicateException(this, "precpred(_ctx, 13)");
 						setState(94);
+						if (!(precpred(_ctx, 13))) throw new FailedPredicateException(this, "precpred(_ctx, 13)");
+						setState(95);
 						((BinaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Mul) | (1L << Div) | (1L << Mod))) != 0)) ) {
@@ -689,7 +663,7 @@ public class Comet extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(95);
+						setState(96);
 						expr(14);
 						}
 						break;
@@ -697,9 +671,9 @@ public class Comet extends Parser {
 						{
 						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(96);
-						if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
 						setState(97);
+						if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
+						setState(98);
 						((BinaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==Add || _la==Sub) ) {
@@ -710,7 +684,7 @@ public class Comet extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(98);
+						setState(99);
 						expr(13);
 						}
 						break;
@@ -718,9 +692,9 @@ public class Comet extends Parser {
 						{
 						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(99);
-						if (!(precpred(_ctx, 11))) throw new FailedPredicateException(this, "precpred(_ctx, 11)");
 						setState(100);
+						if (!(precpred(_ctx, 11))) throw new FailedPredicateException(this, "precpred(_ctx, 11)");
+						setState(101);
 						((BinaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==BitRShift || _la==BitLShift) ) {
@@ -731,7 +705,7 @@ public class Comet extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(101);
+						setState(102);
 						expr(12);
 						}
 						break;
@@ -739,9 +713,9 @@ public class Comet extends Parser {
 						{
 						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(102);
-						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
 						setState(103);
+						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
+						setState(104);
 						((BinaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Greater) | (1L << Less) | (1L << GreaterEqual) | (1L << LessEqual))) != 0)) ) {
@@ -752,7 +726,7 @@ public class Comet extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(104);
+						setState(105);
 						expr(11);
 						}
 						break;
@@ -760,9 +734,9 @@ public class Comet extends Parser {
 						{
 						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(105);
-						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
 						setState(106);
+						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
+						setState(107);
 						((BinaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==NotEqual || _la==Eqaul) ) {
@@ -773,7 +747,7 @@ public class Comet extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(107);
+						setState(108);
 						expr(10);
 						}
 						break;
@@ -781,11 +755,11 @@ public class Comet extends Parser {
 						{
 						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(108);
-						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
 						setState(109);
-						((BinaryArithExprContext)_localctx).op = match(BitAnd);
+						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
 						setState(110);
+						((BinaryArithExprContext)_localctx).op = match(BitAnd);
+						setState(111);
 						expr(9);
 						}
 						break;
@@ -793,11 +767,11 @@ public class Comet extends Parser {
 						{
 						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(111);
-						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
 						setState(112);
-						((BinaryArithExprContext)_localctx).op = match(BitXor);
+						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
 						setState(113);
+						((BinaryArithExprContext)_localctx).op = match(BitXor);
+						setState(114);
 						expr(8);
 						}
 						break;
@@ -805,11 +779,11 @@ public class Comet extends Parser {
 						{
 						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(114);
-						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
 						setState(115);
-						((BinaryArithExprContext)_localctx).op = match(BitOr);
+						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
 						setState(116);
+						((BinaryArithExprContext)_localctx).op = match(BitOr);
+						setState(117);
 						expr(7);
 						}
 						break;
@@ -817,11 +791,11 @@ public class Comet extends Parser {
 						{
 						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(117);
-						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(118);
-						((BinaryArithExprContext)_localctx).op = match(LogicAnd);
+						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(119);
+						((BinaryArithExprContext)_localctx).op = match(LogicAnd);
+						setState(120);
 						expr(6);
 						}
 						break;
@@ -829,11 +803,11 @@ public class Comet extends Parser {
 						{
 						_localctx = new BinaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(120);
-						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(121);
-						((BinaryArithExprContext)_localctx).op = match(LogicOr);
+						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(122);
+						((BinaryArithExprContext)_localctx).op = match(LogicOr);
+						setState(123);
 						expr(5);
 						}
 						break;
@@ -841,15 +815,15 @@ public class Comet extends Parser {
 						{
 						_localctx = new ConditionalExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(123);
-						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(124);
-						match(QMark);
+						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(125);
-						expr(0);
+						match(QMark);
 						setState(126);
-						match(Colon);
+						expr(0);
 						setState(127);
+						match(Colon);
+						setState(128);
 						expr(4);
 						}
 						break;
@@ -857,9 +831,9 @@ public class Comet extends Parser {
 						{
 						_localctx = new AssignExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(129);
-						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 						setState(130);
+						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+						setState(131);
 						((AssignExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Assign) | (1L << AddAssign) | (1L << SubAssign) | (1L << MulAssign) | (1L << DivAssign) | (1L << ModAssign) | (1L << AndAssign) | (1L << XorAssign) | (1L << OrAssign) | (1L << BitLShiftAssign) | (1L << BitRShiftAssign))) != 0)) ) {
@@ -870,45 +844,41 @@ public class Comet extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(131);
+						setState(132);
 						expr(3);
 						}
 						break;
 					case 13:
 						{
-						_localctx = new MemberVarExprContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new MemberExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(132);
-						if (!(precpred(_ctx, 20))) throw new FailedPredicateException(this, "precpred(_ctx, 20)");
 						setState(133);
-						match(Member);
+						if (!(precpred(_ctx, 19))) throw new FailedPredicateException(this, "precpred(_ctx, 19)");
 						setState(134);
-						((MemberVarExprContext)_localctx).varName = match(Identifier);
+						match(Member);
+						setState(135);
+						((MemberExprContext)_localctx).member = match(Identifier);
 						}
 						break;
 					case 14:
 						{
-						_localctx = new MemberCallExprContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new CallExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(135);
-						if (!(precpred(_ctx, 18))) throw new FailedPredicateException(this, "precpred(_ctx, 18)");
 						setState(136);
-						match(Member);
+						if (!(precpred(_ctx, 18))) throw new FailedPredicateException(this, "precpred(_ctx, 18)");
 						setState(137);
-						((MemberCallExprContext)_localctx).funcName = match(Identifier);
-						setState(138);
 						match(LParen);
-						setState(140);
+						setState(139);
 						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
 							{
-							setState(139);
+							setState(138);
 							funcArgList();
 							}
 						}
 
-						setState(142);
+						setState(141);
 						match(RParen);
 						}
 						break;
@@ -916,13 +886,13 @@ public class Comet extends Parser {
 						{
 						_localctx = new IndexExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(143);
+						setState(142);
 						if (!(precpred(_ctx, 17))) throw new FailedPredicateException(this, "precpred(_ctx, 17)");
-						setState(144);
+						setState(143);
 						match(LBracket);
-						setState(145);
+						setState(144);
 						expr(0);
-						setState(146);
+						setState(145);
 						match(RBracket);
 						}
 						break;
@@ -930,9 +900,9 @@ public class Comet extends Parser {
 						{
 						_localctx = new UnaryArithExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(148);
+						setState(147);
 						if (!(precpred(_ctx, 16))) throw new FailedPredicateException(this, "precpred(_ctx, 16)");
-						setState(149);
+						setState(148);
 						((UnaryArithExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==SelfAdd || _la==SelfSub) ) {
@@ -948,7 +918,7 @@ public class Comet extends Parser {
 					}
 					} 
 				}
-				setState(154);
+				setState(153);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
 			}
@@ -987,28 +957,28 @@ public class Comet extends Parser {
 
 	public final VarDefContext varDef() throws RecognitionException {
 		VarDefContext _localctx = new VarDefContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_varDef);
+		enterRule(_localctx, 8, RULE_varDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
+			setState(154);
+			typeName();
 			setState(155);
-			typeName(0);
-			setState(156);
 			varCtor();
-			setState(161);
+			setState(160);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				setState(157);
+				setState(156);
 				match(Comma);
-				setState(158);
+				setState(157);
 				varCtor();
 				}
 				}
-				setState(163);
+				setState(162);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1040,21 +1010,21 @@ public class Comet extends Parser {
 
 	public final VarCtorContext varCtor() throws RecognitionException {
 		VarCtorContext _localctx = new VarCtorContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_varCtor);
+		enterRule(_localctx, 10, RULE_varCtor);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(164);
+			setState(163);
 			((VarCtorContext)_localctx).varName = match(Identifier);
-			setState(167);
+			setState(166);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==Assign) {
 				{
-				setState(165);
+				setState(164);
 				match(Assign);
-				setState(166);
+				setState(165);
 				expr(0);
 				}
 			}
@@ -1108,54 +1078,54 @@ public class Comet extends Parser {
 
 	public final ClassDefContext classDef() throws RecognitionException {
 		ClassDefContext _localctx = new ClassDefContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_classDef);
+		enterRule(_localctx, 12, RULE_classDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(169);
+			setState(168);
 			match(Class);
-			setState(170);
+			setState(169);
 			((ClassDefContext)_localctx).className = match(Identifier);
-			setState(171);
+			setState(170);
 			match(LBrace);
-			setState(179);
+			setState(178);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Void) | (1L << Bool) | (1L << Int) | (1L << String))) != 0) || _la==Identifier) {
 				{
-				setState(177);
+				setState(176);
 				_errHandler.sync(this);
 				switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 				case 1:
 					{
 					{
-					setState(172);
+					setState(171);
 					varDef();
-					setState(173);
+					setState(172);
 					match(Semi);
 					}
 					}
 					break;
 				case 2:
 					{
-					setState(175);
+					setState(174);
 					funcDef();
 					}
 					break;
 				case 3:
 					{
-					setState(176);
+					setState(175);
 					classCtor();
 					}
 					break;
 				}
 				}
-				setState(181);
+				setState(180);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(182);
+			setState(181);
 			match(RBrace);
 			}
 		}
@@ -1186,17 +1156,17 @@ public class Comet extends Parser {
 
 	public final ClassCtorContext classCtor() throws RecognitionException {
 		ClassCtorContext _localctx = new ClassCtorContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_classCtor);
+		enterRule(_localctx, 14, RULE_classCtor);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(184);
+			setState(183);
 			((ClassCtorContext)_localctx).className = match(Identifier);
-			setState(185);
+			setState(184);
 			match(LParen);
-			setState(186);
+			setState(185);
 			match(RParen);
-			setState(187);
+			setState(186);
 			blockStmt();
 			}
 		}
@@ -1233,30 +1203,30 @@ public class Comet extends Parser {
 
 	public final FuncDefContext funcDef() throws RecognitionException {
 		FuncDefContext _localctx = new FuncDefContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_funcDef);
+		enterRule(_localctx, 16, RULE_funcDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(189);
+			setState(188);
 			returnType();
-			setState(190);
+			setState(189);
 			((FuncDefContext)_localctx).funcName = match(Identifier);
-			setState(191);
+			setState(190);
 			match(LParen);
-			setState(193);
+			setState(192);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Void) | (1L << Bool) | (1L << Int) | (1L << String))) != 0) || _la==Identifier) {
 				{
-				setState(192);
+				setState(191);
 				funcParaList();
 				}
 			}
 
-			setState(195);
+			setState(194);
 			match(RParen);
-			setState(196);
+			setState(195);
 			blockStmt();
 			}
 		}
@@ -1296,30 +1266,30 @@ public class Comet extends Parser {
 
 	public final FuncParaListContext funcParaList() throws RecognitionException {
 		FuncParaListContext _localctx = new FuncParaListContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_funcParaList);
+		enterRule(_localctx, 18, RULE_funcParaList);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
+			setState(197);
+			typeName();
 			setState(198);
-			typeName(0);
-			setState(199);
 			varCtor();
-			setState(206);
+			setState(205);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				setState(200);
+				setState(199);
 				match(Comma);
+				setState(200);
+				typeName();
 				setState(201);
-				typeName(0);
-				setState(202);
 				varCtor();
 				}
 				}
-				setState(208);
+				setState(207);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1355,26 +1325,26 @@ public class Comet extends Parser {
 
 	public final FuncArgListContext funcArgList() throws RecognitionException {
 		FuncArgListContext _localctx = new FuncArgListContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_funcArgList);
+		enterRule(_localctx, 20, RULE_funcArgList);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(209);
+			setState(208);
 			expr(0);
-			setState(214);
+			setState(213);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				setState(210);
+				setState(209);
 				match(Comma);
-				setState(211);
+				setState(210);
 				expr(0);
 				}
 				}
-				setState(216);
+				setState(215);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1403,12 +1373,12 @@ public class Comet extends Parser {
 
 	public final ReturnTypeContext returnType() throws RecognitionException {
 		ReturnTypeContext _localctx = new ReturnTypeContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_returnType);
+		enterRule(_localctx, 22, RULE_returnType);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(217);
-			typeName(0);
+			setState(216);
+			typeName();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1439,28 +1409,28 @@ public class Comet extends Parser {
 
 	public final BlockStmtContext blockStmt() throws RecognitionException {
 		BlockStmtContext _localctx = new BlockStmtContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_blockStmt);
+		enterRule(_localctx, 24, RULE_blockStmt);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(219);
+			setState(218);
 			match(LBrace);
-			setState(223);
+			setState(222);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Void) | (1L << Bool) | (1L << Int) | (1L << String) | (1L << New) | (1L << Class) | (1L << Null) | (1L << True) | (1L << False) | (1L << This) | (1L << If) | (1L << For) | (1L << While) | (1L << Break) | (1L << Continue) | (1L << Return) | (1L << Add) | (1L << Sub) | (1L << LogicNot) | (1L << BitNot) | (1L << SelfAdd) | (1L << SelfSub) | (1L << LParen) | (1L << Semi) | (1L << LBrace))) != 0) || ((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (Identifier - 65)) | (1L << (IntegerConst - 65)) | (1L << (StringConst - 65)))) != 0)) {
 				{
 				{
-				setState(220);
+				setState(219);
 				stmt();
 				}
 				}
-				setState(225);
+				setState(224);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(226);
+			setState(225);
 			match(RBrace);
 			}
 		}
@@ -1515,97 +1485,97 @@ public class Comet extends Parser {
 
 	public final StmtContext stmt() throws RecognitionException {
 		StmtContext _localctx = new StmtContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_stmt);
+		enterRule(_localctx, 26, RULE_stmt);
 		try {
-			setState(251);
+			setState(250);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(228);
+				setState(227);
 				blockStmt();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(229);
+				setState(228);
 				ifStmt();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(230);
+				setState(229);
 				forStmt();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(231);
+				setState(230);
 				whileStmt();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(232);
+				setState(231);
 				varDef();
-				setState(233);
+				setState(232);
 				match(Semi);
 				}
 				break;
 			case 6:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(235);
+				setState(234);
 				classDef();
-				setState(236);
+				setState(235);
 				match(Semi);
 				}
 				break;
 			case 7:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(238);
+				setState(237);
 				continueStmt();
-				setState(239);
+				setState(238);
 				match(Semi);
 				}
 				break;
 			case 8:
 				enterOuterAlt(_localctx, 8);
 				{
-				setState(241);
+				setState(240);
 				breakStmt();
-				setState(242);
+				setState(241);
 				match(Semi);
 				}
 				break;
 			case 9:
 				enterOuterAlt(_localctx, 9);
 				{
-				setState(244);
+				setState(243);
 				returnStmt();
-				setState(245);
+				setState(244);
 				match(Semi);
 				}
 				break;
 			case 10:
 				enterOuterAlt(_localctx, 10);
 				{
-				setState(247);
+				setState(246);
 				exprStmt();
-				setState(248);
+				setState(247);
 				match(Semi);
 				}
 				break;
 			case 11:
 				enterOuterAlt(_localctx, 11);
 				{
-				setState(250);
+				setState(249);
 				match(Semi);
 				}
 				break;
@@ -1644,28 +1614,28 @@ public class Comet extends Parser {
 
 	public final IfStmtContext ifStmt() throws RecognitionException {
 		IfStmtContext _localctx = new IfStmtContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_ifStmt);
+		enterRule(_localctx, 28, RULE_ifStmt);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(253);
+			setState(252);
 			match(If);
-			setState(254);
+			setState(253);
 			match(LParen);
-			setState(255);
+			setState(254);
 			expr(0);
-			setState(256);
+			setState(255);
 			match(RParen);
-			setState(257);
+			setState(256);
 			stmt();
-			setState(260);
+			setState(259);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,19,_ctx) ) {
 			case 1:
 				{
-				setState(258);
+				setState(257);
 				match(Else);
-				setState(259);
+				setState(258);
 				stmt();
 				}
 				break;
@@ -1707,32 +1677,32 @@ public class Comet extends Parser {
 
 	public final ForStmtContext forStmt() throws RecognitionException {
 		ForStmtContext _localctx = new ForStmtContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_forStmt);
+		enterRule(_localctx, 30, RULE_forStmt);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(262);
+			setState(261);
 			match(For);
-			setState(263);
+			setState(262);
 			match(LParen);
-			setState(264);
+			setState(263);
 			((ForStmtContext)_localctx).init = stmt();
-			setState(265);
+			setState(264);
 			((ForStmtContext)_localctx).condition = stmt();
-			setState(267);
+			setState(266);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
 				{
-				setState(266);
+				setState(265);
 				((ForStmtContext)_localctx).update = exprStmt();
 				}
 			}
 
-			setState(269);
+			setState(268);
 			match(RParen);
-			setState(270);
+			setState(269);
 			stmt();
 			}
 		}
@@ -1766,19 +1736,19 @@ public class Comet extends Parser {
 
 	public final WhileStmtContext whileStmt() throws RecognitionException {
 		WhileStmtContext _localctx = new WhileStmtContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_whileStmt);
+		enterRule(_localctx, 32, RULE_whileStmt);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(272);
+			setState(271);
 			match(While);
-			setState(273);
+			setState(272);
 			match(LParen);
-			setState(274);
+			setState(273);
 			((WhileStmtContext)_localctx).condition = expr(0);
-			setState(275);
+			setState(274);
 			match(RParen);
-			setState(276);
+			setState(275);
 			stmt();
 			}
 		}
@@ -1803,11 +1773,11 @@ public class Comet extends Parser {
 
 	public final ContinueStmtContext continueStmt() throws RecognitionException {
 		ContinueStmtContext _localctx = new ContinueStmtContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_continueStmt);
+		enterRule(_localctx, 34, RULE_continueStmt);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(278);
+			setState(277);
 			match(Continue);
 			}
 		}
@@ -1832,11 +1802,11 @@ public class Comet extends Parser {
 
 	public final BreakStmtContext breakStmt() throws RecognitionException {
 		BreakStmtContext _localctx = new BreakStmtContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_breakStmt);
+		enterRule(_localctx, 36, RULE_breakStmt);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(280);
+			setState(279);
 			match(Break);
 			}
 		}
@@ -1864,19 +1834,19 @@ public class Comet extends Parser {
 
 	public final ReturnStmtContext returnStmt() throws RecognitionException {
 		ReturnStmtContext _localctx = new ReturnStmtContext(_ctx, getState());
-		enterRule(_localctx, 36, RULE_returnStmt);
+		enterRule(_localctx, 38, RULE_returnStmt);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(282);
+			setState(281);
 			match(Return);
-			setState(284);
+			setState(283);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
 				{
-				setState(283);
+				setState(282);
 				expr(0);
 				}
 			}
@@ -1913,26 +1883,26 @@ public class Comet extends Parser {
 
 	public final ExprStmtContext exprStmt() throws RecognitionException {
 		ExprStmtContext _localctx = new ExprStmtContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_exprStmt);
+		enterRule(_localctx, 40, RULE_exprStmt);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(286);
+			setState(285);
 			expr(0);
-			setState(291);
+			setState(290);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				setState(287);
+				setState(286);
 				match(Comma);
-				setState(288);
+				setState(287);
 				expr(0);
 				}
 				}
-				setState(293);
+				setState(292);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1951,162 +1921,153 @@ public class Comet extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 1:
-			return typeName_sempred((TypeNameContext)_localctx, predIndex);
-		case 2:
+		case 3:
 			return expr_sempred((ExprContext)_localctx, predIndex);
-		}
-		return true;
-	}
-	private boolean typeName_sempred(TypeNameContext _localctx, int predIndex) {
-		switch (predIndex) {
-		case 0:
-			return precpred(_ctx, 1);
 		}
 		return true;
 	}
 	private boolean expr_sempred(ExprContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 1:
+		case 0:
 			return precpred(_ctx, 13);
-		case 2:
+		case 1:
 			return precpred(_ctx, 12);
-		case 3:
+		case 2:
 			return precpred(_ctx, 11);
-		case 4:
+		case 3:
 			return precpred(_ctx, 10);
-		case 5:
+		case 4:
 			return precpred(_ctx, 9);
-		case 6:
+		case 5:
 			return precpred(_ctx, 8);
-		case 7:
+		case 6:
 			return precpred(_ctx, 7);
-		case 8:
+		case 7:
 			return precpred(_ctx, 6);
-		case 9:
+		case 8:
 			return precpred(_ctx, 5);
-		case 10:
+		case 9:
 			return precpred(_ctx, 4);
-		case 11:
+		case 10:
 			return precpred(_ctx, 3);
-		case 12:
+		case 11:
 			return precpred(_ctx, 2);
+		case 12:
+			return precpred(_ctx, 19);
 		case 13:
-			return precpred(_ctx, 20);
-		case 14:
 			return precpred(_ctx, 18);
-		case 15:
+		case 14:
 			return precpred(_ctx, 17);
-		case 16:
+		case 15:
 			return precpred(_ctx, 16);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3F\u0129\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3F\u0128\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
-		"\4\23\t\23\4\24\t\24\4\25\t\25\3\2\3\2\3\2\3\2\3\2\3\2\3\2\7\2\62\n\2"+
-		"\f\2\16\2\65\13\2\3\2\3\2\3\3\3\3\3\3\5\3<\n\3\3\3\3\3\3\3\3\3\7\3B\n"+
-		"\3\f\3\16\3E\13\3\3\4\3\4\3\4\3\4\3\4\5\4L\n\4\3\4\3\4\3\4\3\4\3\4\3\4"+
-		"\3\4\3\4\5\4V\n\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4^\n\4\3\4\3\4\3\4\3\4\3\4"+
-		"\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3"+
-		"\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4"+
-		"\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4\u008f\n\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4"+
-		"\3\4\7\4\u0099\n\4\f\4\16\4\u009c\13\4\3\5\3\5\3\5\3\5\7\5\u00a2\n\5\f"+
-		"\5\16\5\u00a5\13\5\3\6\3\6\3\6\5\6\u00aa\n\6\3\7\3\7\3\7\3\7\3\7\3\7\3"+
-		"\7\3\7\7\7\u00b4\n\7\f\7\16\7\u00b7\13\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3"+
-		"\t\3\t\3\t\3\t\5\t\u00c4\n\t\3\t\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\7\n\u00cf"+
-		"\n\n\f\n\16\n\u00d2\13\n\3\13\3\13\3\13\7\13\u00d7\n\13\f\13\16\13\u00da"+
-		"\13\13\3\f\3\f\3\r\3\r\7\r\u00e0\n\r\f\r\16\r\u00e3\13\r\3\r\3\r\3\16"+
-		"\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16"+
-		"\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\5\16\u00fe\n\16\3\17\3\17\3\17"+
-		"\3\17\3\17\3\17\3\17\5\17\u0107\n\17\3\20\3\20\3\20\3\20\3\20\5\20\u010e"+
-		"\n\20\3\20\3\20\3\20\3\21\3\21\3\21\3\21\3\21\3\21\3\22\3\22\3\23\3\23"+
-		"\3\24\3\24\5\24\u011f\n\24\3\25\3\25\3\25\7\25\u0124\n\25\f\25\16\25\u0127"+
-		"\13\25\3\25\2\4\4\6\26\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(\2"+
-		"\f\3\2\3\6\5\2\24\25!!\'\'\3\2\63\64\5\2\t\fCDFF\3\2\26\30\3\2\24\25\3"+
-		"\2\"#\3\2\31\34\3\2\35\36\3\2(\62\2\u0149\2\63\3\2\2\2\4;\3\2\2\2\6]\3"+
-		"\2\2\2\b\u009d\3\2\2\2\n\u00a6\3\2\2\2\f\u00ab\3\2\2\2\16\u00ba\3\2\2"+
-		"\2\20\u00bf\3\2\2\2\22\u00c8\3\2\2\2\24\u00d3\3\2\2\2\26\u00db\3\2\2\2"+
-		"\30\u00dd\3\2\2\2\32\u00fd\3\2\2\2\34\u00ff\3\2\2\2\36\u0108\3\2\2\2 "+
-		"\u0112\3\2\2\2\"\u0118\3\2\2\2$\u011a\3\2\2\2&\u011c\3\2\2\2(\u0120\3"+
-		"\2\2\2*+\5\b\5\2+,\7<\2\2,\62\3\2\2\2-.\5\f\7\2./\7<\2\2/\62\3\2\2\2\60"+
-		"\62\5\20\t\2\61*\3\2\2\2\61-\3\2\2\2\61\60\3\2\2\2\62\65\3\2\2\2\63\61"+
-		"\3\2\2\2\63\64\3\2\2\2\64\66\3\2\2\2\65\63\3\2\2\2\66\67\7\2\2\3\67\3"+
-		"\3\2\2\289\b\3\1\29<\t\2\2\2:<\7C\2\2;8\3\2\2\2;:\3\2\2\2<C\3\2\2\2=>"+
-		"\f\3\2\2>?\7\66\2\2?@\7D\2\2@B\7\67\2\2A=\3\2\2\2BE\3\2\2\2CA\3\2\2\2"+
-		"CD\3\2\2\2D\5\3\2\2\2EC\3\2\2\2FG\b\4\1\2GH\7\7\2\2HK\5\4\3\2IJ\78\2\2"+
-		"JL\79\2\2KI\3\2\2\2KL\3\2\2\2L^\3\2\2\2MN\78\2\2NO\5\6\4\2OP\79\2\2P^"+
-		"\3\2\2\2Q^\7C\2\2RS\7C\2\2SU\78\2\2TV\5\24\13\2UT\3\2\2\2UV\3\2\2\2VW"+
-		"\3\2\2\2W^\79\2\2XY\t\3\2\2Y^\5\6\4\21Z[\t\4\2\2[^\5\6\4\20\\^\t\5\2\2"+
-		"]F\3\2\2\2]M\3\2\2\2]Q\3\2\2\2]R\3\2\2\2]X\3\2\2\2]Z\3\2\2\2]\\\3\2\2"+
-		"\2^\u009a\3\2\2\2_`\f\17\2\2`a\t\6\2\2a\u0099\5\6\4\20bc\f\16\2\2cd\t"+
-		"\7\2\2d\u0099\5\6\4\17ef\f\r\2\2fg\t\b\2\2g\u0099\5\6\4\16hi\f\f\2\2i"+
-		"j\t\t\2\2j\u0099\5\6\4\rkl\f\13\2\2lm\t\n\2\2m\u0099\5\6\4\fno\f\n\2\2"+
-		"op\7$\2\2p\u0099\5\6\4\13qr\f\t\2\2rs\7&\2\2s\u0099\5\6\4\ntu\f\b\2\2"+
-		"uv\7%\2\2v\u0099\5\6\4\twx\f\7\2\2xy\7\37\2\2y\u0099\5\6\4\bz{\f\6\2\2"+
-		"{|\7 \2\2|\u0099\5\6\4\7}~\f\5\2\2~\177\7:\2\2\177\u0080\5\6\4\2\u0080"+
-		"\u0081\7;\2\2\u0081\u0082\5\6\4\6\u0082\u0099\3\2\2\2\u0083\u0084\f\4"+
-		"\2\2\u0084\u0085\t\13\2\2\u0085\u0099\5\6\4\5\u0086\u0087\f\26\2\2\u0087"+
-		"\u0088\7\65\2\2\u0088\u0099\7C\2\2\u0089\u008a\f\24\2\2\u008a\u008b\7"+
-		"\65\2\2\u008b\u008c\7C\2\2\u008c\u008e\78\2\2\u008d\u008f\5\24\13\2\u008e"+
-		"\u008d\3\2\2\2\u008e\u008f\3\2\2\2\u008f\u0090\3\2\2\2\u0090\u0099\79"+
-		"\2\2\u0091\u0092\f\23\2\2\u0092\u0093\7\66\2\2\u0093\u0094\5\6\4\2\u0094"+
-		"\u0095\7\67\2\2\u0095\u0099\3\2\2\2\u0096\u0097\f\22\2\2\u0097\u0099\t"+
-		"\4\2\2\u0098_\3\2\2\2\u0098b\3\2\2\2\u0098e\3\2\2\2\u0098h\3\2\2\2\u0098"+
-		"k\3\2\2\2\u0098n\3\2\2\2\u0098q\3\2\2\2\u0098t\3\2\2\2\u0098w\3\2\2\2"+
-		"\u0098z\3\2\2\2\u0098}\3\2\2\2\u0098\u0083\3\2\2\2\u0098\u0086\3\2\2\2"+
-		"\u0098\u0089\3\2\2\2\u0098\u0091\3\2\2\2\u0098\u0096\3\2\2\2\u0099\u009c"+
-		"\3\2\2\2\u009a\u0098\3\2\2\2\u009a\u009b\3\2\2\2\u009b\7\3\2\2\2\u009c"+
-		"\u009a\3\2\2\2\u009d\u009e\5\4\3\2\u009e\u00a3\5\n\6\2\u009f\u00a0\7="+
-		"\2\2\u00a0\u00a2\5\n\6\2\u00a1\u009f\3\2\2\2\u00a2\u00a5\3\2\2\2\u00a3"+
-		"\u00a1\3\2\2\2\u00a3\u00a4\3\2\2\2\u00a4\t\3\2\2\2\u00a5\u00a3\3\2\2\2"+
-		"\u00a6\u00a9\7C\2\2\u00a7\u00a8\7(\2\2\u00a8\u00aa\5\6\4\2\u00a9\u00a7"+
-		"\3\2\2\2\u00a9\u00aa\3\2\2\2\u00aa\13\3\2\2\2\u00ab\u00ac\7\b\2\2\u00ac"+
-		"\u00ad\7C\2\2\u00ad\u00b5\7>\2\2\u00ae\u00af\5\b\5\2\u00af\u00b0\7<\2"+
-		"\2\u00b0\u00b4\3\2\2\2\u00b1\u00b4\5\20\t\2\u00b2\u00b4\5\16\b\2\u00b3"+
-		"\u00ae\3\2\2\2\u00b3\u00b1\3\2\2\2\u00b3\u00b2\3\2\2\2\u00b4\u00b7\3\2"+
-		"\2\2\u00b5\u00b3\3\2\2\2\u00b5\u00b6\3\2\2\2\u00b6\u00b8\3\2\2\2\u00b7"+
-		"\u00b5\3\2\2\2\u00b8\u00b9\7?\2\2\u00b9\r\3\2\2\2\u00ba\u00bb\7C\2\2\u00bb"+
-		"\u00bc\78\2\2\u00bc\u00bd\79\2\2\u00bd\u00be\5\30\r\2\u00be\17\3\2\2\2"+
-		"\u00bf\u00c0\5\26\f\2\u00c0\u00c1\7C\2\2\u00c1\u00c3\78\2\2\u00c2\u00c4"+
-		"\5\22\n\2\u00c3\u00c2\3\2\2\2\u00c3\u00c4\3\2\2\2\u00c4\u00c5\3\2\2\2"+
-		"\u00c5\u00c6\79\2\2\u00c6\u00c7\5\30\r\2\u00c7\21\3\2\2\2\u00c8\u00c9"+
-		"\5\4\3\2\u00c9\u00d0\5\n\6\2\u00ca\u00cb\7=\2\2\u00cb\u00cc\5\4\3\2\u00cc"+
-		"\u00cd\5\n\6\2\u00cd\u00cf\3\2\2\2\u00ce\u00ca\3\2\2\2\u00cf\u00d2\3\2"+
-		"\2\2\u00d0\u00ce\3\2\2\2\u00d0\u00d1\3\2\2\2\u00d1\23\3\2\2\2\u00d2\u00d0"+
-		"\3\2\2\2\u00d3\u00d8\5\6\4\2\u00d4\u00d5\7=\2\2\u00d5\u00d7\5\6\4\2\u00d6"+
-		"\u00d4\3\2\2\2\u00d7\u00da\3\2\2\2\u00d8\u00d6\3\2\2\2\u00d8\u00d9\3\2"+
-		"\2\2\u00d9\25\3\2\2\2\u00da\u00d8\3\2\2\2\u00db\u00dc\5\4\3\2\u00dc\27"+
-		"\3\2\2\2\u00dd\u00e1\7>\2\2\u00de\u00e0\5\32\16\2\u00df\u00de\3\2\2\2"+
-		"\u00e0\u00e3\3\2\2\2\u00e1\u00df\3\2\2\2\u00e1\u00e2\3\2\2\2\u00e2\u00e4"+
-		"\3\2\2\2\u00e3\u00e1\3\2\2\2\u00e4\u00e5\7?\2\2\u00e5\31\3\2\2\2\u00e6"+
-		"\u00fe\5\30\r\2\u00e7\u00fe\5\34\17\2\u00e8\u00fe\5\36\20\2\u00e9\u00fe"+
-		"\5 \21\2\u00ea\u00eb\5\b\5\2\u00eb\u00ec\7<\2\2\u00ec\u00fe\3\2\2\2\u00ed"+
-		"\u00ee\5\f\7\2\u00ee\u00ef\7<\2\2\u00ef\u00fe\3\2\2\2\u00f0\u00f1\5\""+
-		"\22\2\u00f1\u00f2\7<\2\2\u00f2\u00fe\3\2\2\2\u00f3\u00f4\5$\23\2\u00f4"+
-		"\u00f5\7<\2\2\u00f5\u00fe\3\2\2\2\u00f6\u00f7\5&\24\2\u00f7\u00f8\7<\2"+
-		"\2\u00f8\u00fe\3\2\2\2\u00f9\u00fa\5(\25\2\u00fa\u00fb\7<\2\2\u00fb\u00fe"+
-		"\3\2\2\2\u00fc\u00fe\7<\2\2\u00fd\u00e6\3\2\2\2\u00fd\u00e7\3\2\2\2\u00fd"+
-		"\u00e8\3\2\2\2\u00fd\u00e9\3\2\2\2\u00fd\u00ea\3\2\2\2\u00fd\u00ed\3\2"+
-		"\2\2\u00fd\u00f0\3\2\2\2\u00fd\u00f3\3\2\2\2\u00fd\u00f6\3\2\2\2\u00fd"+
-		"\u00f9\3\2\2\2\u00fd\u00fc\3\2\2\2\u00fe\33\3\2\2\2\u00ff\u0100\7\r\2"+
-		"\2\u0100\u0101\78\2\2\u0101\u0102\5\6\4\2\u0102\u0103\79\2\2\u0103\u0106"+
-		"\5\32\16\2\u0104\u0105\7\16\2\2\u0105\u0107\5\32\16\2\u0106\u0104\3\2"+
-		"\2\2\u0106\u0107\3\2\2\2\u0107\35\3\2\2\2\u0108\u0109\7\17\2\2\u0109\u010a"+
-		"\78\2\2\u010a\u010b\5\32\16\2\u010b\u010d\5\32\16\2\u010c\u010e\5(\25"+
-		"\2\u010d\u010c\3\2\2\2\u010d\u010e\3\2\2\2\u010e\u010f\3\2\2\2\u010f\u0110"+
-		"\79\2\2\u0110\u0111\5\32\16\2\u0111\37\3\2\2\2\u0112\u0113\7\20\2\2\u0113"+
-		"\u0114\78\2\2\u0114\u0115\5\6\4\2\u0115\u0116\79\2\2\u0116\u0117\5\32"+
-		"\16\2\u0117!\3\2\2\2\u0118\u0119\7\22\2\2\u0119#\3\2\2\2\u011a\u011b\7"+
-		"\21\2\2\u011b%\3\2\2\2\u011c\u011e\7\23\2\2\u011d\u011f\5\6\4\2\u011e"+
-		"\u011d\3\2\2\2\u011e\u011f\3\2\2\2\u011f\'\3\2\2\2\u0120\u0125\5\6\4\2"+
-		"\u0121\u0122\7=\2\2\u0122\u0124\5\6\4\2\u0123\u0121\3\2\2\2\u0124\u0127"+
-		"\3\2\2\2\u0125\u0123\3\2\2\2\u0125\u0126\3\2\2\2\u0126)\3\2\2\2\u0127"+
-		"\u0125\3\2\2\2\31\61\63;CKU]\u008e\u0098\u009a\u00a3\u00a9\u00b3\u00b5"+
-		"\u00c3\u00d0\u00d8\u00e1\u00fd\u0106\u010d\u011e\u0125";
+		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\3\2\3\2\3\2\3\2\3\2\3\2\3\2\7"+
+		"\2\64\n\2\f\2\16\2\67\13\2\3\2\3\2\3\3\3\3\3\4\3\4\3\4\7\4@\n\4\f\4\16"+
+		"\4C\13\4\3\5\3\5\3\5\3\5\3\5\5\5J\n\5\3\5\7\5M\n\5\f\5\16\5P\13\5\3\5"+
+		"\3\5\5\5T\n\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\5\5_\n\5\3\5\3\5\3\5"+
+		"\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
+		"\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5"+
+		"\3\5\3\5\3\5\3\5\3\5\3\5\3\5\5\5\u008e\n\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5"+
+		"\3\5\7\5\u0098\n\5\f\5\16\5\u009b\13\5\3\6\3\6\3\6\3\6\7\6\u00a1\n\6\f"+
+		"\6\16\6\u00a4\13\6\3\7\3\7\3\7\5\7\u00a9\n\7\3\b\3\b\3\b\3\b\3\b\3\b\3"+
+		"\b\3\b\7\b\u00b3\n\b\f\b\16\b\u00b6\13\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3"+
+		"\n\3\n\3\n\3\n\5\n\u00c3\n\n\3\n\3\n\3\n\3\13\3\13\3\13\3\13\3\13\3\13"+
+		"\7\13\u00ce\n\13\f\13\16\13\u00d1\13\13\3\f\3\f\3\f\7\f\u00d6\n\f\f\f"+
+		"\16\f\u00d9\13\f\3\r\3\r\3\16\3\16\7\16\u00df\n\16\f\16\16\16\u00e2\13"+
+		"\16\3\16\3\16\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3"+
+		"\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u00fd"+
+		"\n\17\3\20\3\20\3\20\3\20\3\20\3\20\3\20\5\20\u0106\n\20\3\21\3\21\3\21"+
+		"\3\21\3\21\5\21\u010d\n\21\3\21\3\21\3\21\3\22\3\22\3\22\3\22\3\22\3\22"+
+		"\3\23\3\23\3\24\3\24\3\25\3\25\5\25\u011e\n\25\3\26\3\26\3\26\7\26\u0123"+
+		"\n\26\f\26\16\26\u0126\13\26\3\26\2\3\b\27\2\4\6\b\n\f\16\20\22\24\26"+
+		"\30\32\34\36 \"$&(*\2\f\4\2\3\6CC\5\2\24\25!!\'\'\3\2\63\64\5\2\t\fCD"+
+		"FF\3\2\26\30\3\2\24\25\3\2\"#\3\2\31\34\3\2\35\36\3\2(\62\2\u0145\2\65"+
+		"\3\2\2\2\4:\3\2\2\2\6<\3\2\2\2\b^\3\2\2\2\n\u009c\3\2\2\2\f\u00a5\3\2"+
+		"\2\2\16\u00aa\3\2\2\2\20\u00b9\3\2\2\2\22\u00be\3\2\2\2\24\u00c7\3\2\2"+
+		"\2\26\u00d2\3\2\2\2\30\u00da\3\2\2\2\32\u00dc\3\2\2\2\34\u00fc\3\2\2\2"+
+		"\36\u00fe\3\2\2\2 \u0107\3\2\2\2\"\u0111\3\2\2\2$\u0117\3\2\2\2&\u0119"+
+		"\3\2\2\2(\u011b\3\2\2\2*\u011f\3\2\2\2,-\5\n\6\2-.\7<\2\2.\64\3\2\2\2"+
+		"/\60\5\16\b\2\60\61\7<\2\2\61\64\3\2\2\2\62\64\5\22\n\2\63,\3\2\2\2\63"+
+		"/\3\2\2\2\63\62\3\2\2\2\64\67\3\2\2\2\65\63\3\2\2\2\65\66\3\2\2\2\668"+
+		"\3\2\2\2\67\65\3\2\2\289\7\2\2\39\3\3\2\2\2:;\t\2\2\2;\5\3\2\2\2<A\5\4"+
+		"\3\2=>\7\66\2\2>@\7\67\2\2?=\3\2\2\2@C\3\2\2\2A?\3\2\2\2AB\3\2\2\2B\7"+
+		"\3\2\2\2CA\3\2\2\2DE\b\5\1\2EF\7\7\2\2FN\5\4\3\2GI\7\66\2\2HJ\5\b\5\2"+
+		"IH\3\2\2\2IJ\3\2\2\2JK\3\2\2\2KM\7\67\2\2LG\3\2\2\2MP\3\2\2\2NL\3\2\2"+
+		"\2NO\3\2\2\2OS\3\2\2\2PN\3\2\2\2QR\78\2\2RT\79\2\2SQ\3\2\2\2ST\3\2\2\2"+
+		"T_\3\2\2\2UV\78\2\2VW\5\b\5\2WX\79\2\2X_\3\2\2\2YZ\t\3\2\2Z_\5\b\5\21"+
+		"[\\\t\4\2\2\\_\5\b\5\20]_\t\5\2\2^D\3\2\2\2^U\3\2\2\2^Y\3\2\2\2^[\3\2"+
+		"\2\2^]\3\2\2\2_\u0099\3\2\2\2`a\f\17\2\2ab\t\6\2\2b\u0098\5\b\5\20cd\f"+
+		"\16\2\2de\t\7\2\2e\u0098\5\b\5\17fg\f\r\2\2gh\t\b\2\2h\u0098\5\b\5\16"+
+		"ij\f\f\2\2jk\t\t\2\2k\u0098\5\b\5\rlm\f\13\2\2mn\t\n\2\2n\u0098\5\b\5"+
+		"\fop\f\n\2\2pq\7$\2\2q\u0098\5\b\5\13rs\f\t\2\2st\7&\2\2t\u0098\5\b\5"+
+		"\nuv\f\b\2\2vw\7%\2\2w\u0098\5\b\5\txy\f\7\2\2yz\7\37\2\2z\u0098\5\b\5"+
+		"\b{|\f\6\2\2|}\7 \2\2}\u0098\5\b\5\7~\177\f\5\2\2\177\u0080\7:\2\2\u0080"+
+		"\u0081\5\b\5\2\u0081\u0082\7;\2\2\u0082\u0083\5\b\5\6\u0083\u0098\3\2"+
+		"\2\2\u0084\u0085\f\4\2\2\u0085\u0086\t\13\2\2\u0086\u0098\5\b\5\5\u0087"+
+		"\u0088\f\25\2\2\u0088\u0089\7\65\2\2\u0089\u0098\7C\2\2\u008a\u008b\f"+
+		"\24\2\2\u008b\u008d\78\2\2\u008c\u008e\5\26\f\2\u008d\u008c\3\2\2\2\u008d"+
+		"\u008e\3\2\2\2\u008e\u008f\3\2\2\2\u008f\u0098\79\2\2\u0090\u0091\f\23"+
+		"\2\2\u0091\u0092\7\66\2\2\u0092\u0093\5\b\5\2\u0093\u0094\7\67\2\2\u0094"+
+		"\u0098\3\2\2\2\u0095\u0096\f\22\2\2\u0096\u0098\t\4\2\2\u0097`\3\2\2\2"+
+		"\u0097c\3\2\2\2\u0097f\3\2\2\2\u0097i\3\2\2\2\u0097l\3\2\2\2\u0097o\3"+
+		"\2\2\2\u0097r\3\2\2\2\u0097u\3\2\2\2\u0097x\3\2\2\2\u0097{\3\2\2\2\u0097"+
+		"~\3\2\2\2\u0097\u0084\3\2\2\2\u0097\u0087\3\2\2\2\u0097\u008a\3\2\2\2"+
+		"\u0097\u0090\3\2\2\2\u0097\u0095\3\2\2\2\u0098\u009b\3\2\2\2\u0099\u0097"+
+		"\3\2\2\2\u0099\u009a\3\2\2\2\u009a\t\3\2\2\2\u009b\u0099\3\2\2\2\u009c"+
+		"\u009d\5\6\4\2\u009d\u00a2\5\f\7\2\u009e\u009f\7=\2\2\u009f\u00a1\5\f"+
+		"\7\2\u00a0\u009e\3\2\2\2\u00a1\u00a4\3\2\2\2\u00a2\u00a0\3\2\2\2\u00a2"+
+		"\u00a3\3\2\2\2\u00a3\13\3\2\2\2\u00a4\u00a2\3\2\2\2\u00a5\u00a8\7C\2\2"+
+		"\u00a6\u00a7\7(\2\2\u00a7\u00a9\5\b\5\2\u00a8\u00a6\3\2\2\2\u00a8\u00a9"+
+		"\3\2\2\2\u00a9\r\3\2\2\2\u00aa\u00ab\7\b\2\2\u00ab\u00ac\7C\2\2\u00ac"+
+		"\u00b4\7>\2\2\u00ad\u00ae\5\n\6\2\u00ae\u00af\7<\2\2\u00af\u00b3\3\2\2"+
+		"\2\u00b0\u00b3\5\22\n\2\u00b1\u00b3\5\20\t\2\u00b2\u00ad\3\2\2\2\u00b2"+
+		"\u00b0\3\2\2\2\u00b2\u00b1\3\2\2\2\u00b3\u00b6\3\2\2\2\u00b4\u00b2\3\2"+
+		"\2\2\u00b4\u00b5\3\2\2\2\u00b5\u00b7\3\2\2\2\u00b6\u00b4\3\2\2\2\u00b7"+
+		"\u00b8\7?\2\2\u00b8\17\3\2\2\2\u00b9\u00ba\7C\2\2\u00ba\u00bb\78\2\2\u00bb"+
+		"\u00bc\79\2\2\u00bc\u00bd\5\32\16\2\u00bd\21\3\2\2\2\u00be\u00bf\5\30"+
+		"\r\2\u00bf\u00c0\7C\2\2\u00c0\u00c2\78\2\2\u00c1\u00c3\5\24\13\2\u00c2"+
+		"\u00c1\3\2\2\2\u00c2\u00c3\3\2\2\2\u00c3\u00c4\3\2\2\2\u00c4\u00c5\79"+
+		"\2\2\u00c5\u00c6\5\32\16\2\u00c6\23\3\2\2\2\u00c7\u00c8\5\6\4\2\u00c8"+
+		"\u00cf\5\f\7\2\u00c9\u00ca\7=\2\2\u00ca\u00cb\5\6\4\2\u00cb\u00cc\5\f"+
+		"\7\2\u00cc\u00ce\3\2\2\2\u00cd\u00c9\3\2\2\2\u00ce\u00d1\3\2\2\2\u00cf"+
+		"\u00cd\3\2\2\2\u00cf\u00d0\3\2\2\2\u00d0\25\3\2\2\2\u00d1\u00cf\3\2\2"+
+		"\2\u00d2\u00d7\5\b\5\2\u00d3\u00d4\7=\2\2\u00d4\u00d6\5\b\5\2\u00d5\u00d3"+
+		"\3\2\2\2\u00d6\u00d9\3\2\2\2\u00d7\u00d5\3\2\2\2\u00d7\u00d8\3\2\2\2\u00d8"+
+		"\27\3\2\2\2\u00d9\u00d7\3\2\2\2\u00da\u00db\5\6\4\2\u00db\31\3\2\2\2\u00dc"+
+		"\u00e0\7>\2\2\u00dd\u00df\5\34\17\2\u00de\u00dd\3\2\2\2\u00df\u00e2\3"+
+		"\2\2\2\u00e0\u00de\3\2\2\2\u00e0\u00e1\3\2\2\2\u00e1\u00e3\3\2\2\2\u00e2"+
+		"\u00e0\3\2\2\2\u00e3\u00e4\7?\2\2\u00e4\33\3\2\2\2\u00e5\u00fd\5\32\16"+
+		"\2\u00e6\u00fd\5\36\20\2\u00e7\u00fd\5 \21\2\u00e8\u00fd\5\"\22\2\u00e9"+
+		"\u00ea\5\n\6\2\u00ea\u00eb\7<\2\2\u00eb\u00fd\3\2\2\2\u00ec\u00ed\5\16"+
+		"\b\2\u00ed\u00ee\7<\2\2\u00ee\u00fd\3\2\2\2\u00ef\u00f0\5$\23\2\u00f0"+
+		"\u00f1\7<\2\2\u00f1\u00fd\3\2\2\2\u00f2\u00f3\5&\24\2\u00f3\u00f4\7<\2"+
+		"\2\u00f4\u00fd\3\2\2\2\u00f5\u00f6\5(\25\2\u00f6\u00f7\7<\2\2\u00f7\u00fd"+
+		"\3\2\2\2\u00f8\u00f9\5*\26\2\u00f9\u00fa\7<\2\2\u00fa\u00fd\3\2\2\2\u00fb"+
+		"\u00fd\7<\2\2\u00fc\u00e5\3\2\2\2\u00fc\u00e6\3\2\2\2\u00fc\u00e7\3\2"+
+		"\2\2\u00fc\u00e8\3\2\2\2\u00fc\u00e9\3\2\2\2\u00fc\u00ec\3\2\2\2\u00fc"+
+		"\u00ef\3\2\2\2\u00fc\u00f2\3\2\2\2\u00fc\u00f5\3\2\2\2\u00fc\u00f8\3\2"+
+		"\2\2\u00fc\u00fb\3\2\2\2\u00fd\35\3\2\2\2\u00fe\u00ff\7\r\2\2\u00ff\u0100"+
+		"\78\2\2\u0100\u0101\5\b\5\2\u0101\u0102\79\2\2\u0102\u0105\5\34\17\2\u0103"+
+		"\u0104\7\16\2\2\u0104\u0106\5\34\17\2\u0105\u0103\3\2\2\2\u0105\u0106"+
+		"\3\2\2\2\u0106\37\3\2\2\2\u0107\u0108\7\17\2\2\u0108\u0109\78\2\2\u0109"+
+		"\u010a\5\34\17\2\u010a\u010c\5\34\17\2\u010b\u010d\5*\26\2\u010c\u010b"+
+		"\3\2\2\2\u010c\u010d\3\2\2\2\u010d\u010e\3\2\2\2\u010e\u010f\79\2\2\u010f"+
+		"\u0110\5\34\17\2\u0110!\3\2\2\2\u0111\u0112\7\20\2\2\u0112\u0113\78\2"+
+		"\2\u0113\u0114\5\b\5\2\u0114\u0115\79\2\2\u0115\u0116\5\34\17\2\u0116"+
+		"#\3\2\2\2\u0117\u0118\7\22\2\2\u0118%\3\2\2\2\u0119\u011a\7\21\2\2\u011a"+
+		"\'\3\2\2\2\u011b\u011d\7\23\2\2\u011c\u011e\5\b\5\2\u011d\u011c\3\2\2"+
+		"\2\u011d\u011e\3\2\2\2\u011e)\3\2\2\2\u011f\u0124\5\b\5\2\u0120\u0121"+
+		"\7=\2\2\u0121\u0123\5\b\5\2\u0122\u0120\3\2\2\2\u0123\u0126\3\2\2\2\u0124"+
+		"\u0122\3\2\2\2\u0124\u0125\3\2\2\2\u0125+\3\2\2\2\u0126\u0124\3\2\2\2"+
+		"\31\63\65AINS^\u008d\u0097\u0099\u00a2\u00a8\u00b2\u00b4\u00c2\u00cf\u00d7"+
+		"\u00e0\u00fc\u0105\u010c\u011d\u0124";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

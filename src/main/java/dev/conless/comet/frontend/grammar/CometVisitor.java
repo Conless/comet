@@ -17,26 +17,17 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram(Comet.ProgramContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code customType}
-	 * labeled alternative in {@link Comet#typeName}.
+	 * Visit a parse tree produced by {@link Comet#type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCustomType(Comet.CustomTypeContext ctx);
+	T visitType(Comet.TypeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code arrayType}
-	 * labeled alternative in {@link Comet#typeName}.
+	 * Visit a parse tree produced by {@link Comet#typeName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArrayType(Comet.ArrayTypeContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code builtInType}
-	 * labeled alternative in {@link Comet#typeName}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBuiltInType(Comet.BuiltInTypeContext ctx);
+	T visitTypeName(Comet.TypeNameContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code newExpr}
 	 * labeled alternative in {@link Comet#expr}.
@@ -45,12 +36,12 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNewExpr(Comet.NewExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code memberCallExpr}
+	 * Visit a parse tree produced by the {@code indexExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMemberCallExpr(Comet.MemberCallExprContext ctx);
+	T visitIndexExpr(Comet.IndexExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code binaryArithExpr}
 	 * labeled alternative in {@link Comet#expr}.
@@ -66,40 +57,19 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPreSelfExpr(Comet.PreSelfExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code memberExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMemberExpr(Comet.MemberExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code atomExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAtomExpr(Comet.AtomExprContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code memberVarExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMemberVarExpr(Comet.MemberVarExprContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code parenExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParenExpr(Comet.ParenExprContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code indexExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIndexExpr(Comet.IndexExprContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code varExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVarExpr(Comet.VarExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code unaryArithExpr}
 	 * labeled alternative in {@link Comet#expr}.
@@ -121,6 +91,13 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAssignExpr(Comet.AssignExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code parenExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParenExpr(Comet.ParenExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code conditionalExpr}
 	 * labeled alternative in {@link Comet#expr}.
