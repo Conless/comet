@@ -17,7 +17,7 @@ type:
 typeName: type ('[' ']')*;
 
 expr:
-	New type ('[' expr? ']')* ('(' ')')?                        # newExpr
+	New type ('[' expr ']')* ('[' ']')* ('(' ')')?              # newExpr
 
 	// Exprs that MAY result with lvalue
 	| '(' expr ')'											                        # parenExpr
