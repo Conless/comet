@@ -2,19 +2,19 @@ package dev.conless.comet.frontend.ast.def;
 
 import java.util.ArrayList;
 
-import dev.conless.comet.frontend.ast.*;
-import dev.conless.comet.utils.*;
+import dev.conless.comet.frontend.ast.ASTNode;
+import dev.conless.comet.utils.Position;
 
 public class ClassDefNode extends ASTNode {
   public String name;
   public FuncDefNode constructor;
-  public ArrayList<ASTNode> varDefs;
-  public ArrayList<ASTNode> funcDefs;
+  public ArrayList<VarDefNode> varDefs;
+  public ArrayList<FuncDefNode> funcDefs;
   
   public ClassDefNode(Position position) {
     super(position);
-    this.varDefs = new ArrayList<ASTNode>();
-    this.funcDefs = new ArrayList<ASTNode>();
+    this.varDefs = new ArrayList<VarDefNode>();
+    this.funcDefs = new ArrayList<FuncDefNode>();
   }
 
   @Override
