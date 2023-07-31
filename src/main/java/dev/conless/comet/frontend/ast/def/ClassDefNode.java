@@ -29,15 +29,16 @@ public class ClassDefNode extends ASTNode {
   @Override
   public String toString() {
     String str = "class " + name + " {\n";
-    str += "  " + constructor.toString() + "\n";
-    str += varDefs.toString("  ", ";\n");
-    for (ASTNode varDef : varDefs) {
-      str += "  " + varDef.toString() + "\n";
+    if (constructor != null) {
+      str += "  " + constructor.toString() + "\n";
     }
-    for (ASTNode funcDef : funcDefs) {
-      str += "  " + funcDef.toString() + "\n";
+    str += varDefs.toString("  ", ";\n", ";\n");
+    if (funcDefs.size() > 0) {
+      String funcStr = funcDefs.toString("  ", "\n");
+      funcStr = funcStr.replace("\n", "\n  ");
+      str += funcStr + "\n";
     }
-    str += "};";
+    str += "}";
     return str;
   }
 }

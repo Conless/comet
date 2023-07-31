@@ -9,6 +9,6 @@ public class ContinueStmtNode extends StmtNode {
 
   @Override
   public String toString() {
-    return "continue;";
+    return super.toString() + "continue;";
   }
 }

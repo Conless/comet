@@ -3,10 +3,10 @@ package dev.conless.comet.frontend.ast.stmt;
 import dev.conless.comet.utils.Position;
 
 public class ForStmtNode extends StmtNode {
-  public StmtNode init, update, body;
-  public ExprStmtNode condition;
+  public StmtNode init, condition, body;
+  public ExprStmtNode update;
 
-  public ForStmtNode(Position position, StmtNode init, ExprStmtNode condition, StmtNode update, StmtNode body) {
+  public ForStmtNode(Position position, StmtNode init, StmtNode condition, ExprStmtNode update, StmtNode body) {
     super(position);
     this.init = init;
     this.condition = condition;
@@ -17,13 +17,22 @@ public class ForStmtNode extends StmtNode {
   @Override
   public String toString() {
     String str = "for (";
-    String initStr = init.toString();
-    str += initStr.substring(0, initStr.length() - 1);
-    String conditionStr = condition.toString();
-    str += conditionStr;
+    str += init.toString().substring(indentDepth * 2) + " ";
+    str += condition.toString().substring(indentDepth * 2) + " ";
     String updateStr = update.toString();
-    str += updateStr.substring(0, updateStr.length() - 1);
-    str += ") " + body.toString();
-    return str;
+    updateStr = updateStr.substring(indentDepth * 2, updateStr.length() - 1);
+    str += updateStr + ")";
+    if (body != null) {
+      if (body instanceof BlockStmtNode) {
+        str += " " + body.toString();
+      } else {
+        indentDepth++;
+        str += "\n" + body.toString();
+        indentDepth--;
+      }
+    } else {
+      str += "\n" + super.toString() + ";";
+    }
+    return super.toString() + str;
   }
 }

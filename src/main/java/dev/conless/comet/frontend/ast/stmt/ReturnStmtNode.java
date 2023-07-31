@@ -13,6 +13,6 @@ public class ReturnStmtNode extends StmtNode {
 
   @Override
   public String toString() {
-    return "return " + expr.toString() + ";";
+    return super.toString() + "return" + (expr != null ? " " + expr.toString() : "") + ";";
   }
 }

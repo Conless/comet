@@ -18,6 +18,6 @@ public class ExprStmtNode extends StmtNode {
 
   @Override
   public String toString() {
-    return exprs.toString(", ");
+    return super.toString() + exprs.toString(", ") + ";";
   }
 }

@@ -12,6 +12,7 @@ public class NewExprNode extends ExprNode {
   public NewExprNode(Position position, TypeNode type, Integer arrayDepth) {
     super(position);
     this.type = type;
+    this.arrayDepth = arrayDepth;
     lengths = new Array<ExprNode>();
   }
 
@@ -21,6 +22,10 @@ public class NewExprNode extends ExprNode {
 
   @Override
   public String toString() {
-    return "new " + type.toString() + "(" + lengths.toString(", ") + ")";
+    String str = "new " + type.toString();
+    for (int i = 0; i < arrayDepth; i++) {
+      str += "[" + (i < lengths.size() ? lengths.get(i).toString() : "") + "]";
+    }
+    return str;
   }
 }

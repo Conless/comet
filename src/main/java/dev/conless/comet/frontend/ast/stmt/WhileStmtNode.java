@@ -15,6 +15,14 @@ public class WhileStmtNode extends StmtNode {
 
   @Override
   public String toString() {
-    return "while (" + condition.toString() + ") " + body.toString();
+    String str = "while (" + condition.toString() + ")";
+    if (body instanceof BlockStmtNode) {
+      str += " " + body.toString();
+    } else {
+      indentDepth++;
+      str += "\n" + body.toString();
+      indentDepth--;
+    }
+    return super.toString() + str;
   }
 }

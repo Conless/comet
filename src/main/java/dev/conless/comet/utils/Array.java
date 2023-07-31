@@ -29,4 +29,21 @@ public class Array<E> extends ArrayList<E> {
     }
     return str;
   }
+
+  public String toString(String prefix, String separator, String suffix) {
+    if (this.size() == 0) {
+      return "";
+    }
+    String str = "";
+    boolean first = true;
+    for (E e : this) {
+      if (first) {
+        first = false;
+      } else {
+        str += separator;
+      }
+      str += prefix + e.toString();
+    }
+    return str + suffix;
+  }
 }

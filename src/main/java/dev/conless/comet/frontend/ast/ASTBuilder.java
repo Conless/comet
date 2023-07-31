@@ -14,7 +14,8 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   public ASTNode visitProgram(Comet.ProgramContext ctx) {
     var program = new ProgramNode(new Position(ctx.start));
     for (ParseTree def : ctx.children) {
-      if (def instanceof Comet.VarDefContext || def instanceof Comet.FuncDefContext || def instanceof Comet.ClassDefContext) {
+      if (def instanceof Comet.VarDefContext || def instanceof Comet.FuncDefContext
+          || def instanceof Comet.ClassDefContext) {
         program.addDef(visit(def));
       }
     }
@@ -32,13 +33,10 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitClassDef(Comet.ClassDefContext ctx) {
-    if (ctx.classConstructor().size() != 1) {
-      System.out.println("Class can only have one constructor");
-      System.exit(-1);
-    }
-    var constructor = ctx.classConstructor(0);
+    var constructor = ctx.classConstructor() != null ? ctx.classConstructor(0) : null;
     var classDef = new ClassDefNode(new Position(ctx.start), ctx.name.getText(),
-        new FuncDefNode(new Position(constructor.start), null, constructor.name.getText()));
+        constructor != null ? new FuncDefNode(new Position(constructor.start), null, constructor.name.getText())
+            : null);
     for (var def : ctx.varDef()) {
       classDef.addVarDef((VarDefNode) visit(def));
     }
@@ -131,13 +129,13 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
         (ExprNode) visit(ctx.expr(1)),
         (ExprNode) visit(ctx.expr(2)));
   }
-  
+
   @Override
   public ASTNode visitAssignExpr(Comet.AssignExprContext ctx) {
     return new AssignExprNode(new Position(ctx.start), (ExprNode) visit(ctx.expr(0)), ctx.op.getText(),
         (ExprNode) visit(ctx.expr(1)));
   }
-  
+
   @Override
   public ASTNode visitAtomExpr(Comet.AtomExprContext ctx) {
     Type type;
@@ -159,6 +157,14 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitStmt(Comet.StmtContext ctx) {
+    var child = ctx.getChild(0);
+    if (child instanceof Comet.VarDefContext) {
+      return new VarDefStmtNode(new Position(ctx.start), (VarDefNode) visit(child));
+    } else if (child instanceof Comet.ClassDefContext) {
+      return new ClassDefStmtNode(new Position(ctx.start), (ClassDefNode) visit(child));
+    } else if (child == ctx.Semi()) {
+      return new EmptyStmtNode(new Position(ctx.start));
+    }
     return visit(ctx.getChild(0));
   }
 
@@ -179,8 +185,8 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitForStmt(Comet.ForStmtContext ctx) {
-    return new ForStmtNode(new Position(ctx.start), (StmtNode) visit(ctx.init), (ExprStmtNode) visit(ctx.condition),
-        (StmtNode) visit(ctx.update), (StmtNode) visit(ctx.body));
+    return new ForStmtNode(new Position(ctx.start), (StmtNode) visit(ctx.init), (StmtNode) visit(ctx.condition),
+        (ExprStmtNode) visit(ctx.update), (StmtNode) visit(ctx.body));
   }
 
   @Override

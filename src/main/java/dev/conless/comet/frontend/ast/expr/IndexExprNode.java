@@ -13,6 +13,6 @@ public class IndexExprNode extends ExprNode {
 
   @Override
   public String toString() {
-    return array.toString() + "." + index.toString();
+    return array.toString() + "[" + index.toString() + "]";
   }
 }

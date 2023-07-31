@@ -17,6 +17,10 @@ public class BlockStmtNode extends StmtNode {
 
   @Override
   public String toString() {
-    return "{\n" + stmts.toString("  ", "\n") + "\n}";
+    indentDepth++;
+    String str = "{\n" + stmts.toString("\n");
+    indentDepth--;
+    str += "\n" + super.toString() + "}";
+    return str;
   }
 }

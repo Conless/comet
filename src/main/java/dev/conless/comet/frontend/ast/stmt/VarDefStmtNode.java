@@ -13,6 +13,6 @@ public class VarDefStmtNode extends StmtNode {
 
   @Override
   public String toString() {
-    return def.toString() + ";";
+    return super.toString() + def.toString() + ";";
   }
 }

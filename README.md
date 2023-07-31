@@ -1,11 +1,17 @@
 # COMET
 
-[TOC]
-
+1. [COMET](#comet)
+   1. [Introduction](#introduction)
+   2. [Usage](#usage)
+      1. [Installation](#installation)
+      2. [Build](#build)
+   3. [Documentation](#documentation)
+   4. [Development Progress](#development-progress)
+   5. [License](#license)
+   
 ## Introduction
 
 This is COMET, Compiler and Optimizer for Mx* with Extended Traits. It is the course lab of CS2966@SJTU (Compiler Design, 2023 Summer), which implements a compiler for Mx* programming language to RV32I assembly code by Java and antlr4.
-
 
 ## Usage
 
