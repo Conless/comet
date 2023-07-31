@@ -6,8 +6,10 @@ public class MemberExprNode extends ExprNode {
   public ExprNode object;
   public String member;
 
-  public MemberExprNode(Position position) {
+  public MemberExprNode(Position position, ExprNode object, String member) {
     super(position);
+    this.object = object;
+    this.member = member;
   }
 
   @Override

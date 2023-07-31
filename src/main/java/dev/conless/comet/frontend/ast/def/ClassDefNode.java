@@ -11,10 +11,20 @@ public class ClassDefNode extends ASTNode {
   public ArrayList<VarDefNode> varDefs;
   public ArrayList<FuncDefNode> funcDefs;
   
-  public ClassDefNode(Position position) {
+  public ClassDefNode(Position position, String name, FuncDefNode constructor) {
     super(position);
+    this.name = name;
+    this.constructor = constructor;
     this.varDefs = new ArrayList<VarDefNode>();
     this.funcDefs = new ArrayList<FuncDefNode>();
+  }
+
+  public void addVarDef(VarDefNode varDef) {
+    varDefs.add(varDef);
+  }
+
+  public void addFuncDef(FuncDefNode funcDef) {
+    funcDefs.add(funcDef);
   }
 
   @Override

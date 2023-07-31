@@ -2,12 +2,15 @@ package dev.conless.comet.frontend.ast.expr;
 
 import dev.conless.comet.utils.Position;
 
-public class BinaryArithExprNode extends ExprNode {
+public class BinaryExprNode extends ExprNode {
   public ExprNode lhs, rhs;
   public String op;
 
-  public BinaryArithExprNode(Position position) {
+  public BinaryExprNode(Position position, ExprNode lhs, String op, ExprNode rhs) {
     super(position);
+    this.lhs = lhs;
+    this.op = op;
+    this.rhs = rhs;
   }
 
   @Override

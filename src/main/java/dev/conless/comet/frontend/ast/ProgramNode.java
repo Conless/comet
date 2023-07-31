@@ -12,6 +12,10 @@ public class ProgramNode extends ASTNode {
     this.defs = new ArrayList<ASTNode>();
   }
 
+  public void addDef(ASTNode def) {
+    defs.add(def);
+  }
+
   @Override
   public String toString() {
     String str = "";

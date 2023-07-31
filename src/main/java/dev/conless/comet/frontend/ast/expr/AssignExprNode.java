@@ -6,8 +6,11 @@ public class AssignExprNode extends ExprNode {
   public ExprNode lhs, rhs;
   public String op;
 
-  public AssignExprNode(Position position) {
+  public AssignExprNode(Position position, ExprNode lhs, String op, ExprNode rhs) {
     super(position);
+    this.lhs = lhs;
+    this.op = op;
+    this.rhs = rhs;
   }
 
   @Override
