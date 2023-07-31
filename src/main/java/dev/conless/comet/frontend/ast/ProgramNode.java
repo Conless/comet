@@ -2,7 +2,7 @@ package dev.conless.comet.frontend.ast;
 
 import java.util.ArrayList;
 
-import dev.conless.comet.utils.*;
+import dev.conless.comet.utils.Position;
 
 public class ProgramNode extends ASTNode {
   public ArrayList<ASTNode> defs;

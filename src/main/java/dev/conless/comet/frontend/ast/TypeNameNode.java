@@ -1,6 +1,6 @@
 package dev.conless.comet.frontend.ast;
 
-import dev.conless.comet.utils.*;
+import dev.conless.comet.utils.Position;
 
 public class TypeNameNode extends ASTNode {
   String typeName;
