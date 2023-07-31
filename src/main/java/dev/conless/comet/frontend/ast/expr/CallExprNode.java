@@ -1,17 +1,16 @@
 package dev.conless.comet.frontend.ast.expr;
 
-import java.util.ArrayList;
-
 import dev.conless.comet.utils.Position;
+import dev.conless.comet.utils.Array;
 
 public class CallExprNode extends ExprNode {
   public ExprNode func;
-  public ArrayList<ExprNode> args;
+  public Array<ExprNode> args;
 
   public CallExprNode(Position position, ExprNode func) {
     super(position);
     this.func = func;
-    this.args = new ArrayList<ExprNode>();
+    this.args = new Array<ExprNode>();
   }
 
   public void addArg(ExprNode arg) {
@@ -19,6 +18,6 @@ public class CallExprNode extends ExprNode {
   }
 
   @Override public String toString() {
-    return func + "(" + args.toString() + ")";
+    return func + "(" + args.toString(", ") + ")";
   }
 }

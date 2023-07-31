@@ -4,14 +4,15 @@ import dev.conless.comet.frontend.ast.def.ClassDefNode;
 import dev.conless.comet.utils.Position;
 
 public class ClassDefStmtNode extends StmtNode {
-  public ClassDefNode varDef;
+  public ClassDefNode def;
 
-  public ClassDefStmtNode(Position position) {
+  public ClassDefStmtNode(Position position, ClassDefNode def) {
     super(position);
+    this.def = def;
   }
 
   @Override
   public String toString() {
-    return varDef.toString() + ";";
+    return def.toString() + ";";
   }
 }

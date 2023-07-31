@@ -92,18 +92,19 @@ stmt:
 	| ifStmt
 	| forStmt
 	| whileStmt
-	| varDef ';'
-	| classDef ';'
 	| continueStmt ';'
 	| breakStmt ';'
 	| returnStmt ';'
 	| exprStmt ';'
-	| ';';
+	| varDef ';'
+	| classDef ';'
+	| ';'
+	;
 
 ifStmt: If '(' expr ')' stmt (Else stmt)?;
 forStmt:
-	For '(' init = stmt condition = stmt update = exprStmt? ')' stmt;
-whileStmt: While '(' condition = expr ')' stmt;
+	For '(' init = stmt condition = stmt update = exprStmt? ')' body=stmt;
+whileStmt: While '(' expr ')' stmt;
 
 continueStmt: Continue;
 breakStmt: Break;

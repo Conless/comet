@@ -1,15 +1,15 @@
 package dev.conless.comet.frontend.ast;
 
-import java.util.ArrayList;
-
+import dev.conless.comet.frontend.ast.def.*;
 import dev.conless.comet.utils.Position;
+import dev.conless.comet.utils.Array;
 
 public class ProgramNode extends ASTNode {
-  public ArrayList<ASTNode> defs;
+  public Array<ASTNode> defs;
 
   public ProgramNode(Position position) {
     super(position);
-    this.defs = new ArrayList<ASTNode>();
+    this.defs = new Array<ASTNode>();
   }
 
   public void addDef(ASTNode def) {
@@ -20,7 +20,12 @@ public class ProgramNode extends ASTNode {
   public String toString() {
     String str = "";
     for (ASTNode def : defs) {
-      str += def.toString() + "\n";
+      str += def.toString();
+      if (def instanceof ClassDefNode || def instanceof VarDefNode) {
+        str += ";\n";
+      } else {
+        str += "\n";
+      }
     }
     return str;
   }

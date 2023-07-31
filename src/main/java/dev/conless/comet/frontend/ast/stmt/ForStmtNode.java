@@ -1,14 +1,17 @@
 package dev.conless.comet.frontend.ast.stmt;
 
-import dev.conless.comet.frontend.ast.expr.ExprNode;
 import dev.conless.comet.utils.Position;
 
 public class ForStmtNode extends StmtNode {
   public StmtNode init, update, body;
-  public ExprNode condition;
+  public ExprStmtNode condition;
 
-  public ForStmtNode(Position position) {
+  public ForStmtNode(Position position, StmtNode init, ExprStmtNode condition, StmtNode update, StmtNode body) {
     super(position);
+    this.init = init;
+    this.condition = condition;
+    this.update = update;
+    this.body = body;
   }
 
   @Override

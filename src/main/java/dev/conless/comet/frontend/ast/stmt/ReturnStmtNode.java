@@ -6,8 +6,9 @@ import dev.conless.comet.utils.Position;
 public class ReturnStmtNode extends StmtNode {
   ExprNode expr;
 
-  public ReturnStmtNode(Position position) {
+  public ReturnStmtNode(Position position, ExprNode expr) {
     super(position);
+    this.expr = expr;
   }
 
   @Override

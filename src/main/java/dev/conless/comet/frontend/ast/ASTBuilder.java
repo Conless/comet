@@ -14,7 +14,9 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   public ASTNode visitProgram(Comet.ProgramContext ctx) {
     var program = new ProgramNode(new Position(ctx.start));
     for (ParseTree def : ctx.children) {
-      program.addDef(visit(def));
+      if (def instanceof Comet.VarDefContext || def instanceof Comet.FuncDefContext || def instanceof Comet.ClassDefContext) {
+        program.addDef(visit(def));
+      }
     }
     return program;
   }
@@ -153,5 +155,60 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
       type = Type.CUSTOM;
     }
     return new AtomExprNode(new Position(ctx.start), type, ctx.getText());
+  }
+
+  @Override
+  public ASTNode visitStmt(Comet.StmtContext ctx) {
+    return visit(ctx.getChild(0));
+  }
+
+  @Override
+  public ASTNode visitBlockStmt(Comet.BlockStmtContext ctx) {
+    var blockStmt = new BlockStmtNode(new Position(ctx.start));
+    for (var stmt : ctx.stmt()) {
+      blockStmt.addStmt((StmtNode) visit(stmt));
+    }
+    return blockStmt;
+  }
+
+  @Override
+  public ASTNode visitIfStmt(Comet.IfStmtContext ctx) {
+    return new IfStmtNode(new Position(ctx.start), (ExprNode) visit(ctx.expr()), (StmtNode) visit(ctx.stmt(0)),
+        ctx.stmt().size() == 2 ? (StmtNode) visit(ctx.stmt(1)) : null);
+  }
+
+  @Override
+  public ASTNode visitForStmt(Comet.ForStmtContext ctx) {
+    return new ForStmtNode(new Position(ctx.start), (StmtNode) visit(ctx.init), (ExprStmtNode) visit(ctx.condition),
+        (StmtNode) visit(ctx.update), (StmtNode) visit(ctx.body));
+  }
+
+  @Override
+  public ASTNode visitWhileStmt(Comet.WhileStmtContext ctx) {
+    return new WhileStmtNode(new Position(ctx.start), (ExprNode) visit(ctx.expr()), (StmtNode) visit(ctx.stmt()));
+  }
+
+  @Override
+  public ASTNode visitContinueStmt(Comet.ContinueStmtContext ctx) {
+    return new ContinueStmtNode(new Position(ctx.start));
+  }
+
+  @Override
+  public ASTNode visitBreakStmt(Comet.BreakStmtContext ctx) {
+    return new BreakStmtNode(new Position(ctx.start));
+  }
+
+  @Override
+  public ASTNode visitReturnStmt(Comet.ReturnStmtContext ctx) {
+    return new ReturnStmtNode(new Position(ctx.start), ctx.expr() != null ? (ExprNode) visit(ctx.expr()) : null);
+  }
+
+  @Override
+  public ASTNode visitExprStmt(Comet.ExprStmtContext ctx) {
+    var exprStmt = new ExprStmtNode(new Position(ctx.start));
+    for (var expr : ctx.expr()) {
+      exprStmt.addExpr((ExprNode) visit(expr));
+    }
+    return exprStmt;
   }
 }

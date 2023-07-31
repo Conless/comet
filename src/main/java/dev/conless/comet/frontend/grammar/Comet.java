@@ -1769,16 +1769,10 @@ public class Comet extends Parser {
 		public WhileStmtContext whileStmt() {
 			return getRuleContext(WhileStmtContext.class,0);
 		}
-		public VarDefContext varDef() {
-			return getRuleContext(VarDefContext.class,0);
-		}
-		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
-		public ClassDefContext classDef() {
-			return getRuleContext(ClassDefContext.class,0);
-		}
 		public ContinueStmtContext continueStmt() {
 			return getRuleContext(ContinueStmtContext.class,0);
 		}
+		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
 		public BreakStmtContext breakStmt() {
 			return getRuleContext(BreakStmtContext.class,0);
 		}
@@ -1787,6 +1781,12 @@ public class Comet extends Parser {
 		}
 		public ExprStmtContext exprStmt() {
 			return getRuleContext(ExprStmtContext.class,0);
+		}
+		public VarDefContext varDef() {
+			return getRuleContext(VarDefContext.class,0);
+		}
+		public ClassDefContext classDef() {
+			return getRuleContext(ClassDefContext.class,0);
 		}
 		public StmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1846,7 +1846,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(233);
-				varDef();
+				continueStmt();
 				setState(234);
 				match(Semi);
 				}
@@ -1855,7 +1855,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(236);
-				classDef();
+				breakStmt();
 				setState(237);
 				match(Semi);
 				}
@@ -1864,7 +1864,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(239);
-				continueStmt();
+				returnStmt();
 				setState(240);
 				match(Semi);
 				}
@@ -1873,7 +1873,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 8);
 				{
 				setState(242);
-				breakStmt();
+				exprStmt();
 				setState(243);
 				match(Semi);
 				}
@@ -1882,7 +1882,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 9);
 				{
 				setState(245);
-				returnStmt();
+				varDef();
 				setState(246);
 				match(Semi);
 				}
@@ -1891,7 +1891,7 @@ public class Comet extends Parser {
 				enterOuterAlt(_localctx, 10);
 				{
 				setState(248);
-				exprStmt();
+				classDef();
 				setState(249);
 				match(Semi);
 				}
@@ -1996,6 +1996,7 @@ public class Comet extends Parser {
 		public StmtContext init;
 		public StmtContext condition;
 		public ExprStmtContext update;
+		public StmtContext body;
 		public TerminalNode For() { return getToken(Comet.For, 0); }
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
@@ -2055,7 +2056,7 @@ public class Comet extends Parser {
 			setState(270);
 			match(RParen);
 			setState(271);
-			stmt();
+			((ForStmtContext)_localctx).body = stmt();
 			}
 		}
 		catch (RecognitionException re) {
@@ -2071,15 +2072,14 @@ public class Comet extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class WhileStmtContext extends ParserRuleContext {
-		public ExprContext condition;
 		public TerminalNode While() { return getToken(Comet.While, 0); }
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
 		public StmtContext stmt() {
 			return getRuleContext(StmtContext.class,0);
-		}
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
 		}
 		public WhileStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2111,7 +2111,7 @@ public class Comet extends Parser {
 			setState(274);
 			match(LParen);
 			setState(275);
-			((WhileStmtContext)_localctx).condition = expr(0);
+			expr(0);
 			setState(276);
 			match(RParen);
 			setState(277);
@@ -2542,14 +2542,14 @@ public class Comet extends Parser {
 		"\u0000\u0000\u0000\u00e3\u00e4\u0005=\u0000\u0000\u00e4\u0019\u0001\u0000"+
 		"\u0000\u0000\u00e5\u00fd\u0003\u0018\f\u0000\u00e6\u00fd\u0003\u001c\u000e"+
 		"\u0000\u00e7\u00fd\u0003\u001e\u000f\u0000\u00e8\u00fd\u0003 \u0010\u0000"+
-		"\u00e9\u00ea\u0003\b\u0004\u0000\u00ea\u00eb\u0005:\u0000\u0000\u00eb"+
-		"\u00fd\u0001\u0000\u0000\u0000\u00ec\u00ed\u0003\f\u0006\u0000\u00ed\u00ee"+
+		"\u00e9\u00ea\u0003\"\u0011\u0000\u00ea\u00eb\u0005:\u0000\u0000\u00eb"+
+		"\u00fd\u0001\u0000\u0000\u0000\u00ec\u00ed\u0003$\u0012\u0000\u00ed\u00ee"+
 		"\u0005:\u0000\u0000\u00ee\u00fd\u0001\u0000\u0000\u0000\u00ef\u00f0\u0003"+
-		"\"\u0011\u0000\u00f0\u00f1\u0005:\u0000\u0000\u00f1\u00fd\u0001\u0000"+
-		"\u0000\u0000\u00f2\u00f3\u0003$\u0012\u0000\u00f3\u00f4\u0005:\u0000\u0000"+
-		"\u00f4\u00fd\u0001\u0000\u0000\u0000\u00f5\u00f6\u0003&\u0013\u0000\u00f6"+
-		"\u00f7\u0005:\u0000\u0000\u00f7\u00fd\u0001\u0000\u0000\u0000\u00f8\u00f9"+
-		"\u0003(\u0014\u0000\u00f9\u00fa\u0005:\u0000\u0000\u00fa\u00fd\u0001\u0000"+
+		"&\u0013\u0000\u00f0\u00f1\u0005:\u0000\u0000\u00f1\u00fd\u0001\u0000\u0000"+
+		"\u0000\u00f2\u00f3\u0003(\u0014\u0000\u00f3\u00f4\u0005:\u0000\u0000\u00f4"+
+		"\u00fd\u0001\u0000\u0000\u0000\u00f5\u00f6\u0003\b\u0004\u0000\u00f6\u00f7"+
+		"\u0005:\u0000\u0000\u00f7\u00fd\u0001\u0000\u0000\u0000\u00f8\u00f9\u0003"+
+		"\f\u0006\u0000\u00f9\u00fa\u0005:\u0000\u0000\u00fa\u00fd\u0001\u0000"+
 		"\u0000\u0000\u00fb\u00fd\u0005:\u0000\u0000\u00fc\u00e5\u0001\u0000\u0000"+
 		"\u0000\u00fc\u00e6\u0001\u0000\u0000\u0000\u00fc\u00e7\u0001\u0000\u0000"+
 		"\u0000\u00fc\u00e8\u0001\u0000\u0000\u0000\u00fc\u00e9\u0001\u0000\u0000"+
