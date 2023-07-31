@@ -180,15 +180,15 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitVarDef(Comet.VarDefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#varCtor}.
+	 * Enter a parse tree produced by {@link Comet#varConstructor}.
 	 * @param ctx the parse tree
 	 */
-	void enterVarCtor(Comet.VarCtorContext ctx);
+	void enterVarConstructor(Comet.VarConstructorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#varCtor}.
+	 * Exit a parse tree produced by {@link Comet#varConstructor}.
 	 * @param ctx the parse tree
 	 */
-	void exitVarCtor(Comet.VarCtorContext ctx);
+	void exitVarConstructor(Comet.VarConstructorContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Comet#classDef}.
 	 * @param ctx the parse tree
@@ -200,15 +200,15 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitClassDef(Comet.ClassDefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#classCtor}.
+	 * Enter a parse tree produced by {@link Comet#classConstructor}.
 	 * @param ctx the parse tree
 	 */
-	void enterClassCtor(Comet.ClassCtorContext ctx);
+	void enterClassConstructor(Comet.ClassConstructorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#classCtor}.
+	 * Exit a parse tree produced by {@link Comet#classConstructor}.
 	 * @param ctx the parse tree
 	 */
-	void exitClassCtor(Comet.ClassCtorContext ctx);
+	void exitClassConstructor(Comet.ClassConstructorContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Comet#funcDef}.
 	 * @param ctx the parse tree

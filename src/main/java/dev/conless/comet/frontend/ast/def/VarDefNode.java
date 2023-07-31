@@ -1,12 +1,13 @@
 package dev.conless.comet.frontend.ast.def;
 
 import dev.conless.comet.frontend.ast.*;
+import dev.conless.comet.frontend.ast.expr.ExprNode;
 import dev.conless.comet.utils.*;
 
 public class VarDefNode extends ASTNode {
   public String name;
   public TypeNameNode type;
-  public VarCtorNode ctor;
+  public ExprNode constructor;
 
   public VarDefNode(Position position) {
     super(position);
@@ -14,6 +15,10 @@ public class VarDefNode extends ASTNode {
 
   @Override
   public String toString() {
-    return type.toString() + " " + name + " " + ctor.toString() + ";";
+    String str = type.toString() + " " + name;
+    if (constructor != null) {
+      str += " = " + constructor.toString();
+    }
+    return str;
   }
 }

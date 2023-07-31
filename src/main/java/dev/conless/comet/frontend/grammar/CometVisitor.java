@@ -112,11 +112,11 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVarDef(Comet.VarDefContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#varCtor}.
+	 * Visit a parse tree produced by {@link Comet#varConstructor}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVarCtor(Comet.VarCtorContext ctx);
+	T visitVarConstructor(Comet.VarConstructorContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Comet#classDef}.
 	 * @param ctx the parse tree
@@ -124,11 +124,11 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClassDef(Comet.ClassDefContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#classCtor}.
+	 * Visit a parse tree produced by {@link Comet#classConstructor}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitClassCtor(Comet.ClassCtorContext ctx);
+	T visitClassConstructor(Comet.ClassConstructorContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Comet#funcDef}.
 	 * @param ctx the parse tree

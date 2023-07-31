@@ -72,20 +72,20 @@ expr:
 	)                                                            # atomExpr
   ;
 
-varDef: typeName varCtor (',' varCtor)*;
-varCtor: varName = Identifier ('=' expr)?;
+varDef: typeName varConstructor (',' varConstructor)*;
+varConstructor: varName = Identifier ('=' expr)?;
 
 classDef:
 	Class className = Identifier '{' (
 		(varDef ';')
 		| funcDef
-		| classCtor
+		| classConstructor
 	)* '}';
-classCtor: className = Identifier '(' ')' blockStmt;
+classConstructor: className = Identifier '(' ')' blockStmt;
 
 funcDef:
 	returnType funcName = Identifier '(' funcParaList? ')' blockStmt;
-funcParaList: typeName varCtor (',' typeName varCtor)*;
+funcParaList: typeName varConstructor (',' typeName varConstructor)*;
 funcArgList: expr (',' expr)*;
 returnType: typeName;
 

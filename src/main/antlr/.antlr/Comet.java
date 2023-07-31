@@ -30,14 +30,15 @@ public class Comet extends Parser {
 		StringCharacter=67, StringConst=68;
 	public static final int
 		RULE_program = 0, RULE_type = 1, RULE_typeName = 2, RULE_expr = 3, RULE_varDef = 4, 
-		RULE_varCtor = 5, RULE_classDef = 6, RULE_classCtor = 7, RULE_funcDef = 8, 
-		RULE_funcParaList = 9, RULE_funcArgList = 10, RULE_returnType = 11, RULE_blockStmt = 12, 
-		RULE_stmt = 13, RULE_ifStmt = 14, RULE_forStmt = 15, RULE_whileStmt = 16, 
-		RULE_continueStmt = 17, RULE_breakStmt = 18, RULE_returnStmt = 19, RULE_exprStmt = 20;
+		RULE_varConstructor = 5, RULE_classDef = 6, RULE_classConstructor = 7, 
+		RULE_funcDef = 8, RULE_funcParaList = 9, RULE_funcArgList = 10, RULE_returnType = 11, 
+		RULE_blockStmt = 12, RULE_stmt = 13, RULE_ifStmt = 14, RULE_forStmt = 15, 
+		RULE_whileStmt = 16, RULE_continueStmt = 17, RULE_breakStmt = 18, RULE_returnStmt = 19, 
+		RULE_exprStmt = 20;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"program", "type", "typeName", "expr", "varDef", "varCtor", "classDef", 
-			"classCtor", "funcDef", "funcParaList", "funcArgList", "returnType", 
+			"program", "type", "typeName", "expr", "varDef", "varConstructor", "classDef", 
+			"classConstructor", "funcDef", "funcParaList", "funcArgList", "returnType", 
 			"blockStmt", "stmt", "ifStmt", "forStmt", "whileStmt", "continueStmt", 
 			"breakStmt", "returnStmt", "exprStmt"
 		};
@@ -949,11 +950,11 @@ public class Comet extends Parser {
 		public TypeNameContext typeName() {
 			return getRuleContext(TypeNameContext.class,0);
 		}
-		public List<VarCtorContext> varCtor() {
-			return getRuleContexts(VarCtorContext.class);
+		public List<VarConstructorContext> varConstructor() {
+			return getRuleContexts(VarConstructorContext.class);
 		}
-		public VarCtorContext varCtor(int i) {
-			return getRuleContext(VarCtorContext.class,i);
+		public VarConstructorContext varConstructor(int i) {
+			return getRuleContext(VarConstructorContext.class,i);
 		}
 		public List<TerminalNode> Comma() { return getTokens(Comet.Comma); }
 		public TerminalNode Comma(int i) {
@@ -975,7 +976,7 @@ public class Comet extends Parser {
 			setState(160);
 			typeName();
 			setState(161);
-			varCtor();
+			varConstructor();
 			setState(166);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -985,7 +986,7 @@ public class Comet extends Parser {
 				setState(162);
 				match(Comma);
 				setState(163);
-				varCtor();
+				varConstructor();
 				}
 				}
 				setState(168);
@@ -1005,28 +1006,28 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class VarCtorContext extends ParserRuleContext {
+	public static class VarConstructorContext extends ParserRuleContext {
 		public Token varName;
 		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
 		public TerminalNode Assign() { return getToken(Comet.Assign, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public VarCtorContext(ParserRuleContext parent, int invokingState) {
+		public VarConstructorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_varCtor; }
+		@Override public int getRuleIndex() { return RULE_varConstructor; }
 	}
 
-	public final VarCtorContext varCtor() throws RecognitionException {
-		VarCtorContext _localctx = new VarCtorContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_varCtor);
+	public final VarConstructorContext varConstructor() throws RecognitionException {
+		VarConstructorContext _localctx = new VarConstructorContext(_ctx, getState());
+		enterRule(_localctx, 10, RULE_varConstructor);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(169);
-			((VarCtorContext)_localctx).varName = match(Identifier);
+			((VarConstructorContext)_localctx).varName = match(Identifier);
 			setState(172);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -1064,11 +1065,11 @@ public class Comet extends Parser {
 		public FuncDefContext funcDef(int i) {
 			return getRuleContext(FuncDefContext.class,i);
 		}
-		public List<ClassCtorContext> classCtor() {
-			return getRuleContexts(ClassCtorContext.class);
+		public List<ClassConstructorContext> classConstructor() {
+			return getRuleContexts(ClassConstructorContext.class);
 		}
-		public ClassCtorContext classCtor(int i) {
-			return getRuleContext(ClassCtorContext.class,i);
+		public ClassConstructorContext classConstructor(int i) {
+			return getRuleContext(ClassConstructorContext.class,i);
 		}
 		public List<VarDefContext> varDef() {
 			return getRuleContexts(VarDefContext.class);
@@ -1126,7 +1127,7 @@ public class Comet extends Parser {
 				case 3:
 					{
 					setState(181);
-					classCtor();
+					classConstructor();
 					}
 					break;
 				}
@@ -1150,7 +1151,7 @@ public class Comet extends Parser {
 		return _localctx;
 	}
 
-	public static class ClassCtorContext extends ParserRuleContext {
+	public static class ClassConstructorContext extends ParserRuleContext {
 		public Token className;
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
@@ -1158,20 +1159,20 @@ public class Comet extends Parser {
 			return getRuleContext(BlockStmtContext.class,0);
 		}
 		public TerminalNode Identifier() { return getToken(Comet.Identifier, 0); }
-		public ClassCtorContext(ParserRuleContext parent, int invokingState) {
+		public ClassConstructorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_classCtor; }
+		@Override public int getRuleIndex() { return RULE_classConstructor; }
 	}
 
-	public final ClassCtorContext classCtor() throws RecognitionException {
-		ClassCtorContext _localctx = new ClassCtorContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_classCtor);
+	public final ClassConstructorContext classConstructor() throws RecognitionException {
+		ClassConstructorContext _localctx = new ClassConstructorContext(_ctx, getState());
+		enterRule(_localctx, 14, RULE_classConstructor);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(189);
-			((ClassCtorContext)_localctx).className = match(Identifier);
+			((ClassConstructorContext)_localctx).className = match(Identifier);
 			setState(190);
 			match(LParen);
 			setState(191);
@@ -1258,11 +1259,11 @@ public class Comet extends Parser {
 		public TypeNameContext typeName(int i) {
 			return getRuleContext(TypeNameContext.class,i);
 		}
-		public List<VarCtorContext> varCtor() {
-			return getRuleContexts(VarCtorContext.class);
+		public List<VarConstructorContext> varConstructor() {
+			return getRuleContexts(VarConstructorContext.class);
 		}
-		public VarCtorContext varCtor(int i) {
-			return getRuleContext(VarCtorContext.class,i);
+		public VarConstructorContext varConstructor(int i) {
+			return getRuleContext(VarConstructorContext.class,i);
 		}
 		public List<TerminalNode> Comma() { return getTokens(Comet.Comma); }
 		public TerminalNode Comma(int i) {
@@ -1284,7 +1285,7 @@ public class Comet extends Parser {
 			setState(203);
 			typeName();
 			setState(204);
-			varCtor();
+			varConstructor();
 			setState(211);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -1296,7 +1297,7 @@ public class Comet extends Parser {
 				setState(206);
 				typeName();
 				setState(207);
-				varCtor();
+				varConstructor();
 				}
 				}
 				setState(213);

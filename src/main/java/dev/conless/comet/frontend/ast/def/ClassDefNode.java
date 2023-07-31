@@ -7,7 +7,7 @@ import dev.conless.comet.utils.*;
 
 public class ClassDefNode extends ASTNode {
   public String name;
-  public ClassCtorNode ctor;
+  public FuncDefNode constructor;
   public ArrayList<ASTNode> varDefs;
   public ArrayList<ASTNode> funcDefs;
   
@@ -20,7 +20,7 @@ public class ClassDefNode extends ASTNode {
   @Override
   public String toString() {
     String str = "class " + name + " {\n";
-    str += "  " + ctor.toString() + "\n";
+    str += "  " + constructor.toString() + "\n";
     for (ASTNode varDef : varDefs) {
       str += "  " + varDef.toString() + "\n";
     }

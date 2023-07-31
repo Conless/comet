@@ -197,13 +197,13 @@ public class CometBaseListener implements CometListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVarCtor(Comet.VarCtorContext ctx) { }
+	@Override public void enterVarConstructor(Comet.VarConstructorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVarCtor(Comet.VarCtorContext ctx) { }
+	@Override public void exitVarConstructor(Comet.VarConstructorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -221,13 +221,13 @@ public class CometBaseListener implements CometListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClassCtor(Comet.ClassCtorContext ctx) { }
+	@Override public void enterClassConstructor(Comet.ClassConstructorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClassCtor(Comet.ClassCtorContext ctx) { }
+	@Override public void exitClassConstructor(Comet.ClassConstructorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
