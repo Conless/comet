@@ -403,7 +403,7 @@ public class MxParser extends Parser {
 		public TerminalNode SelfSub() { return getToken(MxParser.SelfSub, 0); }
 		public PreSelfExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
-	public static class BinaryArithExpressionContext extends ExpressionContext {
+	public static class BinaryExpressionContext extends ExpressionContext {
 		public Token op;
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
@@ -429,7 +429,7 @@ public class MxParser extends Parser {
 		public TerminalNode BitOr() { return getToken(MxParser.BitOr, 0); }
 		public TerminalNode LogicAnd() { return getToken(MxParser.LogicAnd, 0); }
 		public TerminalNode LogicOr() { return getToken(MxParser.LogicOr, 0); }
-		public BinaryArithExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public BinaryExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class VariableExpressionContext extends ExpressionContext {
 		public Token varibleName;
@@ -661,15 +661,15 @@ public class MxParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
 					case 1:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(90);
 						if (!(precpred(_ctx, 13))) throw new FailedPredicateException(this, "precpred(_ctx, 13)");
 						setState(91);
-						((BinaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((BinaryExpressionContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Mul) | (1L << Div) | (1L << Mod))) != 0)) ) {
-							((BinaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((BinaryExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -682,15 +682,15 @@ public class MxParser extends Parser {
 						break;
 					case 2:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(93);
 						if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
 						setState(94);
-						((BinaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((BinaryExpressionContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==Add || _la==Sub) ) {
-							((BinaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((BinaryExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -703,15 +703,15 @@ public class MxParser extends Parser {
 						break;
 					case 3:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(96);
 						if (!(precpred(_ctx, 11))) throw new FailedPredicateException(this, "precpred(_ctx, 11)");
 						setState(97);
-						((BinaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((BinaryExpressionContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==BitRShift || _la==BitLShift) ) {
-							((BinaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((BinaryExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -724,15 +724,15 @@ public class MxParser extends Parser {
 						break;
 					case 4:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(99);
 						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
 						setState(100);
-						((BinaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((BinaryExpressionContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Greater) | (1L << Less) | (1L << GreaterEqual) | (1L << LessEqual))) != 0)) ) {
-							((BinaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((BinaryExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -745,15 +745,15 @@ public class MxParser extends Parser {
 						break;
 					case 5:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(102);
 						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
 						setState(103);
-						((BinaryArithExpressionContext)_localctx).op = _input.LT(1);
+						((BinaryExpressionContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==NotEqual || _la==Eqaul) ) {
-							((BinaryArithExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+							((BinaryExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -766,60 +766,60 @@ public class MxParser extends Parser {
 						break;
 					case 6:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(105);
 						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
 						setState(106);
-						((BinaryArithExpressionContext)_localctx).op = match(BitAnd);
+						((BinaryExpressionContext)_localctx).op = match(BitAnd);
 						setState(107);
 						expression(9);
 						}
 						break;
 					case 7:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(108);
 						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
 						setState(109);
-						((BinaryArithExpressionContext)_localctx).op = match(BitXor);
+						((BinaryExpressionContext)_localctx).op = match(BitXor);
 						setState(110);
 						expression(8);
 						}
 						break;
 					case 8:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(111);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
 						setState(112);
-						((BinaryArithExpressionContext)_localctx).op = match(BitOr);
+						((BinaryExpressionContext)_localctx).op = match(BitOr);
 						setState(113);
 						expression(7);
 						}
 						break;
 					case 9:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(114);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(115);
-						((BinaryArithExpressionContext)_localctx).op = match(LogicAnd);
+						((BinaryExpressionContext)_localctx).op = match(LogicAnd);
 						setState(116);
 						expression(6);
 						}
 						break;
 					case 10:
 						{
-						_localctx = new BinaryArithExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(117);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(118);
-						((BinaryArithExpressionContext)_localctx).op = match(LogicOr);
+						((BinaryExpressionContext)_localctx).op = match(LogicOr);
 						setState(119);
 						expression(5);
 						}

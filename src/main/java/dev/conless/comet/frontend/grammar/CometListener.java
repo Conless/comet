@@ -62,29 +62,29 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitIndexExpr(Comet.IndexExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code binaryArithExpr}
+	 * Enter a parse tree produced by the {@code postUnaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterBinaryArithExpr(Comet.BinaryArithExprContext ctx);
+	void enterPostUnaryExpr(Comet.PostUnaryExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code binaryArithExpr}
+	 * Exit a parse tree produced by the {@code postUnaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitBinaryArithExpr(Comet.BinaryArithExprContext ctx);
+	void exitPostUnaryExpr(Comet.PostUnaryExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code preSelfExpr}
+	 * Enter a parse tree produced by the {@code preUnaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterPreSelfExpr(Comet.PreSelfExprContext ctx);
+	void enterPreUnaryExpr(Comet.PreUnaryExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code preSelfExpr}
+	 * Exit a parse tree produced by the {@code preUnaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitPreSelfExpr(Comet.PreSelfExprContext ctx);
+	void exitPreUnaryExpr(Comet.PreUnaryExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code memberExpr}
 	 * labeled alternative in {@link Comet#expr}.
@@ -110,17 +110,17 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitAtomExpr(Comet.AtomExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code unaryArithExpr}
+	 * Enter a parse tree produced by the {@code binaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterUnaryArithExpr(Comet.UnaryArithExprContext ctx);
+	void enterBinaryExpr(Comet.BinaryExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code unaryArithExpr}
+	 * Exit a parse tree produced by the {@code binaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitUnaryArithExpr(Comet.UnaryArithExprContext ctx);
+	void exitBinaryExpr(Comet.BinaryExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code callExpr}
 	 * labeled alternative in {@link Comet#expr}.
@@ -220,15 +220,25 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitFuncDef(Comet.FuncDefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Comet#funcParaList}.
+	 * Enter a parse tree produced by {@link Comet#funcParamList}.
 	 * @param ctx the parse tree
 	 */
-	void enterFuncParaList(Comet.FuncParaListContext ctx);
+	void enterFuncParamList(Comet.FuncParamListContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Comet#funcParaList}.
+	 * Exit a parse tree produced by {@link Comet#funcParamList}.
 	 * @param ctx the parse tree
 	 */
-	void exitFuncParaList(Comet.FuncParaListContext ctx);
+	void exitFuncParamList(Comet.FuncParamListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Comet#funcParam}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncParam(Comet.FuncParamContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Comet#funcParam}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncParam(Comet.FuncParamContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Comet#funcArgList}.
 	 * @param ctx the parse tree
@@ -239,16 +249,6 @@ public interface CometListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFuncArgList(Comet.FuncArgListContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link Comet#returnType}.
-	 * @param ctx the parse tree
-	 */
-	void enterReturnType(Comet.ReturnTypeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Comet#returnType}.
-	 * @param ctx the parse tree
-	 */
-	void exitReturnType(Comet.ReturnTypeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Comet#blockStmt}.
 	 * @param ctx the parse tree

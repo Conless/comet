@@ -43,19 +43,19 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIndexExpr(Comet.IndexExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code binaryArithExpr}
+	 * Visit a parse tree produced by the {@code postUnaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBinaryArithExpr(Comet.BinaryArithExprContext ctx);
+	T visitPostUnaryExpr(Comet.PostUnaryExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code preSelfExpr}
+	 * Visit a parse tree produced by the {@code preUnaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPreSelfExpr(Comet.PreSelfExprContext ctx);
+	T visitPreUnaryExpr(Comet.PreUnaryExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code memberExpr}
 	 * labeled alternative in {@link Comet#expr}.
@@ -71,12 +71,12 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAtomExpr(Comet.AtomExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code unaryArithExpr}
+	 * Visit a parse tree produced by the {@code binaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitUnaryArithExpr(Comet.UnaryArithExprContext ctx);
+	T visitBinaryExpr(Comet.BinaryExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code callExpr}
 	 * labeled alternative in {@link Comet#expr}.
@@ -136,23 +136,23 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFuncDef(Comet.FuncDefContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Comet#funcParaList}.
+	 * Visit a parse tree produced by {@link Comet#funcParamList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFuncParaList(Comet.FuncParaListContext ctx);
+	T visitFuncParamList(Comet.FuncParamListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Comet#funcParam}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncParam(Comet.FuncParamContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Comet#funcArgList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitFuncArgList(Comet.FuncArgListContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Comet#returnType}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitReturnType(Comet.ReturnTypeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Comet#blockStmt}.
 	 * @param ctx the parse tree

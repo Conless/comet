@@ -17,35 +17,32 @@ type:
 typeName: type ('[' ']')*;
 
 expr:
-	New type ('[' expr ']')* ('[' ']')* ('(' ')')?              # newExpr
+	New type ('[' expr ']')* ('[' ']')* ('(' ')')?              										# newExpr
 
 	// Exprs that MAY result with lvalue
-	| '(' expr ')'											                        # parenExpr
-	| expr '.' member = Identifier							                # memberExpr
-	| expr '(' funcArgList? ')'			                            # callExpr
-	| expr '[' expr ']'										                      # indexExpr
+	| '(' expr ')'											                        										# parenExpr
+	| expr '.' member = Identifier							                										# memberExpr
+	| expr '(' funcArgList? ')'			                            										# callExpr
+	| expr '[' expr ']'										                      										# indexExpr
 
-	// Unary exprs that result with rvalue
-	| <assoc = right> expr op = (SelfAdd | SelfSub)				      # unaryArithExpr
-	| <assoc = right> op = (LogicNot | BitNot | Add | Sub) expr	# unaryArithExpr
-
-	// Prefix self operation
-	| op = (SelfAdd | SelfSub) expr                             # preSelfExpr
+	// Unary exprs
+	| expr op = (SelfAdd | SelfSub)				      																		# postUnaryExpr
+	| <assoc = right> op = (SelfAdd | SelfSub | LogicNot | BitNot | Add | Sub) expr	# preUnaryExpr
 
 	// Binary exprs that results with rvalue
-	| expr op = (Mul | Div | Mod) expr								          # binaryArithExpr
-	| expr op = (Add | Sub) expr									              # binaryArithExpr
-	| expr op = (BitLShift | BitRShift) expr						        # binaryArithExpr
-	| expr op = (Less | Greater | LessEqual | GreaterEqual) expr# binaryArithExpr
-	| expr op = (Eqaul | NotEqual) expr								          # binaryArithExpr
-	| expr op = BitAnd expr											                # binaryArithExpr
-	| expr op = BitXor expr											                # binaryArithExpr
-	| expr op = BitOr expr											                # binaryArithExpr
-	| expr op = LogicAnd expr										                # binaryArithExpr
-	| expr op = LogicOr expr										                # binaryArithExpr
+	| expr op = (Mul | Div | Mod) expr								          										# binaryExpr
+	| expr op = (Add | Sub) expr									              										# binaryExpr
+	| expr op = (BitLShift | BitRShift) expr						        										# binaryExpr
+	| expr op = (Less | Greater | LessEqual | GreaterEqual) expr										# binaryExpr
+	| expr op = (Eqaul | NotEqual) expr								          										# binaryExpr
+	| expr op = BitAnd expr											                										# binaryExpr
+	| expr op = BitXor expr											                										# binaryExpr
+	| expr op = BitOr expr											                										# binaryExpr
+	| expr op = LogicAnd expr										                										# binaryExpr
+	| expr op = LogicOr expr										                										# binaryExpr
 
 	// Conditional expr
-	| expr '?' expr ':' expr                                    # conditionalExpr
+	| expr '?' expr ':' expr                                    										# conditionalExpr
 
 	// Assignment exprs, requires lvalue and results with lvalue
 	| expr op = (
@@ -60,7 +57,7 @@ expr:
 		| OrAssign
 		| BitLShiftAssign
 		| BitRShiftAssign
-	) expr                                                       # assignExpr
+	) expr                                                       										# assignExpr
 	| value = (
 		IntegerConst
 		| StringConst
@@ -69,25 +66,25 @@ expr:
 		| Null
 		| Identifier
 		| This
-	)                                                            # atomExpr
+	)                                                            										# atomExpr
   ;
 
 varDef: typeName varConstructor (',' varConstructor)*;
-varConstructor: varName = Identifier ('=' expr)?;
+varConstructor: name = Identifier ('=' expr)?;
 
 classDef:
-	Class className = Identifier '{' (
+	Class name = Identifier '{' (
 		(varDef ';')
 		| funcDef
 		| classConstructor
 	)* '}';
-classConstructor: className = Identifier '(' ')' blockStmt;
+classConstructor: name = Identifier '(' ')' blockStmt;
 
 funcDef:
-	returnType funcName = Identifier '(' funcParaList? ')' blockStmt;
-funcParaList: typeName varConstructor (',' typeName varConstructor)*;
+	typeName name = Identifier '(' funcParamList? ')' blockStmt;
+funcParamList: funcParam (',' funcParam)*;
+funcParam: typeName varConstructor;
 funcArgList: expr (',' expr)*;
-returnType: typeName;
 
 blockStmt: '{' stmt* '}';
 stmt:

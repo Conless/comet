@@ -77,25 +77,25 @@ public class CometBaseListener implements CometListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBinaryArithExpr(Comet.BinaryArithExprContext ctx) { }
+	@Override public void enterPostUnaryExpr(Comet.PostUnaryExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBinaryArithExpr(Comet.BinaryArithExprContext ctx) { }
+	@Override public void exitPostUnaryExpr(Comet.PostUnaryExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPreSelfExpr(Comet.PreSelfExprContext ctx) { }
+	@Override public void enterPreUnaryExpr(Comet.PreUnaryExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPreSelfExpr(Comet.PreSelfExprContext ctx) { }
+	@Override public void exitPreUnaryExpr(Comet.PreUnaryExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -125,13 +125,13 @@ public class CometBaseListener implements CometListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterUnaryArithExpr(Comet.UnaryArithExprContext ctx) { }
+	@Override public void enterBinaryExpr(Comet.BinaryExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitUnaryArithExpr(Comet.UnaryArithExprContext ctx) { }
+	@Override public void exitBinaryExpr(Comet.BinaryExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -245,13 +245,25 @@ public class CometBaseListener implements CometListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFuncParaList(Comet.FuncParaListContext ctx) { }
+	@Override public void enterFuncParamList(Comet.FuncParamListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFuncParaList(Comet.FuncParaListContext ctx) { }
+	@Override public void exitFuncParamList(Comet.FuncParamListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFuncParam(Comet.FuncParamContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFuncParam(Comet.FuncParamContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -264,18 +276,6 @@ public class CometBaseListener implements CometListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFuncArgList(Comet.FuncArgListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterReturnType(Comet.ReturnTypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitReturnType(Comet.ReturnTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
