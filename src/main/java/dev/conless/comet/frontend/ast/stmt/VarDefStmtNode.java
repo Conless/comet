@@ -4,7 +4,7 @@ import dev.conless.comet.frontend.ast.def.VarDefNode;
 import dev.conless.comet.utils.Position;
 
 public class VarDefStmtNode extends StmtNode {
-  VarDefNode varDef;
+  public VarDefNode varDef;
 
   public VarDefStmtNode(Position position) {
     super(position);

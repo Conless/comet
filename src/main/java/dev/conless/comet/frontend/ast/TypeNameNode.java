@@ -3,9 +3,9 @@ package dev.conless.comet.frontend.ast;
 import dev.conless.comet.utils.Position;
 
 public class TypeNameNode extends ASTNode {
-  String typeName;
-  boolean isBuiltIn;
-  int arrayDepth;
+  public String typeName;
+  public boolean isBuiltIn;
+  public int arrayDepth;
 
   public TypeNameNode(Position position) {
     super(position);

@@ -6,8 +6,8 @@ import dev.conless.comet.frontend.ast.TypeNameNode;
 import dev.conless.comet.utils.Position;
 
 public class NewExprNode extends ExprNode {
-  TypeNameNode typename;
-  ArrayList<Integer> lengths;
+  public TypeNameNode typename;
+  public ArrayList<Integer> lengths;
 
   public NewExprNode(Position position) {
     super(position);

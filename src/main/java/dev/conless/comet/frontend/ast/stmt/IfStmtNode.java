@@ -4,10 +4,10 @@ import dev.conless.comet.frontend.ast.expr.ExprNode;
 import dev.conless.comet.utils.Position;
 
 public class IfStmtNode extends StmtNode {
-  ExprNode condition;
-  StmtNode thenStmt, elseStmt;
+  public ExprNode condition;
+  public StmtNode thenStmt, elseStmt;
 
-  IfStmtNode(Position position) {
+  public IfStmtNode(Position position) {
     super(position);
   }
 

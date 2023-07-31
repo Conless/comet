@@ -7,8 +7,8 @@ enum Type {
 };
 
 public class AtomExprNode extends ExprNode {
-  Type type;
-  String value;
+  public Type type;
+  public String value;
 
   public AtomExprNode(Position position) {
     super(position);

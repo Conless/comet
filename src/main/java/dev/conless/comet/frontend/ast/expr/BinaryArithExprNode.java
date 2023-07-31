@@ -3,8 +3,8 @@ package dev.conless.comet.frontend.ast.expr;
 import dev.conless.comet.utils.Position;
 
 public class BinaryArithExprNode extends ExprNode {
-  ExprNode lhs, rhs;
-  String op;
+  public ExprNode lhs, rhs;
+  public String op;
 
   public BinaryArithExprNode(Position position) {
     super(position);

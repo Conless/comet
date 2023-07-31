@@ -3,7 +3,7 @@ package dev.conless.comet.frontend.ast.stmt;
 import dev.conless.comet.utils.Position;
 
 public class ContinueStmtNode extends StmtNode {
-  ContinueStmtNode(Position position) {
+  public ContinueStmtNode(Position position) {
     super(position);
   }
 

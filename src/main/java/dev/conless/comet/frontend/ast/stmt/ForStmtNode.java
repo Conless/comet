@@ -4,10 +4,10 @@ import dev.conless.comet.frontend.ast.expr.ExprNode;
 import dev.conless.comet.utils.Position;
 
 public class ForStmtNode extends StmtNode {
-  StmtNode init, update, body;
-  ExprNode condition;
+  public StmtNode init, update, body;
+  public ExprNode condition;
 
-  ForStmtNode(Position position) {
+  public ForStmtNode(Position position) {
     super(position);
   }
 

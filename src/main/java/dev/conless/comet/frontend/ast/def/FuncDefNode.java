@@ -7,9 +7,9 @@ import dev.conless.comet.frontend.ast.TypeNameNode;
 import dev.conless.comet.utils.Position;
 
 public class FuncDefNode extends ASTNode {
-  TypeNameNode type;
-  String name;
-  ArrayList<VarDefNode> args;
+  public TypeNameNode type;
+  public String name;
+  public ArrayList<VarDefNode> args;
 
   public FuncDefNode(Position position) {
     super(position);

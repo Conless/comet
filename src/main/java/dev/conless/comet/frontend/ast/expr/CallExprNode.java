@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import dev.conless.comet.utils.Position;
 
 public class CallExprNode extends ExprNode {
-  ExprNode func;
-  ArrayList<ExprNode> args;
+  public ExprNode func;
+  public ArrayList<ExprNode> args;
 
   public CallExprNode(Position position) {
     super(position);
