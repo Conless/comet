@@ -30,8 +30,11 @@ public class IfStmtNode extends StmtNode {
       } else {
         str += "\n" + super.toString() + "else";
       }
-      if (elseStmt instanceof BlockStmtNode || elseStmt instanceof IfStmtNode) {
-        str += " " + elseStmt.toString().substring(indentDepth * 2);
+      if (elseStmt instanceof BlockStmtNode) {
+        str += " " + elseStmt.toString();
+      } else if (elseStmt instanceof IfStmtNode) {
+        String elseStr = elseStmt.toString();
+        str += " " + elseStr.substring(indentDepth * 2);
       } else {
         indentDepth++;
         str += "\n" + elseStmt.toString();

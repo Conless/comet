@@ -5,18 +5,34 @@ import dev.conless.comet.frontend.ast.def.*;
 import dev.conless.comet.frontend.ast.expr.*;
 import dev.conless.comet.frontend.ast.stmt.*;
 import dev.conless.comet.frontend.ast.type.*;
+import dev.conless.comet.utils.scope.*;
 
-public class SemanticChecker implements ASTVisitor {
+public class SymbolCollector implements ASTVisitor {
+  private GlobalScope global;
+
   public void visit(ASTNode node) throws Exception {
-    throw new Exception("SemanticChecker.visit(ASTNode) should not be called");
+    throw new Exception("SymbolCollector.visit(ASTNode) should not be called");
   }
 
-  public void visit(ProgramNode node) {
-    
+  public void visit(ProgramNode node) throws Exception {
+    for (var def : node.defs) {
+      if (def instanceof ClassDefNode || def instanceof FuncDefNode) {
+        if (global.checkDeclared(def.info.name())) {
+          throw new Exception(def.info.name() + " is already defined");
+        } else {
+          global.declare(def.info);
+        }
+      }
+    }
   }
 
   public void visit(FuncDefNode node) {}
-  public void visit(ClassDefNode node) {}
+
+  public void visit(ClassDefNode node) {
+    for (var def : node.funcDefs) {
+      
+    }
+  }
   public void visit(VarDefNode node) {}
   
   public void visit(TypeNameNode node) {}

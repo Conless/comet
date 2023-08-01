@@ -1,8 +1,7 @@
 package dev.conless.comet.frontend.ast;
 
-import org.antlr.v4.runtime.tree.ParseTree;
-
 import dev.conless.comet.frontend.grammar.*;
+import dev.conless.comet.utils.Type;
 import dev.conless.comet.utils.container.Position;
 import dev.conless.comet.frontend.ast.def.*;
 import dev.conless.comet.frontend.ast.expr.*;
@@ -13,10 +12,10 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   @Override
   public ASTNode visitProgram(Comet.ProgramContext ctx) {
     var program = new ProgramNode(new Position(ctx.start));
-    for (ParseTree def : ctx.children) {
+    for (var def : ctx.children) {
       if (def instanceof Comet.VarDefContext || def instanceof Comet.FuncDefContext
           || def instanceof Comet.ClassDefContext) {
-        program.addDef(visit(def));
+        program.addDef((BaseDefNode) visit(def));
       }
     }
     return program;
@@ -63,18 +62,13 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   }
 
   @Override
-  public TypeNode visitType(Comet.TypeContext ctx) {
-    return new TypeNode(new Position(ctx.start), ctx.getText());
-  }
-
-  @Override
   public ASTNode visitTypeName(Comet.TypeNameContext ctx) {
-    return new TypeNameNode(new Position(ctx.start), (TypeNode) visit(ctx.type()), ctx.LBracket().size());
+    return new TypeNameNode(new Position(ctx.start), ctx.type().getText(), ctx.LBracket().size());
   }
 
   @Override
   public ASTNode visitNewExpr(Comet.NewExprContext ctx) {
-    var newExpr = new NewExprNode(new Position(ctx.start), (TypeNode) visit(ctx.type()), ctx.LBracket().size());
+    var newExpr = new NewExprNode(new Position(ctx.start), ctx.type().getText(), ctx.LBracket().size());
     for (var expr : ctx.expr()) {
       newExpr.addLength((ExprNode) visit(expr));
     }

@@ -1,18 +1,17 @@
 package dev.conless.comet.frontend.ast.expr;
 
-import dev.conless.comet.frontend.ast.type.TypeNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.metadata.TypeInfo;
 
 public class NewExprNode extends ExprNode {
-  public TypeNode type;
-  public Integer arrayDepth;
+  public TypeInfo type;
   public Array<ExprNode> lengths;
 
-  public NewExprNode(Position position, TypeNode type, Integer arrayDepth) {
+  public NewExprNode(Position position, String typeName, Integer arrayDepth) {
     super(position);
-    this.type = type;
-    this.arrayDepth = arrayDepth;
+    this.type = new TypeInfo(typeName);
+    this.type.depth = arrayDepth;
     lengths = new Array<ExprNode>();
   }
 
@@ -22,8 +21,8 @@ public class NewExprNode extends ExprNode {
 
   @Override
   public String toString() {
-    String str = "new " + type.toString();
-    for (int i = 0; i < arrayDepth; i++) {
+    String str = "new " + type.name;
+    for (int i = 0; i < type.depth; i++) {
       str += "[" + (i < lengths.size() ? lengths.get(i).toString() : "") + "]";
     }
     return str;

@@ -19,7 +19,7 @@ public class Compiler {
     parser.removeErrorListeners();
     parser.addErrorListener(new CometErrorListener());
     ASTNode program = new ASTBuilder().visit(parser.program());
-    var output = new FileOutputStream("./src/test/mx/input_transformed.mx");
+    var output = new FileOutputStream("./src/test/mx/output.mx");
     output.write(program.toString().getBytes());
     output.close();
   }

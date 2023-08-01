@@ -5,14 +5,14 @@ import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
 
 public class ProgramNode extends ASTNode {
-  public Array<ASTNode> defs;
+  public Array<BaseDefNode> defs;
 
   public ProgramNode(Position position) {
     super(position);
-    this.defs = new Array<ASTNode>();
+    this.defs = new Array<BaseDefNode>();
   }
 
-  public void addDef(ASTNode def) {
+  public void addDef(BaseDefNode def) {
     defs.add(def);
   }
 

@@ -3,16 +3,15 @@ package dev.conless.comet.frontend.ast.def;
 import dev.conless.comet.frontend.ast.ASTNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.metadata.ClassInfo;
 
-public class ClassDefNode extends ASTNode {
-  public String name;
+public class ClassDefNode extends BaseDefNode {
   public FuncDefNode constructor;
   public Array<VarDefNode> varDefs;
   public Array<FuncDefNode> funcDefs;
   
   public ClassDefNode(Position position, String name, FuncDefNode constructor) {
-    super(position);
-    this.name = name;
+    super(position, new ClassInfo(name));
     this.constructor = constructor;
     this.varDefs = new Array<VarDefNode>();
     this.funcDefs = new Array<FuncDefNode>();
@@ -26,9 +25,13 @@ public class ClassDefNode extends ASTNode {
     funcDefs.add(funcDef);
   }
 
+  public String name() {
+    return info.name;
+  }
+
   @Override
   public String toString() {
-    String str = "class " + name + " {\n";
+    String str = "class " + info.name + " {\n";
     if (constructor != null) {
       str += "  " + constructor.toString() + "\n";
     }

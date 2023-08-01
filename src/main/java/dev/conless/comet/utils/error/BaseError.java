@@ -2,11 +2,11 @@ package dev.conless.comet.utils.error;
 
 import dev.conless.comet.utils.container.Position;
 
-abstract public class Error extends RuntimeException {
+abstract public class BaseError extends RuntimeException {
   private Position pos;
   private String message;
 
-  public Error(String msg, Position pos) {
+  public BaseError(String msg, Position pos) {
     this.pos = pos;
     this.message = msg;
   }
