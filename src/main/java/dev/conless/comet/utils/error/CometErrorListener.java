@@ -1,6 +1,7 @@
-package dev.conless.comet.utils;
+package dev.conless.comet.utils.error;
 
-import dev.conless.comet.utils.error.SyntaxError;
+import dev.conless.comet.utils.container.Position;
+
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;

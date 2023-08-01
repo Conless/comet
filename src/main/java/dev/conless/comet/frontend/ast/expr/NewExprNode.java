@@ -1,8 +1,8 @@
 package dev.conless.comet.frontend.ast.expr;
 
 import dev.conless.comet.frontend.ast.type.TypeNode;
-import dev.conless.comet.utils.Position;
-import dev.conless.comet.utils.Array;
+import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.container.Position;
 
 public class NewExprNode extends ExprNode {
   public TypeNode type;

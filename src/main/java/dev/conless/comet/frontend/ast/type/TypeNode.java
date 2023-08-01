@@ -1,7 +1,7 @@
 package dev.conless.comet.frontend.ast.type;
 
 import dev.conless.comet.frontend.ast.ASTNode;
-import dev.conless.comet.utils.Position;
+import dev.conless.comet.utils.container.Position;
 
 public class TypeNode extends ASTNode {
   public Type type;

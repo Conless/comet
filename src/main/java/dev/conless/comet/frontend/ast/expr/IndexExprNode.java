@@ -1,6 +1,6 @@
 package dev.conless.comet.frontend.ast.expr;
 
-import dev.conless.comet.utils.Position;
+import dev.conless.comet.utils.container.Position;
 
 public class IndexExprNode extends ExprNode {
   public ExprNode array, index;

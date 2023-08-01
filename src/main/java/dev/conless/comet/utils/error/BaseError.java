@@ -1,6 +1,6 @@
 package dev.conless.comet.utils.error;
 
-import dev.conless.comet.utils.Position;
+import dev.conless.comet.utils.container.Position;
 
 abstract public class Error extends RuntimeException {
   private Position pos;

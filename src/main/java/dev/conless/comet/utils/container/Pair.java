@@ -1,4 +1,4 @@
-package dev.conless.comet.utils;
+package dev.conless.comet.utils.container;
 
 public class Pair<A, B> {
 	public A a;

@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.*;
 
 import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.grammar.*;
-import dev.conless.comet.utils.*;
+import dev.conless.comet.utils.error.*;
 
 public class Compiler {
   public static void main(String[] args) throws Exception {
@@ -19,7 +19,7 @@ public class Compiler {
     parser.removeErrorListeners();
     parser.addErrorListener(new CometErrorListener());
     ASTNode program = new ASTBuilder().visit(parser.program());
-    var output = new FileOutputStream("./src/test/mx/output.mx");
+    var output = new FileOutputStream("./src/test/mx/input_transformed.mx");
     output.write(program.toString().getBytes());
     output.close();
   }

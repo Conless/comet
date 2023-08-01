@@ -1,8 +1,8 @@
 package dev.conless.comet.frontend.ast.stmt;
 
 import dev.conless.comet.frontend.ast.expr.ExprNode;
-import dev.conless.comet.utils.Position;
-import dev.conless.comet.utils.Array;
+import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.container.Position;
 
 public class ExprStmtNode extends StmtNode {
   public Array<ExprNode> exprs;

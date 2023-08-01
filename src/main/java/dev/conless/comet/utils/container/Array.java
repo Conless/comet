@@ -1,4 +1,4 @@
-package dev.conless.comet.utils;
+package dev.conless.comet.utils.container;
 
 import java.util.ArrayList;
 

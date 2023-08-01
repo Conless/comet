@@ -5,6 +5,8 @@ options {
 
 @header {package dev.conless.comet.frontend.grammar;}
 
+// Program contains varDef, classDef and funcDef
+// Notice that there has to be exact one main function, which should be handled in SemanticChecker.
 program: ((varDef ';') | (classDef ';') | funcDef)* EOF;
 
 type:
@@ -22,7 +24,7 @@ expr:
 	// Exprs that MAY result with lvalue
 	| '(' expr ')'											                        										# parenExpr
 	| expr '.' member = Identifier							                										# memberExpr
-	| expr '(' funcArgList? ')'			                            										# callExpr
+	| expr '(' funcArgList? ')'			                            										# callExpr			// in Mx only need to deal with args without default value
 	| expr '[' expr ']'										                      										# indexExpr
 
 	// Unary exprs
@@ -57,7 +59,7 @@ expr:
 		| OrAssign
 		| BitLShiftAssign
 		| BitRShiftAssign
-	) expr                                                       										# assignExpr
+	) expr                                                       										# assignExpr		// in Mx only need to deal with Assign
 	| value = (
 		IntegerConst
 		| StringConst
@@ -72,7 +74,7 @@ expr:
 varDef: typeName varConstructor (',' varConstructor)*;
 varConstructor: name = Identifier ('=' expr)?;
 
-classDef:
+classDef: // Notice that there're limitations for classConstructor, which should be handled in SemanticChecker.
 	Class name = Identifier '{' (
 		(varDef ';')
 		| funcDef
@@ -97,13 +99,12 @@ stmt:
 	| returnStmt ';'
 	| exprStmt ';'
 	| varDef ';'
-	| classDef ';'
 	| ';'
 	;
 
 ifStmt: If '(' expr ')' stmt (Else stmt)?;
 forStmt:
-	For '(' init = stmt condition = stmt update = exprStmt? ')' body=stmt;
+	For '(' init = stmt condition = stmt update = exprStmt? ')' body=stmt;	// Notice that condition statement can only be exprStmt or emptyStmt.
 whileStmt: While '(' expr ')' stmt;
 
 continueStmt: Continue;

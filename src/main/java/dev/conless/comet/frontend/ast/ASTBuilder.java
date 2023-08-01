@@ -3,11 +3,11 @@ package dev.conless.comet.frontend.ast;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import dev.conless.comet.frontend.grammar.*;
+import dev.conless.comet.utils.container.Position;
 import dev.conless.comet.frontend.ast.def.*;
 import dev.conless.comet.frontend.ast.expr.*;
 import dev.conless.comet.frontend.ast.stmt.*;
 import dev.conless.comet.frontend.ast.type.*;
-import dev.conless.comet.utils.Position;
 
 public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   @Override

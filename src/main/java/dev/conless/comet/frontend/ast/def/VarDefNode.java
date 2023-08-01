@@ -3,9 +3,9 @@ package dev.conless.comet.frontend.ast.def;
 import dev.conless.comet.frontend.ast.ASTNode;
 import dev.conless.comet.frontend.ast.expr.ExprNode;
 import dev.conless.comet.frontend.ast.type.TypeNameNode;
-import dev.conless.comet.utils.Position;
-import dev.conless.comet.utils.Array;
-import dev.conless.comet.utils.Pair;
+import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.container.Pair;
+import dev.conless.comet.utils.container.Position;
 
 public class VarDefNode extends ASTNode {
   public TypeNameNode type;

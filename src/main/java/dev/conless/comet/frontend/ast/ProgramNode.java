@@ -1,8 +1,8 @@
 package dev.conless.comet.frontend.ast;
 
 import dev.conless.comet.frontend.ast.def.*;
-import dev.conless.comet.utils.Position;
-import dev.conless.comet.utils.Array;
+import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.container.Position;
 
 public class ProgramNode extends ASTNode {
   public Array<ASTNode> defs;
