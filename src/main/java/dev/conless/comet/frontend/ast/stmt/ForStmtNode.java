@@ -3,11 +3,14 @@ package dev.conless.comet.frontend.ast.stmt;
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.utils.container.Position;
 
-public class ForStmtNode extends StmtNode {
-  public StmtNode init, condition, body;
+public class ForStmtNode extends StmtNode implements ScopedNode {
+  public BaseScope scope;
+  public StmtNode init;
+  public ExprNode condition;
   public ExprStmtNode update;
+  public StmtNode body;
 
-  public ForStmtNode(Position position, StmtNode init, StmtNode condition, ExprStmtNode update, StmtNode body) {
+  public ForStmtNode(Position position, StmtNode init, ExprNode condition, ExprStmtNode update, StmtNode body) {
     super(position);
     this.init = init;
     this.condition = condition;

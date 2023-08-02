@@ -37,6 +37,5 @@ public interface ASTVisitor {
   public void visit(ReturnStmtNode node) throws Exception;
   public void visit(ExprStmtNode node) throws Exception;
   public void visit(VarDefStmtNode node) throws Exception;
-  public void visit(ClassDefStmtNode node) throws Exception;
   public void visit(EmptyStmtNode node) throws Exception;
 }

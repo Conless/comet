@@ -1630,17 +1630,21 @@ public class Comet extends Parser {
 
 	public static class ForStmtContext extends ParserRuleContext {
 		public StmtContext init;
-		public StmtContext condition;
+		public ExprContext condition;
 		public ExprStmtContext update;
 		public StmtContext body;
 		public TerminalNode For() { return getToken(Comet.For, 0); }
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
 		public List<StmtContext> stmt() {
 			return getRuleContexts(StmtContext.class);
 		}
 		public StmtContext stmt(int i) {
 			return getRuleContext(StmtContext.class,i);
+		}
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprStmtContext exprStmt() {
 			return getRuleContext(ExprStmtContext.class,0);
@@ -1665,20 +1669,22 @@ public class Comet extends Parser {
 			setState(262);
 			((ForStmtContext)_localctx).init = stmt();
 			setState(263);
-			((ForStmtContext)_localctx).condition = stmt();
-			setState(265);
+			((ForStmtContext)_localctx).condition = expr(0);
+			setState(264);
+			match(Semi);
+			setState(266);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
 				{
-				setState(264);
+				setState(265);
 				((ForStmtContext)_localctx).update = exprStmt();
 				}
 			}
 
-			setState(267);
-			match(RParen);
 			setState(268);
+			match(RParen);
+			setState(269);
 			((ForStmtContext)_localctx).body = stmt();
 			}
 		}
@@ -1715,15 +1721,15 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(270);
-			match(While);
 			setState(271);
-			match(LParen);
+			match(While);
 			setState(272);
-			expr(0);
+			match(LParen);
 			setState(273);
-			match(RParen);
+			expr(0);
 			setState(274);
+			match(RParen);
+			setState(275);
 			stmt();
 			}
 		}
@@ -1752,7 +1758,7 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(276);
+			setState(277);
 			match(Continue);
 			}
 		}
@@ -1781,7 +1787,7 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(278);
+			setState(279);
 			match(Break);
 			}
 		}
@@ -1814,14 +1820,14 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(280);
+			setState(281);
 			match(Return);
-			setState(282);
+			setState(283);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & ((1L << (New - 5)) | (1L << (Null - 5)) | (1L << (True - 5)) | (1L << (False - 5)) | (1L << (This - 5)) | (1L << (Add - 5)) | (1L << (Sub - 5)) | (1L << (LogicNot - 5)) | (1L << (BitNot - 5)) | (1L << (SelfAdd - 5)) | (1L << (SelfSub - 5)) | (1L << (LParen - 5)) | (1L << (Identifier - 5)) | (1L << (IntegerConst - 5)) | (1L << (StringConst - 5)))) != 0)) {
 				{
-				setState(281);
+				setState(282);
 				expr(0);
 				}
 			}
@@ -1863,21 +1869,21 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(284);
+			setState(285);
 			expr(0);
-			setState(289);
+			setState(290);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				setState(285);
-				match(Comma);
 				setState(286);
+				match(Comma);
+				setState(287);
 				expr(0);
 				}
 				}
-				setState(291);
+				setState(292);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1940,7 +1946,7 @@ public class Comet extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3F\u0127\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3F\u0128\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\3\2\3\2\3\2\3\2\3\2\3\2\3\2\7"+
@@ -1959,16 +1965,16 @@ public class Comet extends Parser {
 		"\u00e4\13\16\3\16\3\16\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3"+
 		"\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u00fc\n\17"+
 		"\3\20\3\20\3\20\3\20\3\20\3\20\3\20\5\20\u0105\n\20\3\21\3\21\3\21\3\21"+
-		"\3\21\5\21\u010c\n\21\3\21\3\21\3\21\3\22\3\22\3\22\3\22\3\22\3\22\3\23"+
-		"\3\23\3\24\3\24\3\25\3\25\5\25\u011d\n\25\3\26\3\26\3\26\7\26\u0122\n"+
-		"\26\f\26\16\26\u0125\13\26\3\26\2\3\b\27\2\4\6\b\n\f\16\20\22\24\26\30"+
-		"\32\34\36 \"$&(*\2\f\4\2\3\6CC\6\2\24\25!!\'\'\63\64\5\2\t\fCDFF\3\2\26"+
-		"\30\3\2\24\25\3\2\"#\3\2\31\34\3\2\35\36\3\2(\62\3\2\63\64\2\u0142\2\65"+
-		"\3\2\2\2\4:\3\2\2\2\6<\3\2\2\2\bb\3\2\2\2\n\u00a0\3\2\2\2\f\u00a9\3\2"+
-		"\2\2\16\u00ae\3\2\2\2\20\u00bd\3\2\2\2\22\u00c2\3\2\2\2\24\u00cb\3\2\2"+
-		"\2\26\u00d3\3\2\2\2\30\u00d6\3\2\2\2\32\u00de\3\2\2\2\34\u00fb\3\2\2\2"+
-		"\36\u00fd\3\2\2\2 \u0106\3\2\2\2\"\u0110\3\2\2\2$\u0116\3\2\2\2&\u0118"+
-		"\3\2\2\2(\u011a\3\2\2\2*\u011e\3\2\2\2,-\5\n\6\2-.\7<\2\2.\64\3\2\2\2"+
+		"\3\21\3\21\5\21\u010d\n\21\3\21\3\21\3\21\3\22\3\22\3\22\3\22\3\22\3\22"+
+		"\3\23\3\23\3\24\3\24\3\25\3\25\5\25\u011e\n\25\3\26\3\26\3\26\7\26\u0123"+
+		"\n\26\f\26\16\26\u0126\13\26\3\26\2\3\b\27\2\4\6\b\n\f\16\20\22\24\26"+
+		"\30\32\34\36 \"$&(*\2\f\4\2\3\6CC\6\2\24\25!!\'\'\63\64\5\2\t\fCDFF\3"+
+		"\2\26\30\3\2\24\25\3\2\"#\3\2\31\34\3\2\35\36\3\2(\62\3\2\63\64\2\u0143"+
+		"\2\65\3\2\2\2\4:\3\2\2\2\6<\3\2\2\2\bb\3\2\2\2\n\u00a0\3\2\2\2\f\u00a9"+
+		"\3\2\2\2\16\u00ae\3\2\2\2\20\u00bd\3\2\2\2\22\u00c2\3\2\2\2\24\u00cb\3"+
+		"\2\2\2\26\u00d3\3\2\2\2\30\u00d6\3\2\2\2\32\u00de\3\2\2\2\34\u00fb\3\2"+
+		"\2\2\36\u00fd\3\2\2\2 \u0106\3\2\2\2\"\u0111\3\2\2\2$\u0117\3\2\2\2&\u0119"+
+		"\3\2\2\2(\u011b\3\2\2\2*\u011f\3\2\2\2,-\5\n\6\2-.\7<\2\2.\64\3\2\2\2"+
 		"/\60\5\16\b\2\60\61\7<\2\2\61\64\3\2\2\2\62\64\5\22\n\2\63,\3\2\2\2\63"+
 		"/\3\2\2\2\63\62\3\2\2\2\64\67\3\2\2\2\65\63\3\2\2\2\65\66\3\2\2\2\668"+
 		"\3\2\2\2\67\65\3\2\2\289\7\2\2\39\3\3\2\2\2:;\t\2\2\2;\5\3\2\2\2<A\5\4"+
@@ -2031,17 +2037,17 @@ public class Comet extends Parser {
 		"\7\r\2\2\u00fe\u00ff\78\2\2\u00ff\u0100\5\b\5\2\u0100\u0101\79\2\2\u0101"+
 		"\u0104\5\34\17\2\u0102\u0103\7\16\2\2\u0103\u0105\5\34\17\2\u0104\u0102"+
 		"\3\2\2\2\u0104\u0105\3\2\2\2\u0105\37\3\2\2\2\u0106\u0107\7\17\2\2\u0107"+
-		"\u0108\78\2\2\u0108\u0109\5\34\17\2\u0109\u010b\5\34\17\2\u010a\u010c"+
-		"\5*\26\2\u010b\u010a\3\2\2\2\u010b\u010c\3\2\2\2\u010c\u010d\3\2\2\2\u010d"+
-		"\u010e\79\2\2\u010e\u010f\5\34\17\2\u010f!\3\2\2\2\u0110\u0111\7\20\2"+
-		"\2\u0111\u0112\78\2\2\u0112\u0113\5\b\5\2\u0113\u0114\79\2\2\u0114\u0115"+
-		"\5\34\17\2\u0115#\3\2\2\2\u0116\u0117\7\22\2\2\u0117%\3\2\2\2\u0118\u0119"+
-		"\7\21\2\2\u0119\'\3\2\2\2\u011a\u011c\7\23\2\2\u011b\u011d\5\b\5\2\u011c"+
-		"\u011b\3\2\2\2\u011c\u011d\3\2\2\2\u011d)\3\2\2\2\u011e\u0123\5\b\5\2"+
-		"\u011f\u0120\7=\2\2\u0120\u0122\5\b\5\2\u0121\u011f\3\2\2\2\u0122\u0125"+
-		"\3\2\2\2\u0123\u0121\3\2\2\2\u0123\u0124\3\2\2\2\u0124+\3\2\2\2\u0125"+
-		"\u0123\3\2\2\2\31\63\65AMTYb\u0091\u009b\u009d\u00a6\u00ac\u00b6\u00b8"+
-		"\u00c6\u00d0\u00db\u00e2\u00fb\u0104\u010b\u011c\u0123";
+		"\u0108\78\2\2\u0108\u0109\5\34\17\2\u0109\u010a\5\b\5\2\u010a\u010c\7"+
+		"<\2\2\u010b\u010d\5*\26\2\u010c\u010b\3\2\2\2\u010c\u010d\3\2\2\2\u010d"+
+		"\u010e\3\2\2\2\u010e\u010f\79\2\2\u010f\u0110\5\34\17\2\u0110!\3\2\2\2"+
+		"\u0111\u0112\7\20\2\2\u0112\u0113\78\2\2\u0113\u0114\5\b\5\2\u0114\u0115"+
+		"\79\2\2\u0115\u0116\5\34\17\2\u0116#\3\2\2\2\u0117\u0118\7\22\2\2\u0118"+
+		"%\3\2\2\2\u0119\u011a\7\21\2\2\u011a\'\3\2\2\2\u011b\u011d\7\23\2\2\u011c"+
+		"\u011e\5\b\5\2\u011d\u011c\3\2\2\2\u011d\u011e\3\2\2\2\u011e)\3\2\2\2"+
+		"\u011f\u0124\5\b\5\2\u0120\u0121\7=\2\2\u0121\u0123\5\b\5\2\u0122\u0120"+
+		"\3\2\2\2\u0123\u0126\3\2\2\2\u0124\u0122\3\2\2\2\u0124\u0125\3\2\2\2\u0125"+
+		"+\3\2\2\2\u0126\u0124\3\2\2\2\31\63\65AMTYb\u0091\u009b\u009d\u00a6\u00ac"+
+		"\u00b6\u00b8\u00c6\u00d0\u00db\u00e2\u00fb\u0104\u010c\u011d\u0124";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

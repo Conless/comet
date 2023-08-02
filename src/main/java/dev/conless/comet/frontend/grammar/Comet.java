@@ -1982,17 +1982,21 @@ public class Comet extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class ForStmtContext extends ParserRuleContext {
 		public StmtContext init;
-		public StmtContext condition;
+		public ExprContext condition;
 		public ExprStmtContext update;
 		public StmtContext body;
 		public TerminalNode For() { return getToken(Comet.For, 0); }
 		public TerminalNode LParen() { return getToken(Comet.LParen, 0); }
+		public TerminalNode Semi() { return getToken(Comet.Semi, 0); }
 		public TerminalNode RParen() { return getToken(Comet.RParen, 0); }
 		public List<StmtContext> stmt() {
 			return getRuleContexts(StmtContext.class);
 		}
 		public StmtContext stmt(int i) {
 			return getRuleContext(StmtContext.class,i);
+		}
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprStmtContext exprStmt() {
 			return getRuleContext(ExprStmtContext.class,0);
@@ -2030,20 +2034,22 @@ public class Comet extends Parser {
 			setState(262);
 			((ForStmtContext)_localctx).init = stmt();
 			setState(263);
-			((ForStmtContext)_localctx).condition = stmt();
-			setState(265);
+			((ForStmtContext)_localctx).condition = expr(0);
+			setState(264);
+			match(Semi);
+			setState(266);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & -5763991792160579523L) != 0)) {
 				{
-				setState(264);
+				setState(265);
 				((ForStmtContext)_localctx).update = exprStmt();
 				}
 			}
 
-			setState(267);
-			match(RParen);
 			setState(268);
+			match(RParen);
+			setState(269);
 			((ForStmtContext)_localctx).body = stmt();
 			}
 		}
@@ -2094,15 +2100,15 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(270);
-			match(While);
 			setState(271);
-			match(LParen);
+			match(While);
 			setState(272);
-			expr(0);
+			match(LParen);
 			setState(273);
-			match(RParen);
+			expr(0);
 			setState(274);
+			match(RParen);
+			setState(275);
 			stmt();
 			}
 		}
@@ -2145,7 +2151,7 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(276);
+			setState(277);
 			match(Continue);
 			}
 		}
@@ -2188,7 +2194,7 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(278);
+			setState(279);
 			match(Break);
 			}
 		}
@@ -2235,14 +2241,14 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(280);
+			setState(281);
 			match(Return);
-			setState(282);
+			setState(283);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (((((_la - 5)) & ~0x3f) == 0 && ((1L << (_la - 5)) & -5763991792160579523L) != 0)) {
 				{
-				setState(281);
+				setState(282);
 				expr(0);
 				}
 			}
@@ -2298,21 +2304,21 @@ public class Comet extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(284);
+			setState(285);
 			expr(0);
-			setState(289);
+			setState(290);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				setState(285);
-				match(Comma);
 				setState(286);
+				match(Comma);
+				setState(287);
 				expr(0);
 				}
 				}
-				setState(291);
+				setState(292);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -2375,7 +2381,7 @@ public class Comet extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001D\u0125\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001D\u0126\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0002"+
@@ -2414,29 +2420,29 @@ public class Comet extends Parser {
 		"\r\u0001\r\u0001\r\u0001\r\u0001\r\u0001\r\u0001\r\u0001\r\u0001\r\u0001"+
 		"\r\u0001\r\u0001\r\u0003\r\u00fa\b\r\u0001\u000e\u0001\u000e\u0001\u000e"+
 		"\u0001\u000e\u0001\u000e\u0001\u000e\u0001\u000e\u0003\u000e\u0103\b\u000e"+
-		"\u0001\u000f\u0001\u000f\u0001\u000f\u0001\u000f\u0001\u000f\u0003\u000f"+
-		"\u010a\b\u000f\u0001\u000f\u0001\u000f\u0001\u000f\u0001\u0010\u0001\u0010"+
-		"\u0001\u0010\u0001\u0010\u0001\u0010\u0001\u0010\u0001\u0011\u0001\u0011"+
-		"\u0001\u0012\u0001\u0012\u0001\u0013\u0001\u0013\u0003\u0013\u011b\b\u0013"+
-		"\u0001\u0014\u0001\u0014\u0001\u0014\u0005\u0014\u0120\b\u0014\n\u0014"+
-		"\f\u0014\u0123\t\u0014\u0001\u0014\u0000\u0001\u0006\u0015\u0000\u0002"+
-		"\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u001e"+
-		" \"$&(\u0000\n\u0002\u0000\u0001\u0004AA\u0004\u0000\u0012\u0013\u001f"+
-		"\u001f%%12\u0003\u0000\u0007\nABDD\u0001\u0000\u0014\u0016\u0001\u0000"+
-		"\u0012\u0013\u0001\u0000 !\u0001\u0000\u0017\u001a\u0001\u0000\u001b\u001c"+
-		"\u0001\u0000&0\u0001\u000012\u0140\u00003\u0001\u0000\u0000\u0000\u0002"+
-		"8\u0001\u0000\u0000\u0000\u0004:\u0001\u0000\u0000\u0000\u0006`\u0001"+
-		"\u0000\u0000\u0000\b\u009e\u0001\u0000\u0000\u0000\n\u00a7\u0001\u0000"+
-		"\u0000\u0000\f\u00ac\u0001\u0000\u0000\u0000\u000e\u00bb\u0001\u0000\u0000"+
-		"\u0000\u0010\u00c0\u0001\u0000\u0000\u0000\u0012\u00c9\u0001\u0000\u0000"+
-		"\u0000\u0014\u00d1\u0001\u0000\u0000\u0000\u0016\u00d4\u0001\u0000\u0000"+
-		"\u0000\u0018\u00dc\u0001\u0000\u0000\u0000\u001a\u00f9\u0001\u0000\u0000"+
-		"\u0000\u001c\u00fb\u0001\u0000\u0000\u0000\u001e\u0104\u0001\u0000\u0000"+
-		"\u0000 \u010e\u0001\u0000\u0000\u0000\"\u0114\u0001\u0000\u0000\u0000"+
-		"$\u0116\u0001\u0000\u0000\u0000&\u0118\u0001\u0000\u0000\u0000(\u011c"+
-		"\u0001\u0000\u0000\u0000*+\u0003\b\u0004\u0000+,\u0005:\u0000\u0000,2"+
-		"\u0001\u0000\u0000\u0000-.\u0003\f\u0006\u0000./\u0005:\u0000\u0000/2"+
-		"\u0001\u0000\u0000\u000002\u0003\u0010\b\u00001*\u0001\u0000\u0000\u0000"+
+		"\u0001\u000f\u0001\u000f\u0001\u000f\u0001\u000f\u0001\u000f\u0001\u000f"+
+		"\u0003\u000f\u010b\b\u000f\u0001\u000f\u0001\u000f\u0001\u000f\u0001\u0010"+
+		"\u0001\u0010\u0001\u0010\u0001\u0010\u0001\u0010\u0001\u0010\u0001\u0011"+
+		"\u0001\u0011\u0001\u0012\u0001\u0012\u0001\u0013\u0001\u0013\u0003\u0013"+
+		"\u011c\b\u0013\u0001\u0014\u0001\u0014\u0001\u0014\u0005\u0014\u0121\b"+
+		"\u0014\n\u0014\f\u0014\u0124\t\u0014\u0001\u0014\u0000\u0001\u0006\u0015"+
+		"\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a"+
+		"\u001c\u001e \"$&(\u0000\n\u0002\u0000\u0001\u0004AA\u0004\u0000\u0012"+
+		"\u0013\u001f\u001f%%12\u0003\u0000\u0007\nABDD\u0001\u0000\u0014\u0016"+
+		"\u0001\u0000\u0012\u0013\u0001\u0000 !\u0001\u0000\u0017\u001a\u0001\u0000"+
+		"\u001b\u001c\u0001\u0000&0\u0001\u000012\u0141\u00003\u0001\u0000\u0000"+
+		"\u0000\u00028\u0001\u0000\u0000\u0000\u0004:\u0001\u0000\u0000\u0000\u0006"+
+		"`\u0001\u0000\u0000\u0000\b\u009e\u0001\u0000\u0000\u0000\n\u00a7\u0001"+
+		"\u0000\u0000\u0000\f\u00ac\u0001\u0000\u0000\u0000\u000e\u00bb\u0001\u0000"+
+		"\u0000\u0000\u0010\u00c0\u0001\u0000\u0000\u0000\u0012\u00c9\u0001\u0000"+
+		"\u0000\u0000\u0014\u00d1\u0001\u0000\u0000\u0000\u0016\u00d4\u0001\u0000"+
+		"\u0000\u0000\u0018\u00dc\u0001\u0000\u0000\u0000\u001a\u00f9\u0001\u0000"+
+		"\u0000\u0000\u001c\u00fb\u0001\u0000\u0000\u0000\u001e\u0104\u0001\u0000"+
+		"\u0000\u0000 \u010f\u0001\u0000\u0000\u0000\"\u0115\u0001\u0000\u0000"+
+		"\u0000$\u0117\u0001\u0000\u0000\u0000&\u0119\u0001\u0000\u0000\u0000("+
+		"\u011d\u0001\u0000\u0000\u0000*+\u0003\b\u0004\u0000+,\u0005:\u0000\u0000"+
+		",2\u0001\u0000\u0000\u0000-.\u0003\f\u0006\u0000./\u0005:\u0000\u0000"+
+		"/2\u0001\u0000\u0000\u000002\u0003\u0010\b\u00001*\u0001\u0000\u0000\u0000"+
 		"1-\u0001\u0000\u0000\u000010\u0001\u0000\u0000\u000025\u0001\u0000\u0000"+
 		"\u000031\u0001\u0000\u0000\u000034\u0001\u0000\u0000\u000046\u0001\u0000"+
 		"\u0000\u000053\u0001\u0000\u0000\u000067\u0005\u0000\u0000\u00017\u0001"+
@@ -2548,24 +2554,24 @@ public class Comet extends Parser {
 		"\u0100\u0101\u0005\f\u0000\u0000\u0101\u0103\u0003\u001a\r\u0000\u0102"+
 		"\u0100\u0001\u0000\u0000\u0000\u0102\u0103\u0001\u0000\u0000\u0000\u0103"+
 		"\u001d\u0001\u0000\u0000\u0000\u0104\u0105\u0005\r\u0000\u0000\u0105\u0106"+
-		"\u00056\u0000\u0000\u0106\u0107\u0003\u001a\r\u0000\u0107\u0109\u0003"+
-		"\u001a\r\u0000\u0108\u010a\u0003(\u0014\u0000\u0109\u0108\u0001\u0000"+
-		"\u0000\u0000\u0109\u010a\u0001\u0000\u0000\u0000\u010a\u010b\u0001\u0000"+
-		"\u0000\u0000\u010b\u010c\u00057\u0000\u0000\u010c\u010d\u0003\u001a\r"+
-		"\u0000\u010d\u001f\u0001\u0000\u0000\u0000\u010e\u010f\u0005\u000e\u0000"+
-		"\u0000\u010f\u0110\u00056\u0000\u0000\u0110\u0111\u0003\u0006\u0003\u0000"+
-		"\u0111\u0112\u00057\u0000\u0000\u0112\u0113\u0003\u001a\r\u0000\u0113"+
-		"!\u0001\u0000\u0000\u0000\u0114\u0115\u0005\u0010\u0000\u0000\u0115#\u0001"+
-		"\u0000\u0000\u0000\u0116\u0117\u0005\u000f\u0000\u0000\u0117%\u0001\u0000"+
-		"\u0000\u0000\u0118\u011a\u0005\u0011\u0000\u0000\u0119\u011b\u0003\u0006"+
-		"\u0003\u0000\u011a\u0119\u0001\u0000\u0000\u0000\u011a\u011b\u0001\u0000"+
-		"\u0000\u0000\u011b\'\u0001\u0000\u0000\u0000\u011c\u0121\u0003\u0006\u0003"+
-		"\u0000\u011d\u011e\u0005;\u0000\u0000\u011e\u0120\u0003\u0006\u0003\u0000"+
-		"\u011f\u011d\u0001\u0000\u0000\u0000\u0120\u0123\u0001\u0000\u0000\u0000"+
-		"\u0121\u011f\u0001\u0000\u0000\u0000\u0121\u0122\u0001\u0000\u0000\u0000"+
-		"\u0122)\u0001\u0000\u0000\u0000\u0123\u0121\u0001\u0000\u0000\u0000\u0017"+
-		"13?KRW`\u008f\u0099\u009b\u00a4\u00aa\u00b4\u00b6\u00c4\u00ce\u00d9\u00e0"+
-		"\u00f9\u0102\u0109\u011a\u0121";
+		"\u00056\u0000\u0000\u0106\u0107\u0003\u001a\r\u0000\u0107\u0108\u0003"+
+		"\u0006\u0003\u0000\u0108\u010a\u0005:\u0000\u0000\u0109\u010b\u0003(\u0014"+
+		"\u0000\u010a\u0109\u0001\u0000\u0000\u0000\u010a\u010b\u0001\u0000\u0000"+
+		"\u0000\u010b\u010c\u0001\u0000\u0000\u0000\u010c\u010d\u00057\u0000\u0000"+
+		"\u010d\u010e\u0003\u001a\r\u0000\u010e\u001f\u0001\u0000\u0000\u0000\u010f"+
+		"\u0110\u0005\u000e\u0000\u0000\u0110\u0111\u00056\u0000\u0000\u0111\u0112"+
+		"\u0003\u0006\u0003\u0000\u0112\u0113\u00057\u0000\u0000\u0113\u0114\u0003"+
+		"\u001a\r\u0000\u0114!\u0001\u0000\u0000\u0000\u0115\u0116\u0005\u0010"+
+		"\u0000\u0000\u0116#\u0001\u0000\u0000\u0000\u0117\u0118\u0005\u000f\u0000"+
+		"\u0000\u0118%\u0001\u0000\u0000\u0000\u0119\u011b\u0005\u0011\u0000\u0000"+
+		"\u011a\u011c\u0003\u0006\u0003\u0000\u011b\u011a\u0001\u0000\u0000\u0000"+
+		"\u011b\u011c\u0001\u0000\u0000\u0000\u011c\'\u0001\u0000\u0000\u0000\u011d"+
+		"\u0122\u0003\u0006\u0003\u0000\u011e\u011f\u0005;\u0000\u0000\u011f\u0121"+
+		"\u0003\u0006\u0003\u0000\u0120\u011e\u0001\u0000\u0000\u0000\u0121\u0124"+
+		"\u0001\u0000\u0000\u0000\u0122\u0120\u0001\u0000\u0000\u0000\u0122\u0123"+
+		"\u0001\u0000\u0000\u0000\u0123)\u0001\u0000\u0000\u0000\u0124\u0122\u0001"+
+		"\u0000\u0000\u0000\u001713?KRW`\u008f\u0099\u009b\u00a4\u00aa\u00b4\u00b6"+
+		"\u00c4\u00ce\u00d9\u00e0\u00f9\u0102\u010a\u011b\u0122";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
