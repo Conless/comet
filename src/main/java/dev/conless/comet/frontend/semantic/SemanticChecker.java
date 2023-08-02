@@ -28,7 +28,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     for (var stmt : node.getBody()) {
       stmt.accept(this);
     }
-    if (!node.getReturnType().equals(new TypeInfo("void", 0)) && node.getInfo().getName() == "main") {
+    if (!node.getReturnType().equals(new TypeInfo("void", 0)) && !node.getInfo().getName().equals("main")) {
       if (!((FuncInfo) currentScope.getInfo()).isExited()) {
         throw new Exception("Function " + node.getName() + " should have a return statement");
       }
@@ -79,7 +79,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     node.object.accept(this);
     TypeInfo objectType = (TypeInfo) node.object.getInfo();
     if (objectType.depth > 0) {
-      if (node.member == "length") {
+      if (node.member.equals("length")) {
         node.setInfo(new TypeInfo("int", 0));
       } else {
         throw new RuntimeException("Type " + objectType.getName() + " does not have member " + node.member);
@@ -155,7 +155,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     node.expr.accept(this);
     TypeInfo type = (TypeInfo) node.expr.getInfo();
     node.setEditable(false);
-    if (node.op == "!") {
+    if (node.op.equals("!")) {
       if (!type.equals(new TypeInfo("bool", 0))) {
         throw new RuntimeException("Operand should be of type bool");
       }
@@ -165,7 +165,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
         throw new RuntimeException("Operand should be of type int");
       }
       node.setInfo(new TypeInfo("int", 0));
-      if (node.op == "++" || node.op == "--") {
+      if (node.op.equals("++") || node.op.equals("--")) {
         if (!node.expr.isEditable()) {
           throw new RuntimeException("Operand should be a lvalue");
         }
@@ -182,33 +182,33 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     if (!lhsType.equals(rhsType)) {
       throw new RuntimeException("Operands should be of the same type");
     }
-    if (node.op == "<" || node.op == ">" || node.op == "<=" || node.op == ">=" || node.op == "==" || node.op == "!=") {
+    if (node.op.equals("<") || node.op.equals(">") || node.op.equals("<=") || node.op.equals(">=") || node.op.equals("==") || node.op.equals("!=")) {
       node.setInfo(new TypeInfo("bool", 0));
     } else {
       node.setInfo(lhsType);
     }
     node.setEditable(false);
     if (lhsType.depth > 0) { // TODO: compare two arrays?
-      if (!node.op == "==" && !node.op == "!=") {
+      if (!node.op.equals("==") && !node.op.equals("!=")) {
         throw new RuntimeException("Operator " + node.op + " is not supported for arrays");
       }
       return;
     }
     if (lhsType.equals(new TypeInfo("bool", 0))) {
-      if (!node.op == "==" && !node.op == "!=") {
+      if (!node.op.equals("==") && !node.op.equals("!=")) {
         throw new RuntimeException("Operator " + node.op + " is not supported for booleans");
       }
       return;
     }
     if (lhsType.equals(new TypeInfo("string", 0))) {
-      if (!node.op == "+" && !node.op == "==" && !node.op == "!=" && !node.op == "<" && !node.op == "<=" && !node.op == ">"
-          && !node.op == ">=") {
+      if (!node.op.equals("+") && !node.op.equals("==") && !node.op.equals("!=") && !node.op.equals("<") && !node.op.equals("<=") && !node.op.equals(">")
+          && !node.op.equals(">=")) {
         throw new RuntimeException("Operator " + node.op + " is not supported for strings");
       }
       return;
     }
     if (lhsType.equals(new TypeInfo("int", 0))) {
-      if (node.op == "!") {
+      if (node.op.equals("!")) {
         throw new RuntimeException("Operator " + node.op + " is not supported for integers");
       }
       return;

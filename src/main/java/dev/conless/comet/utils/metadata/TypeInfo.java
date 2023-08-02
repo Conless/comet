@@ -16,7 +16,7 @@ public class TypeInfo extends BaseInfo {
       this.type = Type.BOOL;
     } else if (typeName.equals("string")) {
       this.type = Type.STRING;
-    } else if (typeName == "void") {
+    } else if (typeName.equals("void")) {
       this.type = Type.VOID;
     } else {
       this.type = Type.CUSTOM;

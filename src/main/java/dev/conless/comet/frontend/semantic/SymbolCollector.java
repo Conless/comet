@@ -40,8 +40,8 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor {
     node.addScope(currentScope);
     enterScope(node.getScope());
     if (node.getName().equals("main")) {
-      if (node.getReturnType().equals(new TypeInfo("int", 0))) {
-        throw new Exception("main function should not have a return type");
+      if (!node.getReturnType().equals(new TypeInfo("int", 0))) {
+        throw new Exception("main function should return int");
       }
       if (node.getParams().size() != 0) {
         throw new Exception("main function should not have any parameters");
