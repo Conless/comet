@@ -1,11 +1,18 @@
 package dev.conless.comet.utils.scope;
 
-import dev.conless.comet.utils.container.*;
-import dev.conless.comet.utils.metadata.*;
-
 public class GlobalScope extends BuiltInScope {
   public GlobalScope() {
     super(null);
-    vars = new Map<String, VarInfo>();
+  }
+
+  public String toString() {
+    String str = "";
+    for (var func : funcs.values()) {
+      str += func.toString() + "\n";
+    }
+    for (var class_ : classes.values()) {
+      str += class_.toString() + "\n";
+    }
+    return str;
   }
 }

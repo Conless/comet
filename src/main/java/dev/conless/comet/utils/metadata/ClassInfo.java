@@ -25,4 +25,16 @@ public class ClassInfo extends BaseInfo {
       this.funcs.put(func.name, func);
     }
   }
+
+  public String toString() {
+    String str = "class " + name + " {\n";
+    for (var varName : vars.keySet()) {
+      str += "  " + vars.get(varName).toString() + " " + varName + ";\n";
+    }
+    for (var func : funcs.values()) {
+      str += "  " + func.toString() + "\n";
+    }
+    str += "};";
+    return str;
+  }
 }

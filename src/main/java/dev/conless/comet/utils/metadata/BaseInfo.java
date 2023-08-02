@@ -10,4 +10,8 @@ public class BaseInfo {
   public String name() {
     return name;
   }
+
+  public String toString() {
+    throw new RuntimeException("BaseInfo.toString() called");
+  }
 }

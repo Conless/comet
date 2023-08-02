@@ -22,8 +22,9 @@ public class Compiler {
     ASTNode program = new ASTBuilder().visit(parser.program());
     var output = new FileOutputStream("./src/test/mx/output.mx");
     output.write(program.toString().getBytes());
-    output.close();
     SymbolCollector collector = new SymbolCollector((ProgramNode) program);
     collector.collect();
+    output.write(((ProgramNode)program).scope.toString().getBytes());
+    output.close();
   }
 }

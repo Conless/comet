@@ -22,4 +22,16 @@ public class FuncInfo extends BaseInfo {
       this.params.add(param);
     }
   }
+
+  public String toString() {
+    String str = type.toString() + " " + name + "(";
+    for (int i = 0; i < params.size(); i++) {
+      str += params.get(i).toString();
+      if (i != params.size() - 1) {
+        str += ", ";
+      }
+    }
+    str += ");";
+    return str;
+  }
 }
