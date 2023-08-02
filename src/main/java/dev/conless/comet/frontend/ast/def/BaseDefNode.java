@@ -12,7 +12,7 @@ public abstract class BaseDefNode extends ASTNode {
     this.info = info;
   }
 
-  public BaseInfo info() {
+  public BaseInfo getInfo() {
     return info;
   }
 

@@ -21,13 +21,12 @@ public class Compiler {
     parser.addErrorListener(new CometErrorListener());
     ASTNode program = new ASTBuilder().visit(parser.program());
     var output = new FileOutputStream("./src/test/mx/output.mx");
-    // output.write(program.toString().getBytes());
+    output.write(program.toString().getBytes());
     SymbolCollector collector = new SymbolCollector();
     collector.visit((ProgramNode) program);
     output.write(((ProgramNode) program).scope.toString().getBytes());
-    // SemanticChecker checker = new SemanticChecker((ProgramNode) program);
-    // checker.check();
-    
+    SemanticChecker checker = new SemanticChecker();
+    checker.visit((ProgramNode) program);
     output.close();
   }
 }

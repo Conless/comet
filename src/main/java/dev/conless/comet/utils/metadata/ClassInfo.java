@@ -30,8 +30,8 @@ public class ClassInfo extends BaseInfo {
     vars.put(var.name, var);
   }
 
-  public void addFunc(FuncInfo func) {
-    funcs.put(func.name, func);
+  public void addFunc(FuncInfo funcInfo) {
+    funcs.put(funcInfo.name, funcInfo);
   }
 
   @Override
@@ -45,5 +45,28 @@ public class ClassInfo extends BaseInfo {
     }
     str += "};";
     return str;
+  }
+
+  public BaseInfo get(String name) {
+    if (vars.containsKey(name)) {
+      return vars.get(name);
+    } else if (funcs.containsKey(name)) {
+      return funcs.get(name);
+    }
+    return null;
+  }
+  public BaseInfo get(String name, String type) {
+    if (type.equals("var")) {
+      if (vars.containsKey(name)) {
+        return vars.get(name);
+      }
+    } else if (type.equals("func")) {
+      if (funcs.containsKey(name)) {
+        return funcs.get(name);
+      }
+    } else {
+      throw new RuntimeException("ClassScope.get() called with unknown type");
+    }
+    return null;
   }
 }

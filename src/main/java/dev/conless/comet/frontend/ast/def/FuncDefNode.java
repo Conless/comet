@@ -6,7 +6,6 @@ import dev.conless.comet.frontend.ast.stmt.BlockStmtNode;
 import dev.conless.comet.frontend.ast.stmt.StmtNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
-import dev.conless.comet.utils.metadata.BaseInfo;
 import dev.conless.comet.utils.metadata.FuncInfo;
 import dev.conless.comet.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.scope.BaseScope;
@@ -24,6 +23,7 @@ public class FuncDefNode extends BaseDefNode implements ScopedNode {
 
   public void addParam(VarDefNode param) {
     params.add(param);
+    ((FuncInfo) info).addParam((TypeInfo) param.getInfo());
   }
 
   public Array<VarDefNode> getParams() {
@@ -59,7 +59,7 @@ public class FuncDefNode extends BaseDefNode implements ScopedNode {
   @Override
   public void addScope(BaseScope scope) {
     if (this.scope == null) {
-      this.scope = new BaseScope(scope);
+      this.scope = new BaseScope(scope, info);
     }
   }
   

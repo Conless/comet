@@ -10,11 +10,11 @@ public class TypeInfo extends BaseInfo {
   public TypeInfo(String typeName, Integer arrayDepth) {
     super(typeName);
     this.isBuiltIn = true;
-    if (typeName == "int") {
+    if (typeName.equals("int")) {
       this.type = Type.INT;
-    } else if (typeName == "bool") {
+    } else if (typeName.equals("bool")) {
       this.type = Type.BOOL;
-    } else if (typeName == "string") {
+    } else if (typeName.equals("string")) {
       this.type = Type.STRING;
     } else if (typeName == "void") {
       this.type = Type.VOID;

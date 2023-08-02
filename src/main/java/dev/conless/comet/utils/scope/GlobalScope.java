@@ -47,15 +47,15 @@ public class GlobalScope extends BuiltInScope {
 
   @Override
   public BaseInfo get(String name, String type) {
-    if (type == "var") {
+    if (type.equals("var")) {
       if (vars.containsKey(name)) {
         return vars.get(name);
       }
-    } else if (type == "func") {
+    } else if (type.equals("func")) {
       if (funcs.containsKey(name)) {
         return funcs.get(name);
       }
-    } else if (type == "class") {
+    } else if (type.equals("class")) {
       if (classes.containsKey(name)) {
         return classes.get(name);
       }
@@ -65,11 +65,15 @@ public class GlobalScope extends BuiltInScope {
 
   @Override
   public BaseInfo getRecur(String name) {
-    return null;
-  }
-
-  @Override
-  public BaseInfo getRecur(String name, String type) {
+    if (vars.containsKey(name)) {
+      return vars.get(name);
+    }
+    if (funcs.containsKey(name)) {
+      return funcs.get(name);
+    }
+    if (classes.containsKey(name)) {
+      return classes.get(name);
+    }
     return null;
   }
 }

@@ -5,12 +5,12 @@ import dev.conless.comet.utils.Type;
 import dev.conless.comet.utils.container.Position;
 
 public class AtomExprNode extends ExprNode {
-  public Type type;
+  public Type atomType;
   public String value;
 
-  public AtomExprNode(Position position, Type type, String value) {
+  public AtomExprNode(Position position, Type atomType, String value) {
     super(position);
-    this.type = type;
+    this.atomType = atomType;
     this.value = value;
   }
 

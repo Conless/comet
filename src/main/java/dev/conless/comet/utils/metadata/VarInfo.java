@@ -8,6 +8,10 @@ public class VarInfo extends BaseInfo {
     this.type = type;
   }
 
+  public TypeInfo getType() {
+    return type;
+  }
+
   @Override
   public String toString() {
     return type.toString() + " " + name + ";";

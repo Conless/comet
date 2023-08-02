@@ -1,10 +1,14 @@
 package dev.conless.comet.frontend.ast.stmt;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
+import dev.conless.comet.frontend.ast.ScopedNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.metadata.BaseInfo;
+import dev.conless.comet.utils.scope.BaseScope;
 
-public class BlockStmtNode extends StmtNode {
+public class BlockStmtNode extends StmtNode implements ScopedNode {
+  public BaseScope scope;
   public Array<StmtNode> stmts;
   
   public BlockStmtNode(Position position) {
@@ -14,6 +18,10 @@ public class BlockStmtNode extends StmtNode {
 
   public void addStmt(StmtNode stmt) {
     stmts.add(stmt);
+  }
+
+  public Array<StmtNode> getStmts() {
+    return stmts;
   }
 
   @Override
@@ -28,5 +36,15 @@ public class BlockStmtNode extends StmtNode {
   @Override
   public void accept(ASTVisitor visitor) throws Exception {
     visitor.visit(this);
+  }
+
+  @Override
+  public void addScope(BaseScope scope) {
+    scope = new BaseScope(scope, new BaseInfo("block"));
+  }
+
+  @Override
+  public BaseScope getScope() {
+    return scope;
   }
 }

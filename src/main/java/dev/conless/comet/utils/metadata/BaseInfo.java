@@ -7,11 +7,11 @@ public class BaseInfo {
     this.name = name;
   }
 
-  public String name() {
+  public String getName() {
     return name;
   }
 
   public String toString() {
-    throw new RuntimeException("BaseInfo.toString() called");
+    return name + ";";
   }
 }

@@ -7,6 +7,7 @@ import dev.conless.comet.utils.container.Array;
 public class FuncInfo extends BaseInfo {
   public TypeInfo type;
   public Array<TypeInfo> params;
+  public boolean exited = false;
 
   public FuncInfo(String name, TypeInfo type) {
     super(name);
@@ -21,6 +22,26 @@ public class FuncInfo extends BaseInfo {
     for (TypeInfo param : params) {
       this.params.add(param);
     }
+  }
+
+  public void addParam(TypeInfo param) {
+    params.add(param);
+  }
+
+  public Array<TypeInfo> getParams() {
+    return params;
+  }
+
+  public TypeInfo getReturnType() {
+    return type;
+  }
+
+  public void exit() {
+    exited = true;
+  }
+
+  public boolean isExited() {
+    return exited;
   }
 
   @Override

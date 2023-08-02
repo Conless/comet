@@ -4,9 +4,9 @@ import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.ScopedNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
-import dev.conless.comet.utils.metadata.BaseInfo;
 import dev.conless.comet.utils.metadata.ClassInfo;
 import dev.conless.comet.utils.metadata.FuncInfo;
+import dev.conless.comet.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.metadata.VarInfo;
 import dev.conless.comet.utils.scope.BaseScope;
 import dev.conless.comet.utils.scope.ClassScope;
@@ -26,10 +26,14 @@ public class ClassDefNode extends BaseDefNode implements ScopedNode {
 
   public void addVarDef(VarDefNode varDef) {
     varDefs.add(varDef);
+    for (var v : varDef.vars) {
+      ((ClassInfo) info).addVar(new VarInfo(v.a, (TypeInfo) varDef.getInfo()));
+    }
   }
 
   public void addFuncDef(FuncDefNode funcDef) {
     funcDefs.add(funcDef);
+    ((ClassInfo) info).addFunc((FuncInfo) funcDef.getInfo());
   }
 
   public String getName() {
@@ -68,7 +72,9 @@ public class ClassDefNode extends BaseDefNode implements ScopedNode {
 
   @Override
   public void addScope(BaseScope scope) {
-    this.scope = new ClassScope(scope);
+    if (this.scope == null) {
+      this.scope = new ClassScope(scope, (ClassInfo) info);
+    }
   }
 
   @Override

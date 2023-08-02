@@ -2,15 +2,18 @@ package dev.conless.comet.utils.scope;
 
 import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.metadata.BaseInfo;
+import dev.conless.comet.utils.metadata.FlowInfo;
+import dev.conless.comet.utils.metadata.FuncInfo;
 import dev.conless.comet.utils.metadata.VarInfo;
 
 public class BaseScope {
   BaseScope parent;
   Map<String, VarInfo> vars;
-  boolean exited;
+  BaseInfo info;
 
-  public BaseScope(BaseScope parent) {
+  public BaseScope(BaseScope parent, BaseInfo info) {
     this.parent = parent;
+    this.info = info;
     this.vars = new Map<String, VarInfo>();
   }
 
@@ -18,12 +21,32 @@ public class BaseScope {
     return parent;
   }
 
-  public void exit() {
-    exited = true;
+  public BaseScope getLastLoop() {
+    BaseScope scope = this;
+    while (scope != null) {
+      BaseInfo info = scope.getInfo();
+      if (info instanceof FlowInfo && ((FlowInfo) info).isLoop()) {
+        return scope;
+      }
+      scope = scope.getParent();
+    }
+    return null;
+  }
+  
+  public BaseScope getLastFunc() {
+    BaseScope scope = this;
+    while (scope != null) {
+      BaseInfo info = scope.getInfo();
+      if (info instanceof FuncInfo) {
+        return scope;
+      }
+      scope = scope.getParent();
+    }
+    return null;
   }
 
-  public boolean isExited() {
-    return exited;
+  public BaseInfo getInfo() {
+    return info;
   }
 
   public void declare(BaseInfo info) {
@@ -42,7 +65,7 @@ public class BaseScope {
   }
 
   public BaseInfo get(String name, String type) {
-    if (type == "var") {
+    if (type.equals("var")) {
       if (vars.containsKey(name)) {
         return vars.get(name);
       }
@@ -53,10 +76,12 @@ public class BaseScope {
   }
 
   public BaseInfo getRecur(String name) {
-    return null;
-  }
-
-  public BaseInfo getRecur(String name, String type) {
+    if (vars.containsKey(name)) {
+      return vars.get(name);
+    }
+    if (parent != null) {
+      return parent.getRecur(name);
+    }
     return null;
   }
 }

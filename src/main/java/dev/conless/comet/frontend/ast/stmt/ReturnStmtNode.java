@@ -12,6 +12,10 @@ public class ReturnStmtNode extends StmtNode {
     this.expr = expr;
   }
 
+  public ExprNode getExpr() {
+    return expr;
+  }
+
   @Override
   public String toString() {
     return super.toString() + "return" + (expr != null ? " " + expr.toString() : "") + ";";

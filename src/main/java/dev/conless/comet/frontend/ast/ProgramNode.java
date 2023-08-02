@@ -3,10 +3,6 @@ package dev.conless.comet.frontend.ast;
 import dev.conless.comet.frontend.ast.def.*;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
-import dev.conless.comet.utils.metadata.BaseInfo;
-import dev.conless.comet.utils.metadata.ClassInfo;
-import dev.conless.comet.utils.metadata.FuncInfo;
-import dev.conless.comet.utils.metadata.VarInfo;
 import dev.conless.comet.utils.scope.BaseScope;
 import dev.conless.comet.utils.scope.GlobalScope;
 
@@ -53,6 +49,8 @@ public class ProgramNode extends ASTNode implements ScopedNode {
 
   @Override
   public void addScope(BaseScope scope) {
-    this.scope = new GlobalScope();
+    if (this.scope == null) {
+      this.scope = new GlobalScope();
+    }
   }
 }

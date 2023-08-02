@@ -1,19 +1,15 @@
 package dev.conless.comet.frontend.ast.stmt;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.frontend.ast.def.VarDefNode;
+import dev.conless.comet.frontend.ast.def.ClassDefNode;
 import dev.conless.comet.utils.container.Position;
 
-public class VarDefStmtNode extends StmtNode {
-  public VarDefNode def;
+public class ClassDefStmtNode extends StmtNode {
+  public ClassDefNode def;
 
-  public VarDefStmtNode(Position position, VarDefNode def) {
+  public ClassDefStmtNode(Position position, ClassDefNode def) {
     super(position);
     this.def = def;
-  }
-
-  public VarDefNode getDef() {
-    return def;
   }
 
   @Override

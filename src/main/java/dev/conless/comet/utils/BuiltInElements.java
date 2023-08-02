@@ -1,6 +1,5 @@
 package dev.conless.comet.utils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import dev.conless.comet.utils.metadata.ClassInfo;

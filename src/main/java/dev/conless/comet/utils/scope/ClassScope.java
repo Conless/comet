@@ -2,14 +2,15 @@ package dev.conless.comet.utils.scope;
 
 import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.metadata.BaseInfo;
+import dev.conless.comet.utils.metadata.ClassInfo;
 import dev.conless.comet.utils.metadata.FuncInfo;
 import dev.conless.comet.utils.metadata.VarInfo;
 
 public class ClassScope extends BaseScope {
   Map<String, FuncInfo> funcs;
 
-  public ClassScope(BaseScope parent) {
-    super(parent);
+  public ClassScope(BaseScope parent, ClassInfo info) {
+    super(parent, info);
     funcs = new Map<String, FuncInfo>();
   }
 
@@ -34,11 +35,11 @@ public class ClassScope extends BaseScope {
 
   @Override
   public BaseInfo get(String name, String type) {
-    if (type == "var") {
+    if (type.equals("var")) {
       if (vars.containsKey(name)) {
         return vars.get(name);
       }
-    } else if (type == "func") {
+    } else if (type.equals("func")) {
       if (funcs.containsKey(name)) {
         return funcs.get(name);
       }
@@ -48,11 +49,17 @@ public class ClassScope extends BaseScope {
     return null;
   }
 
+  @Override
   public BaseInfo getRecur(String name) {
-    return null;
-  }
-
-  public BaseInfo getRecur(String name, String type) {
+    if (vars.containsKey(name)) {
+      return vars.get(name);
+    }
+    if (funcs.containsKey(name)) {
+      return funcs.get(name);
+    }
+    if (parent != null) {
+      return parent.getRecur(name);
+    }
     return null;
   }
 }
