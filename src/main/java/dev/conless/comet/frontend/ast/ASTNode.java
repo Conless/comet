@@ -9,9 +9,7 @@ public abstract class ASTNode {
     this.position = position;
   }
 
-  public void accept(ASTVisitor visitor) throws Exception {
-    visitor.visit(this);
-  }
+  public abstract void accept(ASTVisitor visitor) throws Exception;
 
   public abstract String toString();
 }

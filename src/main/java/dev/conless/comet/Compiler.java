@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.*;
 
 import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.grammar.*;
+import dev.conless.comet.frontend.semantic.SymbolCollector;
 import dev.conless.comet.utils.error.*;
 
 public class Compiler {
@@ -22,5 +23,7 @@ public class Compiler {
     var output = new FileOutputStream("./src/test/mx/output.mx");
     output.write(program.toString().getBytes());
     output.close();
+    SymbolCollector collector = new SymbolCollector((ProgramNode) program);
+    collector.collect();
   }
 }

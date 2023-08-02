@@ -1,5 +1,6 @@
 package dev.conless.comet.frontend.ast.stmt;
 
+import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
 
@@ -22,5 +23,10 @@ public class BlockStmtNode extends StmtNode {
     indentDepth--;
     str += "\n" + super.toString() + "}";
     return str;
+  }
+
+  @Override
+  public void accept(ASTVisitor visitor) throws Exception {
+    visitor.visit(this);
   }
 }

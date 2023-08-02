@@ -3,6 +3,7 @@ package dev.conless.comet.frontend.ast;
 import dev.conless.comet.frontend.grammar.*;
 import dev.conless.comet.utils.Type;
 import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.ast.def.*;
 import dev.conless.comet.frontend.ast.expr.*;
 import dev.conless.comet.frontend.ast.stmt.*;
@@ -32,10 +33,14 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitClassDef(Comet.ClassDefContext ctx) {
-    var constructor = ctx.classConstructor() != null ? ctx.classConstructor(0) : null;
-    var classDef = new ClassDefNode(new Position(ctx.start), ctx.name.getText(),
-        constructor != null ? new FuncDefNode(new Position(constructor.start), null, constructor.name.getText())
-            : null);
+    FuncDefNode constructor = null;
+    if (ctx.classConstructor().size() == 0) {
+      constructor = new FuncDefNode(new Position(ctx.start), new TypeInfo(ctx.name.getText(), 0), ctx.name.getText(), new BlockStmtNode(new Position(ctx.start)));
+    } else if (ctx.classConstructor().size() == 1) {
+      var ctor = ctx.classConstructor(0);
+      constructor = new FuncDefNode(new Position(ctx.start), new TypeInfo(ctx.name.getText(), 0), ctor.name.getText(), (BlockStmtNode) visit(ctor.blockStmt()));
+    }
+    var classDef = new ClassDefNode(new Position(ctx.start), ctx.name.getText(), constructor);
     for (var def : ctx.varDef()) {
       classDef.addVarDef((VarDefNode) visit(def));
     }
@@ -47,7 +52,7 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitFuncDef(Comet.FuncDefContext ctx) {
-    var funcDef = new FuncDefNode(new Position(ctx.start), (TypeNameNode) visit(ctx.typeName()), ctx.name.getText());
+    var funcDef = new FuncDefNode(new Position(ctx.start), ((TypeNameNode) visit(ctx.typeName())).type, ctx.name.getText(), (BlockStmtNode) visit(ctx.blockStmt()));
     var paramList = ctx.funcParamList();
     if (paramList != null) {
       for (var param : paramList.funcParam()) {
@@ -57,7 +62,6 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
         // TODO(Conless): check init value type
       }
     }
-    funcDef.body = (BlockStmtNode) visit(ctx.blockStmt());
     return funcDef;
   }
 

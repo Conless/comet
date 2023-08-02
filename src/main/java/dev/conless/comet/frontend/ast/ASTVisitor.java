@@ -4,7 +4,6 @@ import dev.conless.comet.frontend.ast.def.*;
 import dev.conless.comet.frontend.ast.expr.*;
 import dev.conless.comet.frontend.ast.stmt.*;
 import dev.conless.comet.frontend.ast.type.*;
-import dev.conless.comet.utils.error.*;
 
 public interface ASTVisitor {
   public void visit(ASTNode node) throws Exception;

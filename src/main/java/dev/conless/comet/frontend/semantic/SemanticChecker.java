@@ -11,8 +11,8 @@ public class SemanticChecker implements ASTVisitor {
     throw new Exception("SemanticChecker.visit(ASTNode) should not be called");
   }
 
-  public void visit(ProgramNode node) {
-    
+  public void visit(ProgramNode node) throws Exception {
+
   }
 
   public void visit(FuncDefNode node) {}

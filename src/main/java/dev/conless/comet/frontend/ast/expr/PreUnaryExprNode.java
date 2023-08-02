@@ -1,5 +1,6 @@
 package dev.conless.comet.frontend.ast.expr;
 
+import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.utils.container.Position;
 
 public class PreUnaryExprNode extends ExprNode {
@@ -15,5 +16,10 @@ public class PreUnaryExprNode extends ExprNode {
   @Override
   public String toString() {
     return op + expr.toString();
+  }
+
+  @Override
+  public void accept(ASTVisitor visitor) throws Exception {
+    visitor.visit(this);
   }
 }
