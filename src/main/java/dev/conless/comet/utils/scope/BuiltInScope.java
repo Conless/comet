@@ -6,8 +6,8 @@ import dev.conless.comet.utils.metadata.ClassInfo;
 import dev.conless.comet.utils.metadata.FuncInfo;
 
 public class BuiltInScope extends BaseScope implements BuiltInElements {
-  public Map<String, FuncInfo> funcs;
-  public Map<String, ClassInfo> classes;
+  Map<String, FuncInfo> funcs;
+  Map<String, ClassInfo> classes;
 
   public BuiltInScope(BaseScope parent) {
     super(parent);

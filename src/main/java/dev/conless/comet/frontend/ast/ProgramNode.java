@@ -47,56 +47,12 @@ public class ProgramNode extends ASTNode implements ScopedNode {
   }
 
   @Override
+  public BaseScope getScope() {
+    return scope;
+  }
+
+  @Override
   public void addScope(BaseScope scope) {
     this.scope = new GlobalScope();
-  }
-
-  @Override
-  public void declare(BaseInfo info) {
-    if (info instanceof ClassInfo) {
-      scope.classes.put(info.name, (ClassInfo) info);
-    } else if (info instanceof FuncInfo) {
-      scope.funcs.put(info.name, (FuncInfo) info);
-    } else if (info instanceof VarInfo) {
-      scope.vars.put(info.name, (VarInfo) info);
-    }
-  }
-
-  @Override
-  public BaseInfo get(String name) {
-    if (scope.vars.containsKey(name)) {
-      return scope.vars.get(name);
-    } else if (scope.funcs.containsKey(name)) {
-      return scope.funcs.get(name);
-    } else if (scope.classes.containsKey(name)) {
-      return scope.classes.get(name);
-    }
-    return null;
-  }
-
-  public BaseInfo get(String name, String type) {
-    if (type == "var") {
-      if (scope.vars.containsKey(name)) {
-        return scope.vars.get(name);
-      }
-    } else if (type == "func") {
-      if (scope.funcs.containsKey(name)) {
-        return scope.funcs.get(name);
-      }
-    } else if (type == "class") {
-      if (scope.classes.containsKey(name)) {
-        return scope.classes.get(name);
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public BaseInfo getRecur(String name) {
-    return null;
-  }
-
-  public BaseInfo getRecur(String name, String type) {
-    return null;
   }
 }

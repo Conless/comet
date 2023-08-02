@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.*;
 
 import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.grammar.*;
-import dev.conless.comet.frontend.semantic.SymbolCollector;
+import dev.conless.comet.frontend.semantic.*;
 import dev.conless.comet.utils.error.*;
 
 public class Compiler {
@@ -21,10 +21,13 @@ public class Compiler {
     parser.addErrorListener(new CometErrorListener());
     ASTNode program = new ASTBuilder().visit(parser.program());
     var output = new FileOutputStream("./src/test/mx/output.mx");
-    output.write(program.toString().getBytes());
-    SymbolCollector collector = new SymbolCollector((ProgramNode) program);
-    collector.collect();
-    output.write(((ProgramNode)program).scope.toString().getBytes());
+    // output.write(program.toString().getBytes());
+    SymbolCollector collector = new SymbolCollector();
+    collector.visit((ProgramNode) program);
+    output.write(((ProgramNode) program).scope.toString().getBytes());
+    // SemanticChecker checker = new SemanticChecker((ProgramNode) program);
+    // checker.check();
+    
     output.close();
   }
 }

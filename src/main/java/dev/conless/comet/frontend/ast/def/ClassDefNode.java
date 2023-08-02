@@ -1,6 +1,7 @@
 package dev.conless.comet.frontend.ast.def;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
+import dev.conless.comet.frontend.ast.ScopedNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
 import dev.conless.comet.utils.metadata.BaseInfo;
@@ -10,7 +11,7 @@ import dev.conless.comet.utils.metadata.VarInfo;
 import dev.conless.comet.utils.scope.BaseScope;
 import dev.conless.comet.utils.scope.ClassScope;
 
-public class ClassDefNode extends BaseDefNode {
+public class ClassDefNode extends BaseDefNode implements ScopedNode {
   public ClassScope scope;
   public FuncDefNode constructor;
   public Array<VarDefNode> varDefs;
@@ -33,6 +34,14 @@ public class ClassDefNode extends BaseDefNode {
 
   public String getName() {
     return info.name;
+  }
+
+  public Array<VarDefNode> getVarDefs() {
+    return varDefs;
+  }
+
+  public Array<FuncDefNode> getFuncDefs() {
+    return funcDefs;
   }
 
   @Override
@@ -63,43 +72,7 @@ public class ClassDefNode extends BaseDefNode {
   }
 
   @Override
-  public void declare(BaseInfo info) {
-    if (info instanceof FuncInfo) {
-      scope.funcs.put(info.name, (FuncInfo) info);
-    } else if (info instanceof VarInfo) {
-      scope.vars.put(info.name, (VarInfo) info);
-    }
-  }
-
-  @Override
-  public BaseInfo get(String name) {
-    if (scope.vars.containsKey(name)) {
-      return scope.vars.get(name);
-    } else if (scope.funcs.containsKey(name)) {
-      return scope.funcs.get(name);
-    }
-    return null;
-  }
-
-  public BaseInfo get(String name, String type) {
-    if (type == "var") {
-      if (scope.vars.containsKey(name)) {
-        return scope.vars.get(name);
-      }
-    } else if (type == "func") {
-      if (scope.funcs.containsKey(name)) {
-        return scope.funcs.get(name);
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public BaseInfo getRecur(String name) {
-    return null;
-  }
-
-  public BaseInfo getRecur(String name, String type) {
-    return null;
+  public BaseScope getScope() {
+    return scope;
   }
 }

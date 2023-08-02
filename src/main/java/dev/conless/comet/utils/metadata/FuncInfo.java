@@ -23,6 +23,7 @@ public class FuncInfo extends BaseInfo {
     }
   }
 
+  @Override
   public String toString() {
     String str = type.toString() + " " + name + "(";
     for (int i = 0; i < params.size(); i++) {

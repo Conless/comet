@@ -1,7 +1,9 @@
 package dev.conless.comet.frontend.ast.def;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
+import dev.conless.comet.frontend.ast.ScopedNode;
 import dev.conless.comet.frontend.ast.stmt.BlockStmtNode;
+import dev.conless.comet.frontend.ast.stmt.StmtNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
 import dev.conless.comet.utils.metadata.BaseInfo;
@@ -9,7 +11,7 @@ import dev.conless.comet.utils.metadata.FuncInfo;
 import dev.conless.comet.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.scope.BaseScope;
 
-public class FuncDefNode extends BaseDefNode {
+public class FuncDefNode extends BaseDefNode implements ScopedNode {
   public BaseScope scope;
   public Array<VarDefNode> params;
   public BlockStmtNode body;
@@ -31,6 +33,11 @@ public class FuncDefNode extends BaseDefNode {
   public TypeInfo getReturnType() {
     return ((FuncInfo) info).type;
   }
+
+  public Array<StmtNode> getBody() {
+    return body.stmts;
+  }
+
   @Override
   public String getName() {
     return info.name;
@@ -51,19 +58,13 @@ public class FuncDefNode extends BaseDefNode {
 
   @Override
   public void addScope(BaseScope scope) {
-    this.scope = new BaseScope(scope);
+    if (this.scope == null) {
+      this.scope = new BaseScope(scope);
+    }
   }
   
   @Override
-  public void declare(BaseInfo info) {}
-
-  @Override
-  public BaseInfo get(String name) {
-    return null;
-  }
-
-  @Override
-  public BaseInfo getRecur(String name) {
-    return null;
+  public BaseScope getScope() {
+    return scope;
   }
 }
