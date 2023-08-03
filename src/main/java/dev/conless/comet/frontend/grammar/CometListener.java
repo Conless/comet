@@ -170,6 +170,16 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitConditionalExpr(Comet.ConditionalExprContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Comet#atom}.
+	 * @param ctx the parse tree
+	 */
+	void enterAtom(Comet.AtomContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Comet#atom}.
+	 * @param ctx the parse tree
+	 */
+	void exitAtom(Comet.AtomContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Comet#varDef}.
 	 * @param ctx the parse tree
 	 */

@@ -106,6 +106,12 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitConditionalExpr(Comet.ConditionalExprContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Comet#atom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAtom(Comet.AtomContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Comet#varDef}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

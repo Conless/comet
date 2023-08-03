@@ -87,18 +87,15 @@ Comma: ',';
 LBrace: '{';
 RBrace: '}';
 
-// Special symbol
-Blank: [ \n\r\t]+ -> skip;
+WhiteSpace: [ \t\r\n]+ -> skip;
 
-// Comments
 CommentLine: '//' ~[\r\n]* -> skip;
 CommentPara: '/*' .*? '*/' -> skip;
-
 
 // Identifier
 Identifier: [A-Za-z][0-9A-Za-z_]*;
 
-// Constants
-IntegerConst: [1-9][0-9]* | '0';
-StringCharacter: '\\n' | '\\\\' | '\\"' | [ -~];
-StringConst: '"' StringCharacter* '"';
+// Literal
+IntegerLiteral: [1-9][0-9]* | '0';
+StringLiteral: '"' (StringCharactor)*? '"';
+fragment StringCharactor: '\\n' | '\\\\' | '\\"' | [ -~];
