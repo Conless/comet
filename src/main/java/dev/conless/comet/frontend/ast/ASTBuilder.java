@@ -70,14 +70,27 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitTypeName(Comet.TypeNameContext ctx) {
-    return new TypeNameNode(new Position(ctx.start), ctx.type().getText(), ctx.LBracket().size());
+    for (var unit : ctx.arrayUnit()) {
+      if (unit.expr() != null) {
+        throw new RuntimeException("array definition shouldn't contain length");
+      }
+    }
+    return new TypeNameNode(new Position(ctx.start), ctx.type().getText(), ctx.arrayUnit().size());
   }
 
   @Override
   public ASTNode visitNewExpr(Comet.NewExprContext ctx) {
-    var newExpr = new NewExprNode(new Position(ctx.start), ctx.type().getText(), ctx.LBracket().size());
-    for (var expr : ctx.expr()) {
-      newExpr.addLength((ExprNode) visit(expr));
+    var newExpr = new NewExprNode(new Position(ctx.start), ctx.type().getText(), ctx.arrayUnit().size());
+    boolean initFinished = false;
+    for (var unit : ctx.arrayUnit()) {
+      if (unit.expr() == null) {
+        initFinished = true;
+      } else {
+        if (initFinished) {
+          throw new RuntimeException("The shape of multidimensional array must be specified from left to right");
+        }
+        newExpr.addLength((ExprNode) visit(unit.expr()));
+      }
     }
     return newExpr;
   }

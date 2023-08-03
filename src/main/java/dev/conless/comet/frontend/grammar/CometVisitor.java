@@ -23,6 +23,12 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitType(Comet.TypeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Comet#arrayUnit}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayUnit(Comet.ArrayUnitContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Comet#typeName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

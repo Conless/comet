@@ -78,9 +78,17 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
   }
 
   public void visit(NewExprNode node) throws Exception {
-    TypeInfo type = (TypeInfo)node.getInfo();
+    TypeInfo type = (TypeInfo) node.getInfo();
     if (!checkTypeValid(type)) {
-      throw new RuntimeException("Undefined type " + type.getName() + " is used at " + node.toString() + " " + node.position.toString());
+      throw new RuntimeException(
+          "Undefined type " + type.getName() + " is used at " + node.toString() + " " + node.position.toString());
+    }
+    for (var expr : node.getLengths()) {
+      expr.accept(this);
+      TypeInfo exprType = (TypeInfo) expr.getInfo();
+      if (!exprType.equals(new TypeInfo("int", 0))) {
+        throw new RuntimeException("Array size must be an integer at " + node.toString() + " " + node.position.toString());
+      }
     }
     node.setEditable(false);
   }
@@ -205,7 +213,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
       return;
     }
     if (lhsType.equals(new TypeInfo("bool", 0))) {
-      if (!node.op.equals("==") && !node.op.equals("!=")) {
+      if (!node.op.equals("==") && !node.op.equals("!=") && !node.op.equals("&&") && !node.op.equals("||")) {
         throw new RuntimeException("Operator " + node.op + " is not supported for booleans");
       }
       return;
@@ -290,6 +298,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
       return;
     }
     if (node.atomType == Type.THIS) {
+      BaseScope lastClass = currentScope.getLastClass();
       if (currentScope instanceof ClassScope) {
         node.setInfo(new TypeInfo(currentScope.getInfo().getName(), 0));
       } else {

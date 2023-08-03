@@ -10,10 +10,11 @@ options {
 program: ((varDef ';') | (classDef ';') | funcDef)* EOF;
 
 type: Int | Bool | String | Void | Identifier;
-typeName: type ('[' ']')*;
+arrayUnit: '[' expr? ']';
+typeName: type arrayUnit*;
 
 expr:
-	New type ('[' expr ']')* ('[' ']')* ('(' ')')? # newExpr
+	New type arrayUnit* ('(' ')')? # newExpr
 
 	// Exprs that MAY result with lvalue
 	| '(' expr ')'					# parenExpr

@@ -28,8 +28,11 @@ public class TypeInfo extends BaseInfo {
   }
 
   public boolean equals(TypeInfo other) {
-    if (this.type == Type.NULL || other.type == Type.NULL) {
-      return true;
+    if (this.type == Type.NULL) {
+      return other.type == Type.NULL || other.depth > 0 || other.type == Type.CUSTOM;
+    }
+    if (other.type == Type.NULL) {
+      return this.depth > 0 || this.type == Type.CUSTOM;
     }
     return this.name.equals(other.name) && this.depth.equals(other.depth);
   }

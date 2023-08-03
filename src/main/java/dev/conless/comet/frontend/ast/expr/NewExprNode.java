@@ -18,6 +18,10 @@ public class NewExprNode extends ExprNode {
     lengths.add(length);
   }
 
+  public Array<ExprNode> getLengths() {
+    return lengths;
+  }
+
   @Override
   public String toString() {
     String str = "new " + info.name;

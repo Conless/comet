@@ -28,6 +28,16 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitType(Comet.TypeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Comet#arrayUnit}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayUnit(Comet.ArrayUnitContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Comet#arrayUnit}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayUnit(Comet.ArrayUnitContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Comet#typeName}.
 	 * @param ctx the parse tree
 	 */

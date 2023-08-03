@@ -7,6 +7,7 @@ import dev.conless.comet.frontend.ast.stmt.*;
 import dev.conless.comet.frontend.ast.type.*;
 import dev.conless.comet.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.metadata.VarInfo;
+import dev.conless.comet.utils.scope.GlobalScope;
 
 public class SymbolCollector extends ScopeManager implements ASTVisitor {
   public void visit(ASTNode node) throws Exception {
@@ -48,7 +49,7 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor {
       }
     }
     TypeInfo returnType = node.getReturnType();
-    if (!checkTypeValid(returnType)) {
+    if (!checkTypeValid(returnType) && !returnType.equals(GlobalScope.voidType)) {
       throw new Exception("Type " + returnType.getName() + " is not defined");
     }
     for (var param : node.getParams()) {
