@@ -197,8 +197,11 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitForStmt(Comet.ForStmtContext ctx) {
-    return new ForStmtNode(new Position(ctx.start), (StmtNode) visit(ctx.init), (ExprNode) visit(ctx.condition),
-        (ExprStmtNode) visit(ctx.update), (StmtNode) visit(ctx.body));
+    var initStmt = ctx.init == null ? null : (StmtNode) visit(ctx.init);
+    var conditionExpr = ctx.condition == null ? null : (ExprNode) visit(ctx.condition);
+    var updateStmt = ctx.update == null ? null : (ExprStmtNode) visit(ctx.update);
+    return new ForStmtNode(new Position(ctx.start), initStmt, conditionExpr,
+        updateStmt, (StmtNode) visit(ctx.body));
   }
 
   @Override

@@ -48,7 +48,11 @@ def main():
     print("  " + "Result: " + result)
     expected_status = 0 if expected == "Success" else 1
     if status != expected_status:
-      break
+      print("Test fail at " + test_name + ", source code has been copied to ./src/test/mx/input.mx")
+      subprocess.call("cp " + test_cases_dir + test_name + " ./src/test/mx/input.mx", shell=True)
+      return
+  print("All tests passed!")  
+  
 
 if __name__ == "__main__":
   main()

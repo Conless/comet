@@ -107,7 +107,7 @@ stmt:
 
 ifStmt: If '(' expr ')' stmt (Else stmt)?;
 forStmt:
-	For '(' init = stmt condition = expr ';' update = exprStmt? ')' body = stmt;
+	For '(' init = stmt condition = expr? ';' update = exprStmt? ')' body = stmt;
 	// Notice that condition statement can only be exprStmt or emptyStmt.
 whileStmt: While '(' expr ')' stmt;
 
