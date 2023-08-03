@@ -8,6 +8,7 @@ import dev.conless.comet.frontend.ast.type.*;
 import dev.conless.comet.utils.Type;
 import dev.conless.comet.utils.metadata.*;
 import dev.conless.comet.utils.scope.ClassScope;
+import dev.conless.comet.utils.scope.GlobalScope;
 
 public class SemanticChecker extends ScopeManager implements ASTVisitor {
   public void visit(ASTNode node) throws Exception {
@@ -15,6 +16,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
   }
 
   public void visit(ProgramNode node) throws Exception {
+    node.addScope(null);
     enterScope(node.getScope());
     for (var def : node.defs) {
       def.accept(this);
@@ -30,7 +32,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     }
     if (!node.getReturnType().equals(new TypeInfo("void", 0)) && !node.getInfo().getName().equals("main")) {
       if (!((FuncInfo) currentScope.getInfo()).isExited()) {
-        throw new Exception("Function " + node.getName() + " should have a return statement");
+        throw new Exception("Function " + node.getName() + " doesn't have a return statement " + node.position.toString());
       }
     }
     exitScope();
@@ -47,13 +49,21 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
 
   public void visit(VarDefNode node) throws Exception {
     TypeInfo type = (TypeInfo) node.getInfo();
-    if (!type.isBuiltIn && globalScope.get(type.getName(), "class") == null) {
-      throw new Exception("Type " + type.getName() + " is not defined");
+    if (!checkTypeValid(type)) {
+      throw new Exception(
+          "Invalid type " + type.getName() + " is used at " + node.toString() + " " + node.position.toString());
     }
     for (var v : node.vars) {
       if (currentScope.get(v.a) != null) {
-        throw new Exception(v.a + " is already defined");
+        throw new Exception("Redefinition of " + v.a + " at " + node.toString() + " " + node.position.toString());
       } else {
+        if (v.b != null) {
+          v.b.accept(this);
+          TypeInfo initType = (TypeInfo) v.b.getInfo();
+          if (!type.equals(initType)) {
+            throw new Exception("Cannot assign " + v.b.toString() + " to " + v.a.toString() + " at " + node.toString() + " " + node.position.toString());
+          }
+        }
         currentScope.declare(new VarInfo(v.a, (TypeInfo) node.info));
       }
     }
@@ -70,7 +80,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
   public void visit(NewExprNode node) throws Exception {
     TypeInfo type = (TypeInfo)node.getInfo();
     if (!checkTypeValid(type)) {
-      throw new RuntimeException("Type " + type.getName() + " is not defined");
+      throw new RuntimeException("Undefined type " + type.getName() + " is used at " + node.toString() + " " + node.position.toString());
     }
     node.setEditable(false);
   }
@@ -79,19 +89,19 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     node.object.accept(this);
     TypeInfo objectType = (TypeInfo) node.object.getInfo();
     if (objectType.depth > 0) {
-      if (node.member.equals("length")) {
-        node.setInfo(new TypeInfo("int", 0));
+      if (node.member.equals("size")) {
+        node.setInfo(GlobalScope.arraySizeFunc);
       } else {
-        throw new RuntimeException("Type " + objectType.getName() + " does not have member " + node.member);
+        throw new RuntimeException("Call to undefined member " + node.member + " of array type " + objectType.getName() + " at " + node.toString() + " " + node.position.toString());
       }
     } else {
       ClassInfo classInfo = (ClassInfo) globalScope.get(objectType.getName(), "class");
       if (classInfo == null) {
-        throw new RuntimeException("Type " + objectType.getName() + " is not a valid class");
+        throw new RuntimeException("Call to undefined class " + objectType.getName() + " at " + node.toString() + " " + node.position.toString());
       }
       BaseInfo memberInfo = classInfo.get(node.member);
       if (memberInfo == null) {
-        throw new RuntimeException("Type " + objectType.getName() + " does not have member " + node.member);
+        throw new RuntimeException("Call to undefined member " + node.member + " of type " + objectType.getName() + " at " + node.toString() + " " + node.position.toString());
       }
       if (memberInfo instanceof VarInfo) {
         node.setInfo(((VarInfo) memberInfo).getType());
@@ -108,18 +118,18 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
       arg.accept(this);
     }
     if (!(node.func.getInfo() instanceof FuncInfo)) {
-      throw new RuntimeException("Type " + node.func.getInfo().getName() + " is not callable");
+      throw new RuntimeException("Call to undefined function " + node.func.getInfo().getName() + " at " + node.toString() + " " + node.position.toString());
     }
     FuncInfo funcInfo = (FuncInfo) node.func.getInfo();
     if (funcInfo.getParams().size() != node.args.size()) { // TODO: add support for default parameters
       throw new RuntimeException(
-          "Function " + funcInfo.getName() + " should have " + funcInfo.getParams().size() + " arguments");
+          "Function " + funcInfo.toString() + " expected to have " + funcInfo.getParams().size() + " arguments, got " + node.args.size() + " at " + node.toString() + " " + node.position.toString());
     }
     for (int i = 0; i < node.args.size(); i++) {
       TypeInfo argType = (TypeInfo) node.args.get(i).getInfo();
       TypeInfo paramType = funcInfo.getParams().get(i);
       if (!argType.equals(paramType)) {
-        throw new RuntimeException("Argument " + i + " should be of type " + paramType.getName());
+        throw new RuntimeException("Function " + funcInfo.toString() + " expected argument " + (i + 1) + " to be of type " + paramType.getName() + ", got " + argType.getName() + " at " + node.toString() + " " + node.position.toString());
       }
     }
     node.setInfo(funcInfo.getReturnType());
@@ -130,12 +140,12 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     node.array.accept(this);
     TypeInfo arrayType = (TypeInfo) node.array.getInfo();
     if (arrayType.depth == 0) {
-      throw new RuntimeException("Type " + arrayType.getName() + " is not an array");
+      throw new RuntimeException("Index call to an non-array variable " + node.array.toString() + " at " + node.toString() + " " + node.position.toString());
     }
     node.index.accept(this);
     TypeInfo indexType = (TypeInfo) node.index.getInfo();
-    if (indexType.equals(new TypeInfo("int", 0))) {
-      throw new RuntimeException("Index should be of type int");
+    if (!indexType.equals(new TypeInfo("int", 0))) {
+      throw new RuntimeException("Cannot access array " + node.array.toString() + " by a non-integer index of " + indexType.toString() + " at " + node.toString() + " " + node.position.toString());
     }
     node.setInfo(new TypeInfo(arrayType.getName(), arrayType.depth - 1));
     node.setEditable(node.array.isEditable());
@@ -145,7 +155,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     node.expr.accept(this);
     TypeInfo type = (TypeInfo) node.expr.getInfo();
     if (!type.equals(new TypeInfo("int", 0))) {
-      throw new RuntimeException("Operand should be of type int");
+      throw new RuntimeException("Cannot apply " + node.op + " to a non-integer operand at " + node.toString() + " " + node.position.toString());
     }
     node.setInfo(new TypeInfo("int", 0));
     node.setEditable(false);
@@ -157,17 +167,17 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     node.setEditable(false);
     if (node.op.equals("!")) {
       if (!type.equals(new TypeInfo("bool", 0))) {
-        throw new RuntimeException("Operand should be of type bool");
+        throw new RuntimeException("Cannot apply " + node.op + " to a non-boolean operand at " + node.toString() + " " + node.position.toString());
       }
       node.setInfo(new TypeInfo("bool", 0));
     } else {
       if (!type.equals(new TypeInfo("int", 0))) {
-        throw new RuntimeException("Operand should be of type int");
+        throw new RuntimeException("Cannot apply " + node.op + " to a non-integer operand at " + node.toString() + " " + node.position.toString());
       }
       node.setInfo(new TypeInfo("int", 0));
       if (node.op.equals("++") || node.op.equals("--")) {
         if (!node.expr.isEditable()) {
-          throw new RuntimeException("Operand should be a lvalue");
+          throw new RuntimeException("Cannot apply " + node.op + " to a rvalue operand at " + node.toString() + " " + node.position.toString());
         }
         node.expr.setEditable(true);
       }
@@ -180,7 +190,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     TypeInfo lhsType = (TypeInfo) node.lhs.getInfo();
     TypeInfo rhsType = (TypeInfo) node.rhs.getInfo();
     if (!lhsType.equals(rhsType)) {
-      throw new RuntimeException("Operands should be of the same type");
+      throw new RuntimeException("Cannot apply " + node.op + " to operands of different types at " + node.toString() + " " + node.position.toString());
     }
     if (node.op.equals("<") || node.op.equals(">") || node.op.equals("<=") || node.op.equals(">=") || node.op.equals("==") || node.op.equals("!=")) {
       node.setInfo(new TypeInfo("bool", 0));
@@ -239,10 +249,10 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     TypeInfo lhsType = (TypeInfo) node.lhs.getInfo();
     TypeInfo rhsType = (TypeInfo) node.rhs.getInfo();
     if (!lhsType.equals(rhsType)) {
-      throw new RuntimeException("Operands should be of the same type");
+      throw new RuntimeException("Cannot assign " + rhsType.getName() + " to " + lhsType.getName() + " at " + node.toString() + " " + node.position.toString());
     }
     if (!node.lhs.isEditable()) {
-      throw new RuntimeException("Operand should be a lvalue");
+      throw new RuntimeException("Cannot assign " + rhsType.getName() + " to a lvalue " + node.lhs.toString() + " at " + node.toString() + " " + node.position.toString());
     }
     node.setInfo(lhsType);
     node.setEditable(true);
@@ -258,7 +268,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
         node.setInfo((FuncInfo) info);
         node.setEditable(false);
       } else {
-        throw new RuntimeException("Unknown identifier " + node.toString());
+        throw new RuntimeException("Use of undefined identifier " + node.toString() + " at " + node.toString() + " " + node.position.toString());
       }
       return;
     }
@@ -328,6 +338,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
       } else {
         node.elseStmt.accept(this);
       }
+      exitScope();
     }
   }
 
@@ -353,7 +364,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
 
   public void visit(WhileStmtNode node) throws Exception {
     node.addScope(currentScope);
-    enterScope(currentScope);
+    enterScope(node.getScope());
     node.condition.accept(this);
     TypeInfo conditionType = (TypeInfo) node.condition.getInfo();
     if (!conditionType.equals(new TypeInfo("bool", 0))) {
@@ -366,6 +377,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     } else {
       node.body.accept(this);
     }
+    exitScope();
   }
 
   public void visit(ContinueStmtNode node) throws Exception {
@@ -394,7 +406,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
       node.getExpr().accept(this);
       TypeInfo exprType = (TypeInfo) node.getExpr().getInfo();
       if (!returnType.equals(exprType)) {
-        throw new RuntimeException("Function should return a value of type " + returnType.getName());
+        throw new RuntimeException("Function should return a value of type " + returnType.getName() + ", but got " + exprType.getName() + " instead at " + node.toString() + " " + node.position.toString());
       }
       ((FuncInfo) scope.getInfo()).exit();
     }

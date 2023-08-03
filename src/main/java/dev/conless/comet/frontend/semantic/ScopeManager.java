@@ -20,6 +20,6 @@ public class ScopeManager {
   }
 
   public boolean checkTypeValid(TypeInfo type) {
-    return type.isBuiltIn || globalScope.get(type.getName(), "class") != null;
+    return (type.isBuiltIn && (type.name.equals("int") || type.name.equals("string") || type.name.equals("bool"))) || globalScope.get(type.getName(), "class") != null;
   }
 }

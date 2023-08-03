@@ -24,26 +24,25 @@ public interface BuiltInElements {
   FuncInfo[] builtInFuncs = { printFunc, printlnFunc, printIntFunc, printlnIntFunc, getStringFunc, getIntFunc,
       toStringFunc };
 
+  FuncInfo arraySizeFunc = new FuncInfo("size", intType);
   FuncInfo stringLengthFunc = new FuncInfo("length", intType);
   FuncInfo stringSubstringFunc = new FuncInfo("substring", stringType, Arrays.asList(intType, intType));
   FuncInfo stringParseintFunc = new FuncInfo("parseInt", intType);
   FuncInfo stringOrdFunc = new FuncInfo("ord", intType, Arrays.asList(intType));
   
-  ClassInfo voidClass = new ClassInfo("void");
-  ClassInfo intClass = new ClassInfo("int");
-  ClassInfo boolClass = new ClassInfo("bool");
+  // ClassInfo voidClass = new ClassInfo("void");
+  // ClassInfo intClass = new ClassInfo("int");
+  // ClassInfo boolClass = new ClassInfo("bool");
   ClassInfo stringClass = new ClassInfo("string", Arrays.asList(),
       Arrays.asList(stringLengthFunc, stringSubstringFunc, stringParseintFunc, stringOrdFunc));
-  ClassInfo nullClass = new ClassInfo("null");
-  ClassInfo thisClass = new ClassInfo("this");
-  ClassInfo[] builtInClasses = { voidClass, intClass, boolClass, stringClass, nullClass, thisClass };
+  // ClassInfo nullClass = new ClassInfo("null");
+  // ClassInfo thisClass = new ClassInfo("this");
+  // ClassInfo[] builtInClasses = { voidClass, intClass, boolClass, stringClass, nullClass, thisClass };
 
   // FuncInfo stringLengthFunc = new FuncInfo(null, intType, "length", "string", null, 0);
   // FuncInfo stringSubstringFunc = new FuncInfo(null, stringType, "substring", "string", intType, 2);
   // FuncInfo stringParseintFunc = new FuncInfo(null, intType, "parseint", "string", null, 0);
   // FuncInfo stringOrdFunc = new FuncInfo(null, intType, "ord", "string", intType, 1);
-
-  // FuncInfo ArraySizeFunc = new FuncInfo(null, intType, "size", null, 0);
 
   // // ------------------ IR Builtin Types ------------------
 

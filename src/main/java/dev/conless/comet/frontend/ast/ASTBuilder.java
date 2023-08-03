@@ -140,15 +140,15 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   @Override
   public ASTNode visitAtomExpr(Comet.AtomExprContext ctx) {
     Type atomType;
-    if (ctx.IntegerConst() != null) {
+    if (ctx.atom().IntegerLiteral() != null) {
       atomType = Type.INT;
-    } else if (ctx.StringConst() != null) {
+    } else if (ctx.atom().StringLiteral() != null) {
       atomType = Type.STRING;
-    } else if (ctx.True() != null || ctx.False() != null) {
+    } else if (ctx.atom().True() != null || ctx.atom().False() != null) {
       atomType = Type.BOOL;
-    } else if (ctx.Null() != null) {
+    } else if (ctx.atom().Null() != null) {
       atomType = Type.NULL;
-    } else if (ctx.This() != null) {
+    } else if (ctx.atom().This() != null) {
       atomType = Type.THIS;
     } else {
       atomType = Type.CUSTOM;

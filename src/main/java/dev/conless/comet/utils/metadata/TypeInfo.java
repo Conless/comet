@@ -18,6 +18,8 @@ public class TypeInfo extends BaseInfo {
       this.type = Type.STRING;
     } else if (typeName.equals("void")) {
       this.type = Type.VOID;
+    } else if (typeName.equals("null")) {
+      this.type = Type.NULL;
     } else {
       this.type = Type.CUSTOM;
       this.isBuiltIn = false;
@@ -26,6 +28,9 @@ public class TypeInfo extends BaseInfo {
   }
 
   public boolean equals(TypeInfo other) {
+    if (this.type == Type.NULL || other.type == Type.NULL) {
+      return true;
+    }
     return this.name.equals(other.name) && this.depth.equals(other.depth);
   }
 

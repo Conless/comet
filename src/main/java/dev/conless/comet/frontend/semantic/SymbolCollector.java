@@ -90,8 +90,15 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor {
       }
       for (var v : def.vars) {
         if (currentScope.get(v.a) != null) {
-          throw new Exception(v.a + " is already defined");
+          throw new Exception("Redefinition of " + v.a + " at " + def.toString() + " " + def.position.toString());
         } else {
+          if (v.b != null) {
+            v.b.accept(this);
+            TypeInfo initType = (TypeInfo) v.b.getInfo();
+            if (!type.equals(initType)) {
+              throw new Exception("Cannot assign " + v.b.toString() + " to " + v.a.toString() + " at " + node.toString() + " " + node.position.toString());
+            }
+          }
           currentScope.declare(new VarInfo(v.a, (TypeInfo) def.info));
         }
       }

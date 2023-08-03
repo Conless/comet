@@ -40,7 +40,9 @@ public class BlockStmtNode extends StmtNode implements ScopedNode {
 
   @Override
   public void addScope(BaseScope scope) {
-    scope = new BaseScope(scope, new BaseInfo("block"));
+    if (this.scope == null) {
+      this.scope = new BaseScope(scope, new BaseInfo("block"));
+    }
   }
 
   @Override

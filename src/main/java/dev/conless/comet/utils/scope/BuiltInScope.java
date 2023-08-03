@@ -17,8 +17,6 @@ public class BuiltInScope extends BaseScope implements BuiltInElements {
     for (FuncInfo func : builtInFuncs) {
       funcs.put(func.name, func);
     }
-    for (ClassInfo class_ : builtInClasses) {
-      classes.put(class_.name, class_);
-    }
+    classes.put("string", stringClass);
   }
 }
