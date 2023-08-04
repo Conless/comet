@@ -5,12 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "Compiler",
+      "request": "launch",
+      "mainClass": "dev.conless.comet.Compiler",
+      "projectName": "comet"
+    },
+    {
       "type": "antlr-debug",
       "request": "launch",
       "name": "Debug Comet Grammar",
-      // "grammar": "../tmp/Mx-Compiler-2022/src/grammar/MxParser.g4",
-      "grammar": "src/main/antlr/MxParser.g4",
-      "input": "src/test/input.mx",
+      "grammar": "src/main/antlr/Comet.g4",
+      "input": "src/test/mx/input.mx",
       "startRule": "program",
       "printParseTree": true,
       "visualParseTree": true

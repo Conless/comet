@@ -28,8 +28,6 @@ public class Compiler {
       SemanticChecker checker = new SemanticChecker();
       checker.visit((ProgramNode) program);
       // output.close();
-      // TODO: null type and void type
-      // TODO: constructor
     } catch (Exception e) {
       System.out.println(e.toString());
       System.exit(1);

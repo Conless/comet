@@ -3,7 +3,7 @@
 import os
 import subprocess
 
-test_cases_dir = "./testcases/sema/"
+test_cases_dir = "./tutorial/Compiler-Design-Implementation/testcases/sema/"
 compile_command = "mvn compile"
 execute_command = "java -Xbootclasspath/a:/Library/Java/JavaVirtualMachines/openjdk-17.jdk/Contents/Home/lib/antlr-4.13.0-complete.jar -jar ./target/comet-0.1.0-alpha.jar"
 
