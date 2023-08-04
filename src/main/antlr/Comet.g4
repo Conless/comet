@@ -46,7 +46,7 @@ expr:
 	| expr op = LogicOr expr										# binaryExpr
 
 	// Conditional expr
-	| expr '?' expr ':' expr # conditionalExpr
+	| <assoc = right> expr '?' expr ':' expr # conditionalExpr
 
 	// Assignment exprs, requires lvalue and results with lvalue
 	| expr op = (

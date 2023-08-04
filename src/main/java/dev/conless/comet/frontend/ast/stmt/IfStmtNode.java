@@ -4,7 +4,6 @@ import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.ScopedNode;
 import dev.conless.comet.frontend.ast.expr.ExprNode;
 import dev.conless.comet.utils.container.Position;
-import dev.conless.comet.utils.metadata.BaseInfo;
 import dev.conless.comet.utils.metadata.FlowInfo;
 import dev.conless.comet.utils.scope.BaseScope;
 

@@ -8,7 +8,6 @@ import dev.conless.comet.frontend.ast.type.*;
 import dev.conless.comet.utils.Type;
 import dev.conless.comet.utils.metadata.*;
 import dev.conless.comet.utils.scope.BaseScope;
-import dev.conless.comet.utils.scope.ClassScope;
 import dev.conless.comet.utils.scope.GlobalScope;
 
 public class SemanticChecker extends ScopeManager implements ASTVisitor {
@@ -264,7 +263,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
     TypeInfo lhsType = (TypeInfo) node.lhs.getInfo();
     TypeInfo rhsType = (TypeInfo) node.rhs.getInfo();
     if (!lhsType.equals(rhsType)) {
-      throw new RuntimeException("Cannot assign " + rhsType.getName() + " to " + lhsType.getName() + " at " + node.toString() + " " + node.position.toString());
+      throw new RuntimeException("Cannot assign " + rhsType.toString() + " to " + lhsType.toString() + " at " + node.toString() + " " + node.position.toString());
     }
     if (!node.lhs.isEditable()) {
       throw new RuntimeException("Cannot assign " + rhsType.getName() + " to a lvalue " + node.lhs.toString() + " at " + node.toString() + " " + node.position.toString());
