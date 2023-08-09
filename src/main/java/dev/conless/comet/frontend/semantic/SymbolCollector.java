@@ -9,6 +9,7 @@ import dev.conless.comet.utils.error.*;
 import dev.conless.comet.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.metadata.VarInfo;
 import dev.conless.comet.utils.scope.GlobalScope;
+import dev.conless.comet.utils.scope.ScopeManager;
 
 public class SymbolCollector extends ScopeManager implements ASTVisitor {
   public void visit(ASTNode node) throws BaseError {

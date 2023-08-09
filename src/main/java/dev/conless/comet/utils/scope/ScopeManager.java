@@ -1,12 +1,14 @@
-package dev.conless.comet.frontend.semantic;
+package dev.conless.comet.utils.scope;
 
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.metadata.TypeInfo;
-import dev.conless.comet.utils.scope.BaseScope;
-import dev.conless.comet.utils.scope.GlobalScope;
 
 public class ScopeManager {
-  public GlobalScope globalScope;
-  public BaseScope currentScope;
+  protected GlobalScope globalScope;
+  protected BaseScope currentScope;
+
+  protected Integer depth;
+  protected Array<Integer> counter;
 
   public void enterScope(BaseScope scope) {
     if (globalScope == null) {

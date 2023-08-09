@@ -1,5 +1,6 @@
 package dev.conless.comet.utils.scope;
 
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.metadata.BaseInfo;
 import dev.conless.comet.utils.metadata.ClassInfo;
@@ -7,17 +8,29 @@ import dev.conless.comet.utils.metadata.FlowInfo;
 import dev.conless.comet.utils.metadata.FuncInfo;
 import dev.conless.comet.utils.metadata.VarInfo;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class BaseScope {
   private BaseScope parent;
   private BaseInfo info;
+  private Array<Integer> tags;
+  private Integer count;
   protected Map<String, VarInfo> vars;
 
   public BaseScope(BaseScope parent, BaseInfo info) {
     this.parent = parent;
     this.info = info;
     this.vars = new Map<String, VarInfo>();
+    if (parent != null) {
+      this.tags = new Array<Integer>(parent.getTags());
+      int count = parent.getCount();
+      this.tags.add(count);
+      parent.setCount(count + 1);
+    } else {
+      this.tags = new Array<Integer>();
+    }
   }
 
   public BaseScope getParent() {
@@ -35,7 +48,7 @@ public class BaseScope {
     }
     return null;
   }
-  
+
   public BaseScope getLastFunc() {
     BaseScope scope = this;
     while (scope != null) {

@@ -11,6 +11,7 @@ import dev.conless.comet.utils.metadata.*;
 import dev.conless.comet.utils.scope.BaseScope;
 import dev.conless.comet.utils.scope.FuncScope;
 import dev.conless.comet.utils.scope.GlobalScope;
+import dev.conless.comet.utils.scope.ScopeManager;
 
 public class SemanticChecker extends ScopeManager implements ASTVisitor {
   public void visit(ASTNode node) throws BaseError {

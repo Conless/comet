@@ -3,6 +3,13 @@ package dev.conless.comet.utils.container;
 import java.util.ArrayList;
 
 public class Array<E> extends ArrayList<E> {
+  public Array() {
+    super();
+  }
+  public Array(Array<E> tags) {
+    super((ArrayList<E>) tags);
+  }
+
   public String toString(String separator) {
     String str = "";
     boolean first = true;
