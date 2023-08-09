@@ -1,9 +1,11 @@
 package dev.conless.comet.frontend.ast;
 
-import dev.conless.comet.frontend.ast.def.*;
-import dev.conless.comet.frontend.ast.expr.*;
-import dev.conless.comet.frontend.ast.stmt.*;
-import dev.conless.comet.frontend.ast.type.*;
+import dev.conless.comet.frontend.ast.node.ASTNode;
+import dev.conless.comet.frontend.ast.node.ProgramNode;
+import dev.conless.comet.frontend.ast.node.def.*;
+import dev.conless.comet.frontend.ast.node.expr.*;
+import dev.conless.comet.frontend.ast.node.stmt.*;
+import dev.conless.comet.frontend.ast.node.type.*;
 import dev.conless.comet.utils.error.BaseError;
 
 public interface ASTVisitor {

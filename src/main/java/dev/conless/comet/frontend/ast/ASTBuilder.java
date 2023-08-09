@@ -1,19 +1,20 @@
 package dev.conless.comet.frontend.ast;
 
 import dev.conless.comet.frontend.grammar.*;
-import dev.conless.comet.utils.AtomType;
+import dev.conless.comet.frontend.utils.metadata.ClassInfo;
+import dev.conless.comet.frontend.utils.metadata.FuncInfo;
+import dev.conless.comet.frontend.utils.metadata.TypeInfo;
+import dev.conless.comet.frontend.utils.metadata.VarInfo;
+import dev.conless.comet.frontend.utils.type.AtomType;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
 import dev.conless.comet.utils.error.CompileError;
-import dev.conless.comet.utils.metadata.ClassInfo;
-import dev.conless.comet.utils.metadata.FuncInfo;
-import dev.conless.comet.utils.metadata.TypeInfo;
-import dev.conless.comet.utils.metadata.VarInfo;
-
-import dev.conless.comet.frontend.ast.def.*;
-import dev.conless.comet.frontend.ast.expr.*;
-import dev.conless.comet.frontend.ast.stmt.*;
-import dev.conless.comet.frontend.ast.type.*;
+import dev.conless.comet.frontend.ast.node.ASTNode;
+import dev.conless.comet.frontend.ast.node.ProgramNode;
+import dev.conless.comet.frontend.ast.node.def.*;
+import dev.conless.comet.frontend.ast.node.expr.*;
+import dev.conless.comet.frontend.ast.node.stmt.*;
+import dev.conless.comet.frontend.ast.node.type.*;
 
 public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   @Override

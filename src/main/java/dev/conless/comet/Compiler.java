@@ -5,6 +5,8 @@ import java.io.*;
 import org.antlr.v4.runtime.*;
 
 import dev.conless.comet.frontend.ast.*;
+import dev.conless.comet.frontend.ast.node.ASTNode;
+import dev.conless.comet.frontend.ast.node.ProgramNode;
 import dev.conless.comet.frontend.grammar.*;
 import dev.conless.comet.frontend.semantic.*;
 import dev.conless.comet.utils.error.*;

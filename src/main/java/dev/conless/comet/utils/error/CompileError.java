@@ -1,6 +1,6 @@
 package dev.conless.comet.utils.error;
 
-import dev.conless.comet.frontend.ast.ASTNode;
+import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.utils.container.Position;
 
 public class CompileError extends BaseError {
