@@ -1,44 +1,39 @@
 package dev.conless.comet.utils.metadata;
 
-import dev.conless.comet.utils.Type;
+import lombok.*;
 
+@Value
 public class TypeInfo extends BaseInfo {
-  public Type type;
   public Integer depth;
   public Boolean isBuiltIn;
 
   public TypeInfo(String typeName, Integer arrayDepth) {
     super(typeName);
-    this.isBuiltIn = true;
-    if (typeName.equals("int")) {
-      this.type = Type.INT;
-    } else if (typeName.equals("bool")) {
-      this.type = Type.BOOL;
-    } else if (typeName.equals("string")) {
-      this.type = Type.STRING;
-    } else if (typeName.equals("void")) {
-      this.type = Type.VOID;
-    } else if (typeName.equals("null")) {
-      this.type = Type.NULL;
-    } else {
-      this.type = Type.CUSTOM;
-      this.isBuiltIn = false;
-    }
+    this.isBuiltIn = typeName.equals("int") || typeName.equals("bool") || typeName.equals("string") || typeName.equals("void") || typeName.equals("null");
     this.depth = arrayDepth;
   }
 
-  public boolean equals(TypeInfo other) {
-    if (this.type == Type.NULL) {
-      return other.type == Type.NULL || other.depth > 0 || other.type == Type.CUSTOM;
+  @Override
+  public boolean equals(Object otherInfo) {
+    if (!(otherInfo instanceof TypeInfo)) {
+      return false;
     }
-    if (other.type == Type.NULL) {
-      return this.depth > 0 || this.type == Type.CUSTOM;
+    var other = (TypeInfo) otherInfo;
+    if (this.getName() == "null") {
+      return other.getName().equals("null") || other.depth > 0 || !other.isBuiltIn;
     }
-    return this.name.equals(other.name) && this.depth.equals(other.depth);
+    if (other.getName() == "null") {
+      return this.depth > 0 || !this.isBuiltIn;
+    }
+    return this.getName().equals(other.getName()) && this.depth.equals(other.depth);
+  }
+
+  public int hashCode() {
+    return this.getName().hashCode() + this.depth;
   }
 
   @Override
   public String toString() {
-    return name + "[]".repeat(depth);
+    return getName() + "[]".repeat(depth);
   }
 }

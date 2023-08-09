@@ -5,66 +5,55 @@ import dev.conless.comet.frontend.ast.ScopedNode;
 import dev.conless.comet.frontend.ast.stmt.BlockStmtNode;
 import dev.conless.comet.frontend.ast.stmt.StmtNode;
 import dev.conless.comet.utils.container.Array;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.metadata.FuncInfo;
 import dev.conless.comet.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.scope.BaseScope;
+import dev.conless.comet.utils.scope.FuncScope;
 
-public class FuncDefNode extends BaseDefNode implements ScopedNode {
-  public BaseScope scope;
-  public Array<VarDefNode> params;
-  public BlockStmtNode body;
+import lombok.experimental.SuperBuilder;
+import lombok.Getter;
+import lombok.Setter;
 
-  public FuncDefNode(Position position, TypeInfo type, String name, BlockStmtNode body) {
-    super(position, new FuncInfo(name, type));
-    params = new Array<VarDefNode>();
-    this.body = body;
-  }
-
-  public void addParam(VarDefNode param) {
-    params.add(param);
-    ((FuncInfo) info).addParam((TypeInfo) param.getInfo());
-  }
-
-  public Array<VarDefNode> getParams() {
-    return params;
-  }
+/**
+ * The `FuncDefNode` class represents a function definition node in an abstract syntax tree, with
+ * properties such as scope, parameters, and a blocked body.
+ */
+@SuperBuilder
+@Getter
+@Setter
+public final class FuncDefNode extends BaseDefNode implements ScopedNode {
+  private FuncScope scope;
+  private final Array<VarDefNode> params;
+  private final BlockStmtNode blockedBody;
   
   public TypeInfo getReturnType() {
-    return ((FuncInfo) info).type;
+    return ((FuncInfo) getInfo()).getType();
   }
 
   public Array<StmtNode> getBody() {
-    return body.stmts;
-  }
-
-  @Override
-  public String getName() {
-    return info.name;
+    return getBlockedBody().getStmts();
   }
 
   @Override
   public String toString() {
-    String str = ((FuncInfo) info).type.toString() + " " + info.name + "(";
-    str += params.toString(", ");
-    str += ") " + body.toString();
+    String str = ((FuncInfo) getInfo()).type.toString() + " " + getInfo().getName() + "(";
+    if (params != null) {
+      str += params.toString(", ");
+    }
+    str += ") " + blockedBody.toString();
     return str;
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 
   @Override
   public void addScope(BaseScope scope) {
     if (this.scope == null) {
-      this.scope = new BaseScope(scope, info);
+      this.scope = new FuncScope(scope, getInfo());
     }
-  }
-  
-  @Override
-  public BaseScope getScope() {
-    return scope;
   }
 }

@@ -5,22 +5,23 @@ import dev.conless.comet.frontend.ast.def.*;
 import dev.conless.comet.frontend.ast.expr.*;
 import dev.conless.comet.frontend.ast.stmt.*;
 import dev.conless.comet.frontend.ast.type.*;
+import dev.conless.comet.utils.error.*;
 import dev.conless.comet.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.metadata.VarInfo;
 import dev.conless.comet.utils.scope.GlobalScope;
 
 public class SymbolCollector extends ScopeManager implements ASTVisitor {
-  public void visit(ASTNode node) throws Exception {
-    throw new Exception("SymbolCollector.visit(ASTNode) should not be called");
+  public void visit(ASTNode node) throws BaseError {
+    throw new RuntimeError("SymbolCollector.visit(ASTNode) should not be called", node.getPosition());
   }
 
-  public void visit(ProgramNode node) throws Exception {
+  public void visit(ProgramNode node) throws BaseError {
     node.addScope(null);
     enterScope(node.getScope());
     for (var def : node.getDefs()) {
       if (def instanceof ClassDefNode || def instanceof FuncDefNode) {
         if (currentScope.get(def.getName()) != null) {
-          throw new Exception("Type " + def.getName() + " is already defined");
+          throw new CompileError("Type " + def.getName() + " is redefined", def.getPosition());
         } else {
           currentScope.declare(def.getInfo());
         }
@@ -32,83 +33,68 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor {
       }
     }
     if (node.getScope().get("main", "func") == null) {
-      throw new Exception("main function is not defined");
+      throw new CompileError("Main function is not defined", node.getPosition());
     }
     exitScope();
   }
 
-  public void visit(FuncDefNode node) throws Exception {
+  public void visit(FuncDefNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
     if (node.getName().equals("main")) {
       if (!node.getReturnType().equals(GlobalScope.intType)) {
-        throw new Exception("main function should return int");
+        throw new CompileError("Main function should return int", node);
       }
       if (node.getParams().size() != 0) {
-        throw new Exception("main function should not have any parameters");
+        throw new CompileError("Main function should not have any parameters", node);
       }
     }
     TypeInfo returnType = node.getReturnType();
     if (!checkTypeValid(returnType) && !returnType.equals(GlobalScope.voidType)) {
-      throw new Exception("Type " + returnType.getName() + " is not defined");
+      throw new CompileError("Type " + returnType.getName() + " is not defined", node);
     }
     for (var param : node.getParams()) {
-      TypeInfo type = (TypeInfo) param.getInfo();
+      TypeInfo type = ((VarInfo) param.getInfo()).getType();
       if (!checkTypeValid(type)) {
-        throw new Exception("Type " + type.getName() + " is not defined");
+        throw new CompileError("Type " + type.getName() + " is not defined", param);
       }
-      if (param.vars.size() != 1) {
-        throw new Exception("Function parameter should only have one variable");
-      }
-      var p = param.vars.get(0);
-      if (currentScope.get(p.a) != null) {
-        throw new Exception(p.a + " is already defined");
+      if (currentScope.get(param.getName()) != null) {
+        throw new CompileError(param.getName() + " is already defined", param);
       } else {
-        currentScope.declare(new VarInfo(p.a, type));
+        currentScope.declare(new VarInfo(param.getName(), param.getType()));
       }
     }
     exitScope();
   }
 
-  public void visit(ClassDefNode node) throws Exception {
+  public void visit(ClassDefNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
-    if (node.constructor == null || !node.constructor.getName().equals(node.getName())) {
-      throw new Exception("Constructor of " + node.getName() + " is not correctly defined");
-    }
-    for (var def : node.funcDefs) {
-      if (currentScope.get(def.info.getName()) != null) {
-        throw new Exception("Function " + def.info.getName() + " is already defined");
+    for (var def : node.getFuncDefs()) {
+      if (currentScope.get(def.getInfo().getName()) != null) {
+        throw new CompileError("Function " + def.getInfo().getName() + " is redefined", def);
       } else {
         def.accept(this);
-        currentScope.declare(def.info);
+        currentScope.declare(def.getInfo());
       }
     }
-    for (var def : node.varDefs) {
-      TypeInfo type = (TypeInfo) def.getInfo();
-      if (!checkTypeValid(type)) {
-        throw new Exception("Type " + type.getName() + " is not defined");
-      }
-      for (var v : def.vars) {
-        if (currentScope.get(v.a) != null) {
-          throw new Exception("Redefinition of " + v.a + " at " + def.toString() + " " + def.position.toString());
-        } else {
-          if (v.b != null) {
-            v.b.accept(this);
-            TypeInfo initType = (TypeInfo) v.b.getInfo();
-            if (!type.equals(initType)) {
-              throw new Exception("Cannot assign " + v.b.toString() + " to " + v.a.toString() + " at " + node.toString() + " " + node.position.toString());
-            }
-          }
-          currentScope.declare(new VarInfo(v.a, (TypeInfo) def.info));
-        }
-      }
+    for (var var : node.getVarDefs()) {
+      var.accept(this);
     }
     exitScope();
   }
 
   public void visit(VarDefNode node) {
-    throw new RuntimeException("SymbolCollector.visit(VarDefNode) should not be called");
+    TypeInfo type = ((VarInfo) node.getInfo()).getType();
+    if (!checkTypeValid(type)) {
+      throw new CompileError("Type " + type.getName() + " is not defined", node);
+    }
+    if (currentScope.get(node.getName()) != null) {
+      throw new CompileError(
+          "Redefinition of " + node.getName(), node);
+    } else {
+      currentScope.declare(new VarInfo(node.getName(), type));
+    }
   }
 
   public void visit(TypeNameNode node) {
@@ -131,7 +117,7 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor {
     throw new RuntimeException("SymbolCollector.visit(CallExprNode) should not be called");
   }
 
-  public void visit(IndexExprNode node) {
+  public void visit(ArrayExprNode node) {
     throw new RuntimeException("SymbolCollector.visit(IndexExprNode) should not be called");
   }
 

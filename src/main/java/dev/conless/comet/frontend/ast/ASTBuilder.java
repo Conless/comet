@@ -1,9 +1,15 @@
 package dev.conless.comet.frontend.ast;
 
 import dev.conless.comet.frontend.grammar.*;
-import dev.conless.comet.utils.Type;
+import dev.conless.comet.utils.AtomType;
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.CompileError;
+import dev.conless.comet.utils.metadata.ClassInfo;
+import dev.conless.comet.utils.metadata.FuncInfo;
 import dev.conless.comet.utils.metadata.TypeInfo;
+import dev.conless.comet.utils.metadata.VarInfo;
+
 import dev.conless.comet.frontend.ast.def.*;
 import dev.conless.comet.frontend.ast.expr.*;
 import dev.conless.comet.frontend.ast.stmt.*;
@@ -12,87 +18,139 @@ import dev.conless.comet.frontend.ast.type.*;
 public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   @Override
   public ASTNode visitProgram(Comet.ProgramContext ctx) {
-    var program = new ProgramNode(new Position(ctx.start));
+    var defs = new Array<BaseDefNode>();
     for (var def : ctx.children) {
-      if (def instanceof Comet.VarDefContext || def instanceof Comet.FuncDefContext
-          || def instanceof Comet.ClassDefContext) {
-        program.addDef((BaseDefNode) visit(def));
+      if ((def instanceof Comet.FuncDefContext) || (def instanceof Comet.ClassDefContext)) {
+        defs.add((BaseDefNode) visit(def));
+      } else if (def instanceof Comet.VarDefContext) {
+        var varDef = (VarDefStmtNode) visit(def);
+        for (var var : varDef.getDefs()) {
+          defs.add(var);
+        }
       }
     }
-    return program;
+    return ProgramNode.builder()
+        .position(new Position(ctx.start))
+        .defs(defs)
+        .build();
   }
 
   @Override
   public ASTNode visitVarDef(Comet.VarDefContext ctx) {
-    var varDef = new VarDefNode(new Position(ctx.start), (TypeNameNode) visit(ctx.typeName()));
+    var typeName = (TypeNameNode) visit(ctx.typeName());
+    var vars = new Array<VarDefNode>();
     for (var v : ctx.varConstructor()) {
-      varDef.addVar(v.name.getText(), v.expr() != null ? (ExprNode) visit(v.expr()) : null);
+      var varDef = VarDefNode.builder()
+          .position(new Position(ctx.start))
+          .info(new VarInfo(v.name.getText(), typeName.getInfo()))
+          .init(v.expr() != null ? (ExprNode) visit(v.expr()) : null)
+          .build();
+      vars.add(varDef);
     }
-    return varDef;
+    return VarDefStmtNode.builder()
+        .position(new Position(ctx.start))
+        .defs(vars)
+        .build();
   }
 
   @Override
   public ASTNode visitClassDef(Comet.ClassDefContext ctx) {
     FuncDefNode constructor = null;
     if (ctx.classConstructor().size() == 0) {
-      constructor = new FuncDefNode(new Position(ctx.start), new TypeInfo("void", 0), ctx.name.getText(), new BlockStmtNode(new Position(ctx.start)));
+      constructor = FuncDefNode.builder()
+          .position(new Position(ctx.start))
+          .info(new FuncInfo(ctx.name.getText(), new TypeInfo("void", 0), new Array<>()))
+          .params(new Array<>())
+          .blockedBody(BlockStmtNode.builder().position(new Position(ctx.start)).stmts(new Array<>()).build())
+          .build();
     } else if (ctx.classConstructor().size() == 1) {
       var ctor = ctx.classConstructor(0);
-      constructor = new FuncDefNode(new Position(ctx.start), new TypeInfo("void", 0), ctor.name.getText(), (BlockStmtNode) visit(ctor.blockStmt()));
+      if (!ctor.name.getText().equals(ctx.name.getText())) {
+        throw new CompileError("Class constructor has a different name to class " + ctx.name.getText(), new Position(ctx.start));
+      }
+      constructor = FuncDefNode.builder()
+          .position(new Position(ctor.start))
+          .info(new FuncInfo(ctor.name.getText(), new TypeInfo("void", 0), new Array<>()))
+          .blockedBody((BlockStmtNode) visit(ctor.blockStmt()))
+          .build();
+    } else {
+      throw new CompileError("More than one class constructor is not allowed in class " + ctx.name.getText(), new Position(ctx.start));
     }
-    var classDef = new ClassDefNode(new Position(ctx.start), ctx.name.getText(), constructor);
+    var vars = new Array<VarDefNode>();
     for (var def : ctx.varDef()) {
-      classDef.addVarDef((VarDefNode) visit(def));
+      var varDef = (VarDefStmtNode) visit(def);
+      for (var v : varDef.getDefs()) {
+        vars.add(v);
+      }
     }
+    var funcs = new Array<FuncDefNode>();
     for (var def : ctx.funcDef()) {
       if (def.name.getText() == ctx.name.getText()) {
-        throw new RuntimeException("constructor cannot have the same name as class");
+        throw new CompileError("Functions cannot have the same name as class " + ctx.name.getText(), new Position(def.start));
       }
-      classDef.addFuncDef((FuncDefNode) visit(def));
+      funcs.add((FuncDefNode) visit(def));
     }
-    return classDef;
+    return ClassDefNode.builder()
+        .info(new ClassInfo(ctx.name.getText(), vars, funcs))
+        .constructor(constructor)
+        .varDefs(vars).funcDefs(funcs)
+        .build();
   }
 
   @Override
   public ASTNode visitFuncDef(Comet.FuncDefContext ctx) {
-    var funcDef = new FuncDefNode(new Position(ctx.start), ((TypeNameNode) visit(ctx.typeName())).type, ctx.name.getText(), (BlockStmtNode) visit(ctx.blockStmt()));
     var paramList = ctx.funcParamList();
+    var params = new Array<VarDefNode>();
     if (paramList != null) {
       for (var param : paramList.funcParam()) {
         var constructor = param.varConstructor();
-        funcDef.addParam(new VarDefNode(new Position(param.start), (TypeNameNode) visit(param.typeName()),
-            constructor.name.getText(), constructor.expr() != null ? (ExprNode) visit(constructor.expr()) : null));
-        // TODO(Conless): check init value type
+        params.add(VarDefNode.builder()
+            .position(new Position(param.start))
+            .info(new VarInfo(constructor.name.getText(), ((TypeNameNode) visit(param.typeName())).getInfo()))
+            .init(constructor.expr() != null ? (ExprNode) visit(constructor.expr()) : null)
+            .build());
       }
     }
-    return funcDef;
+    return FuncDefNode.builder()
+        .position(new Position(ctx.start))
+        .info(new FuncInfo(ctx.name.getText(), ((TypeNameNode) visit(ctx.typeName())).getInfo(), params))
+        .params(params)
+        .blockedBody((BlockStmtNode) visit(ctx.blockStmt()))
+        .build();
   }
 
   @Override
   public ASTNode visitTypeName(Comet.TypeNameContext ctx) {
     for (var unit : ctx.arrayUnit()) {
       if (unit.expr() != null) {
-        throw new RuntimeException("array definition shouldn't contain length");
+        throw new CompileError("The definition of array shouldn't contain length", new Position(ctx.start));
       }
     }
-    return new TypeNameNode(new Position(ctx.start), ctx.type().getText(), ctx.arrayUnit().size());
+    return TypeNameNode.builder()
+        .position(new Position(ctx.start))
+        .info(new TypeInfo(ctx.type().getText(), ctx.arrayUnit().size()))
+        .build();
   }
 
   @Override
   public ASTNode visitNewExpr(Comet.NewExprContext ctx) {
-    var newExpr = new NewExprNode(new Position(ctx.start), ctx.type().getText(), ctx.arrayUnit().size());
     boolean initFinished = false;
+    var lengths = new Array<ExprNode>();
     for (var unit : ctx.arrayUnit()) {
       if (unit.expr() == null) {
         initFinished = true;
       } else {
         if (initFinished) {
-          throw new RuntimeException("The shape of multidimensional array must be specified from left to right");
+          throw new CompileError("The shape of multidimensional array must be specified from left to right", new Position(ctx.start));
         }
-        newExpr.addLength((ExprNode) visit(unit.expr()));
+        lengths.add((ExprNode) visit(unit.expr()));
       }
     }
-    return newExpr;
+    return NewExprNode.builder()
+        .position(new Position(ctx.start))
+        .type(new TypeInfo(ctx.type().getText(), ctx.arrayUnit().size()))
+        .lengths(lengths)
+        .build();
   }
 
   @Override
@@ -102,134 +160,195 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitMemberExpr(Comet.MemberExprContext ctx) {
-    return new MemberExprNode(new Position(ctx.start), (ExprNode) visit(ctx.expr()), ctx.member.getText());
+    return MemberExprNode.builder()
+        .position(new Position(ctx.start))
+        .object((ExprNode) visit(ctx.expr()))
+        .member(ctx.member.getText())
+        .build();
   }
 
   @Override
   public ASTNode visitCallExpr(Comet.CallExprContext ctx) {
-    var callExpr = new CallExprNode(new Position(ctx.start), (ExprNode) visit(ctx.expr()));
+    var args = new Array<ExprNode>();
     if (ctx.funcArgList() != null) {
       for (var expr : ctx.funcArgList().expr()) {
-        callExpr.addArg((ExprNode) visit(expr));
+        args.add((ExprNode) visit(expr));
       }
     }
-    return callExpr;
+    return CallExprNode.builder()
+        .position(new Position(ctx.start))
+        .func((ExprNode) visit(ctx.expr()))
+        .args(args)
+        .build();
   }
 
   @Override
-  public ASTNode visitIndexExpr(Comet.IndexExprContext ctx) {
-    return new IndexExprNode(new Position(ctx.start), (ExprNode) visit(ctx.expr(0)), (ExprNode) visit(ctx.expr(1)));
+  public ASTNode visitArrayExpr(Comet.ArrayExprContext ctx) {
+    if (ctx.arrayUnit().expr() == null) {
+      throw new CompileError("Cannot access an array without index", new Position(ctx.start));
+    }
+    return ArrayExprNode.builder()
+        .position(new Position(ctx.start))
+        .array((ExprNode) visit(ctx.expr()))
+        .subscript((ExprNode) visit(ctx.arrayUnit().expr()))
+        .build();
   }
 
   @Override
   public ASTNode visitPostUnaryExpr(Comet.PostUnaryExprContext ctx) {
-    return new PostUnaryExprNode(new Position(ctx.start), (ExprNode) visit(ctx.expr()), ctx.op.getText());
+    return PostUnaryExprNode.builder()
+        .position(new Position(ctx.start))
+        .expr((ExprNode) visit(ctx.expr()))
+        .op(ctx.op.getText())
+        .build();
   }
 
   @Override
   public ASTNode visitPreUnaryExpr(Comet.PreUnaryExprContext ctx) {
-    return new PreUnaryExprNode(new Position(ctx.start), (ExprNode) visit(ctx.expr()), ctx.op.getText());
+    return PreUnaryExprNode.builder()
+        .position(new Position(ctx.start))
+        .expr((ExprNode) visit(ctx.expr()))
+        .op(ctx.op.getText())
+        .build();
   }
 
   @Override
   public ASTNode visitBinaryExpr(Comet.BinaryExprContext ctx) {
-    return new BinaryExprNode(new Position(ctx.start), (ExprNode) visit(ctx.expr(0)), ctx.op.getText(),
-        (ExprNode) visit(ctx.expr(1)));
+    return BinaryExprNode.builder()
+        .position(new Position(ctx.start))
+        .lhs((ExprNode) visit(ctx.expr(0)))
+        .rhs((ExprNode) visit(ctx.expr(1)))
+        .op(ctx.op.getText())
+        .build();
   }
 
   @Override
   public ASTNode visitConditionalExpr(Comet.ConditionalExprContext ctx) {
-    return new ConditionalExprNode(new Position(ctx.start), (ExprNode) visit(ctx.expr(0)),
-        (ExprNode) visit(ctx.expr(1)),
-        (ExprNode) visit(ctx.expr(2)));
+    return ConditionalExprNode.builder()
+        .position(new Position(ctx.start))
+        .condition((ExprNode) visit(ctx.expr(0)))
+        .lhs((ExprNode) visit(ctx.expr(1)))
+        .rhs((ExprNode) visit(ctx.expr(2)))
+        .build();
   }
 
   @Override
   public ASTNode visitAssignExpr(Comet.AssignExprContext ctx) {
-    return new AssignExprNode(new Position(ctx.start), (ExprNode) visit(ctx.expr(0)), ctx.op.getText(),
-        (ExprNode) visit(ctx.expr(1)));
+    return AssignExprNode.builder()
+        .position(new Position(ctx.start))
+        .lhs((ExprNode) visit(ctx.expr(0)))
+        .rhs((ExprNode) visit(ctx.expr(1)))
+        .build();
   }
 
   @Override
   public ASTNode visitAtomExpr(Comet.AtomExprContext ctx) {
-    Type atomType;
+    AtomType atomType;
     if (ctx.atom().IntegerLiteral() != null) {
-      atomType = Type.INT;
+      atomType = AtomType.INT;
     } else if (ctx.atom().StringLiteral() != null) {
-      atomType = Type.STRING;
+      atomType = AtomType.STRING;
     } else if (ctx.atom().True() != null || ctx.atom().False() != null) {
-      atomType = Type.BOOL;
+      atomType = AtomType.BOOL;
     } else if (ctx.atom().Null() != null) {
-      atomType = Type.NULL;
+      atomType = AtomType.NULL;
     } else if (ctx.atom().This() != null) {
-      atomType = Type.THIS;
+      atomType = AtomType.THIS;
     } else {
-      atomType = Type.CUSTOM;
+      atomType = AtomType.CUSTOM;
     }
-    return new AtomExprNode(new Position(ctx.start), atomType, ctx.getText());
+    return AtomExprNode.builder()
+        .position(new Position(ctx.start))
+        .atomType(atomType)
+        .value(ctx.atom().getText())
+        .build();
   }
 
   @Override
   public ASTNode visitStmt(Comet.StmtContext ctx) {
-    var child = ctx.getChild(0);
-    if (child instanceof Comet.VarDefContext) {
-      return new VarDefStmtNode(new Position(ctx.start), (VarDefNode) visit(child));
-    } else if (child == ctx.Semi()) {
-      return new EmptyStmtNode(new Position(ctx.start));
-    }
-    return visit(ctx.getChild(0));
+    return visitChildren(ctx);
   }
 
   @Override
   public ASTNode visitBlockStmt(Comet.BlockStmtContext ctx) {
-    var blockStmt = new BlockStmtNode(new Position(ctx.start));
+    var stmts = new Array<StmtNode>();
     for (var stmt : ctx.stmt()) {
-      blockStmt.addStmt((StmtNode) visit(stmt));
+      stmts.add((StmtNode) visit(stmt));
     }
-    return blockStmt;
+    return BlockStmtNode.builder()
+        .position(new Position(ctx.start))
+        .stmts(stmts)
+        .build();
   }
 
   @Override
   public ASTNode visitIfStmt(Comet.IfStmtContext ctx) {
-    return new IfStmtNode(new Position(ctx.start), (ExprNode) visit(ctx.expr()), (StmtNode) visit(ctx.stmt(0)),
-        ctx.stmt().size() == 2 ? (StmtNode) visit(ctx.stmt(1)) : null);
+    return IfStmtNode.builder()
+        .position(new Position(ctx.start))
+        .condition((ExprNode) visit(ctx.expr()))
+        .thenStmt((StmtNode) visit(ctx.stmt(0)))
+        .elseStmt(ctx.stmt().size() == 2 ? (StmtNode) visit(ctx.stmt(1)) : null)
+        .build();
   }
 
   @Override
   public ASTNode visitForStmt(Comet.ForStmtContext ctx) {
-    var initStmt = ctx.init == null ? null : (StmtNode) visit(ctx.init);
-    var conditionExpr = ctx.condition == null ? null : (ExprNode) visit(ctx.condition);
-    var updateStmt = ctx.update == null ? null : (ExprStmtNode) visit(ctx.update);
-    return new ForStmtNode(new Position(ctx.start), initStmt, conditionExpr,
-        updateStmt, (StmtNode) visit(ctx.body));
+    return ForStmtNode.builder()
+        .position(new Position(ctx.start))
+        .init((StmtNode) visit(ctx.init))
+        .condition(ctx.condition == null ? null : (ExprNode) visit(ctx.condition))
+        .update(ctx.update == null ? null : (ExprNode) visit(ctx.update))
+        .body((StmtNode) visit(ctx.body))
+        .build();
   }
 
   @Override
   public ASTNode visitWhileStmt(Comet.WhileStmtContext ctx) {
-    return new WhileStmtNode(new Position(ctx.start), (ExprNode) visit(ctx.expr()), (StmtNode) visit(ctx.stmt()));
+    return WhileStmtNode.builder()
+        .position(new Position(ctx.start))
+        .condition((ExprNode) visit(ctx.expr()))
+        .body((StmtNode) visit(ctx.stmt()))
+        .build();
   }
 
   @Override
   public ASTNode visitContinueStmt(Comet.ContinueStmtContext ctx) {
-    return new ContinueStmtNode(new Position(ctx.start));
+    return ContinueStmtNode.builder()
+        .position(new Position(ctx.start))
+        .build();
   }
 
   @Override
   public ASTNode visitBreakStmt(Comet.BreakStmtContext ctx) {
-    return new BreakStmtNode(new Position(ctx.start));
+    return BreakStmtNode.builder()
+        .position(new Position(ctx.start))
+        .build();
   }
 
   @Override
   public ASTNode visitReturnStmt(Comet.ReturnStmtContext ctx) {
-    return new ReturnStmtNode(new Position(ctx.start), ctx.expr() != null ? (ExprNode) visit(ctx.expr()) : null);
+    return ReturnStmtNode.builder()
+        .position(new Position(ctx.start))
+        .expr(ctx.expr() == null ? null : (ExprNode) visit(ctx.expr()))
+        .build();
   }
 
   @Override
   public ASTNode visitExprStmt(Comet.ExprStmtContext ctx) {
-    var exprStmt = new ExprStmtNode(new Position(ctx.start));
+    var exprs = new Array<ExprNode>();
     for (var expr : ctx.expr()) {
-      exprStmt.addExpr((ExprNode) visit(expr));
+      exprs.add((ExprNode) visit(expr));
     }
-    return exprStmt;
+    return ExprStmtNode.builder()
+        .position(new Position(ctx.start))
+        .exprs(exprs)
+        .build();
+  }
+
+  @Override
+  public ASTNode visitEmptyStmt(Comet.EmptyStmtContext ctx) {
+    return EmptyStmtNode.builder()
+        .position(new Position(ctx.start))
+        .build();
   }
 }

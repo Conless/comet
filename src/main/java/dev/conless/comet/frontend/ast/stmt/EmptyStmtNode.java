@@ -1,20 +1,26 @@
 package dev.conless.comet.frontend.ast.stmt;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 
-public class EmptyStmtNode extends StmtNode {
-  public EmptyStmtNode(Position position) {
-    super(position);
-  }
+import lombok.experimental.SuperBuilder;
+import lombok.Value;
+import lombok.EqualsAndHashCode;
 
+/**
+ * The class EmptyStmtNode extends StmtNode and represents an empty statement in Java code.
+ */
+@SuperBuilder
+@Value
+@EqualsAndHashCode(callSuper = true)
+public final class EmptyStmtNode extends StmtNode {
   @Override
   public String toString() {
     return super.toString() + ";";
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 }

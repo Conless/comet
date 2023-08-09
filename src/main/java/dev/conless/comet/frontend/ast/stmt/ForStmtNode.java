@@ -3,33 +3,43 @@ package dev.conless.comet.frontend.ast.stmt;
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.ScopedNode;
 import dev.conless.comet.frontend.ast.expr.ExprNode;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.metadata.FlowInfo;
 import dev.conless.comet.utils.scope.BaseScope;
 
-public class ForStmtNode extends StmtNode implements ScopedNode {
-  public BaseScope scope;
-  public StmtNode init;
-  public ExprNode condition;
-  public ExprStmtNode update;
-  public StmtNode body;
+import lombok.experimental.SuperBuilder;
+import lombok.Getter;
+import lombok.EqualsAndHashCode;
 
-  public ForStmtNode(Position position, StmtNode init, ExprNode condition, ExprStmtNode update, StmtNode body) {
-    super(position);
-    this.init = init;
-    this.condition = condition;
-    this.update = update;
-    this.body = body;
-  }
+/**
+ * The `ForStmtNode` class represents a for loop statement in a programming language and includes
+ * fields for the loop initialization, condition, update, and body.
+ */
+@SuperBuilder
+@Getter
+@EqualsAndHashCode(callSuper = true)
+public final class ForStmtNode extends StmtNode implements ScopedNode {
+  private BaseScope scope;
+  private final StmtNode init;
+  private final ExprNode condition;
+  private final ExprNode update;
+  private final StmtNode body;
 
   @Override
   public String toString() {
     String str = "for (";
-    str += init.toString().substring(indentDepth * 2) + " ";
-    str += condition.toString() + "; ";
-    String updateStr = update.toString();
-    updateStr = updateStr.substring(indentDepth * 2, updateStr.length() - 1);
-    str += updateStr + ")";
+    if (init != null) {
+      str += init.toString().substring(indentDepth * 2);
+    }
+    str += ' ';
+    if (condition != null) {
+      str += condition.toString();
+    }
+    str += ';';
+    if (update != null) {
+      str += update.toString();
+    }
+    str += ')';
     if (body != null) {
       if (body instanceof BlockStmtNode) {
         str += " " + body.toString();
@@ -45,7 +55,7 @@ public class ForStmtNode extends StmtNode implements ScopedNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 
@@ -54,10 +64,5 @@ public class ForStmtNode extends StmtNode implements ScopedNode {
     if (this.scope == null) {
       this.scope = new BaseScope(scope, new FlowInfo("for"));
     }
-  }
-
-  @Override
-  public BaseScope getScope() {
-    return scope;
   }
 }

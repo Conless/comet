@@ -1,20 +1,27 @@
 package dev.conless.comet.frontend.ast.stmt;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 
-public class ContinueStmtNode extends StmtNode {
-  public ContinueStmtNode(Position position) {
-    super(position);
-  }
+import lombok.experimental.SuperBuilder;
+import lombok.Value;
+import lombok.EqualsAndHashCode;
 
+/**
+ * The `ContinueStmtNode` class represents a continue statement in an abstract syntax tree (AST) and
+ * provides methods for generating its string representation and accepting an AST visitor.
+ */
+@SuperBuilder
+@Value
+@EqualsAndHashCode(callSuper = true)
+public final class ContinueStmtNode extends StmtNode {
   @Override
   public String toString() {
     return super.toString() + "continue;";
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 }

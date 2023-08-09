@@ -17,9 +17,9 @@ public class ClassScope extends BaseScope {
   @Override
   public void declare(BaseInfo info) {
     if (info instanceof FuncInfo) {
-      funcs.put(info.name, (FuncInfo) info);
+      funcs.put(info.getName(), (FuncInfo) info);
     } else if (info instanceof VarInfo) {
-      vars.put(info.name, (VarInfo) info);
+      vars.put(info.getName(), (VarInfo) info);
     }
   }
 
@@ -57,8 +57,8 @@ public class ClassScope extends BaseScope {
     if (funcs.containsKey(name)) {
       return funcs.get(name);
     }
-    if (parent != null) {
-      return parent.getRecur(name);
+    if (getParent() != null) {
+      return getParent().getRecur(name);
     }
     return null;
   }

@@ -1,18 +1,21 @@
 package dev.conless.comet.frontend.ast.expr;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
+import lombok.experimental.SuperBuilder;
+import lombok.Value;
+import lombok.EqualsAndHashCode;
 
-public class AssignExprNode extends ExprNode {
-  public ExprNode lhs, rhs;
-  public String op;
-
-  public AssignExprNode(Position position, ExprNode lhs, String op, ExprNode rhs) {
-    super(position);
-    this.lhs = lhs;
-    this.op = op;
-    this.rhs = rhs;
-  }
+/**
+ * The `AssignExprNode` class represents an assignment expression in Java and extends the `ExprNode`
+ * class.
+ */
+@SuperBuilder
+@Value
+@EqualsAndHashCode(callSuper = true)
+public final class AssignExprNode extends ExprNode {
+  private ExprNode lhs, rhs;
+  private String op;
 
   @Override
   public String toString() {
@@ -20,7 +23,7 @@ public class AssignExprNode extends ExprNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 }

@@ -2,37 +2,35 @@ package dev.conless.comet.frontend.ast.expr;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.utils.container.Array;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.metadata.TypeInfo;
 
-public class NewExprNode extends ExprNode {
-  public Array<ExprNode> lengths;
+import lombok.experimental.SuperBuilder;
+import lombok.Value;
+import lombok.EqualsAndHashCode;
 
-  public NewExprNode(Position position, String typeName, Integer arrayDepth) {
-    super(position);
-    this.info = new TypeInfo(typeName, arrayDepth);
-    lengths = new Array<ExprNode>();
-  }
-
-  public void addLength(ExprNode length) {
-    lengths.add(length);
-  }
-
-  public Array<ExprNode> getLengths() {
-    return lengths;
-  }
+/**
+ * The `NewExprNode` class represents a new expression node in an abstract syntax tree (AST) and
+ * includes information about the lengths of the array being created.
+ */
+@SuperBuilder
+@Value
+@EqualsAndHashCode(callSuper = true)
+public final class NewExprNode extends ExprNode {
+  private Array<ExprNode> lengths;
+  private TypeInfo type;
 
   @Override
   public String toString() {
-    String str = "new " + info.name;
-    for (int i = 0; i < ((TypeInfo) info).depth; i++) {
+    String str = "new " + type.getName();
+    for (int i = 0; i < type.depth; i++) {
       str += "[" + (i < lengths.size() ? lengths.get(i).toString() : "") + "]";
     }
     return str;
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 }

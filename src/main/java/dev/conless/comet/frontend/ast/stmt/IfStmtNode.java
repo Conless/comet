@@ -3,21 +3,25 @@ package dev.conless.comet.frontend.ast.stmt;
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.ScopedNode;
 import dev.conless.comet.frontend.ast.expr.ExprNode;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.metadata.FlowInfo;
 import dev.conless.comet.utils.scope.BaseScope;
 
-public class IfStmtNode extends StmtNode implements ScopedNode {
-  public BaseScope thenScope, elseScope;
-  public ExprNode condition;
-  public StmtNode thenStmt, elseStmt;
+import lombok.experimental.SuperBuilder;
+import lombok.Getter;
+import lombok.EqualsAndHashCode;
 
-  public IfStmtNode(Position position, ExprNode condition, StmtNode thenStmt, StmtNode elseStmt) {
-    super(position);
-    this.condition = condition;
-    this.thenStmt = thenStmt;
-    this.elseStmt = elseStmt;
-  }
+/**
+ * The `IfStmtNode` class represents an if statement in a programming language and includes fields for
+ * the condition, then statement, else statement, and scopes.
+ */
+@SuperBuilder
+@Getter
+@EqualsAndHashCode(callSuper = true)
+public final class IfStmtNode extends StmtNode implements ScopedNode {
+  private BaseScope thenScope, elseScope;
+  private final ExprNode condition;
+  private final StmtNode thenStmt, elseStmt;
 
   @Override
   public String toString() {
@@ -50,7 +54,7 @@ public class IfStmtNode extends StmtNode implements ScopedNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 

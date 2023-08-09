@@ -7,7 +7,7 @@ options {
 
 // Program contains varDef, classDef and funcDef Notice that there has to be exact one main
 // function, which should be handled in SemanticChecker.
-program: ((varDef ';') | (classDef ';') | funcDef)* EOF;
+program: (varDef | classDef | funcDef)* EOF;
 
 type: Int | Bool | String | Void | Identifier;
 arrayUnit: '[' expr? ']';
@@ -20,7 +20,7 @@ expr:
 	| '(' expr ')'					# parenExpr
 	| expr '.' member = Identifier	# memberExpr
 	| expr '(' funcArgList? ')'		# callExpr // in Mx only need to deal with args without default value
-	| expr '[' expr ']'				# indexExpr
+	| expr arrayUnit				# arrayExpr
 
 	// Unary exprs
 	| expr op = (SelfAdd | SelfSub) # postUnaryExpr
@@ -74,16 +74,16 @@ atom:
 	| Identifier
 	| This;
 
-varDef: typeName varConstructor (',' varConstructor)*;
+varDef: typeName varConstructor (',' varConstructor)* ';';
 varConstructor: name = Identifier ('=' expr)?;
 
 classDef:
 		// Notice that there're limitations for classConstructor, which should be handled in SemanticChecker.
 	Class name = Identifier '{' (
-		(varDef ';')
+		varDef
 		| funcDef
 		| classConstructor
-	)* '}';
+	)* '}' ';';
 classConstructor: name = Identifier '(' ')' blockStmt;
 
 funcDef:
@@ -93,26 +93,28 @@ funcParam: typeName varConstructor;
 funcArgList: expr (',' expr)*;
 
 blockStmt: '{' stmt* '}';
+exprStmt: expr (',' expr)* ';';
+emptyStmt: ';';
+
 stmt:
 	blockStmt
+	| varDef
 	| ifStmt
 	| forStmt
 	| whileStmt
-	| continueStmt ';'
-	| breakStmt ';'
-	| returnStmt ';'
-	| exprStmt ';'
-	| varDef ';'
-	| ';';
+	| continueStmt
+	| breakStmt
+	| returnStmt
+	| exprStmt
+	| emptyStmt
+	;
 
 ifStmt: If '(' expr ')' stmt (Else stmt)?;
 forStmt:
-	For '(' init = stmt condition = expr? ';' update = exprStmt? ')' body = stmt;
+	For '(' init = stmt condition = expr? ';' update = expr? ')' body = stmt;
 	// Notice that condition statement can only be exprStmt or emptyStmt.
 whileStmt: While '(' expr ')' stmt;
 
-continueStmt: Continue;
-breakStmt: Break;
-returnStmt: Return expr?;
-
-exprStmt: expr (',' expr)*;
+continueStmt: Continue ';';
+breakStmt: Break ';';
+returnStmt: Return expr? ';';

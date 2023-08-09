@@ -1,52 +1,37 @@
 package dev.conless.comet.utils.metadata;
 
-import java.util.List;
-
+import dev.conless.comet.frontend.ast.def.VarDefNode;
 import dev.conless.comet.utils.container.Array;
 
+import lombok.*;
+
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class FuncInfo extends BaseInfo {
   public TypeInfo type;
   public Array<TypeInfo> params;
-  public boolean exited = false;
 
-  public FuncInfo(String name, TypeInfo type) {
+  public FuncInfo(String name, TypeInfo type, TypeInfo... params) {
     super(name);
     this.type = type;
     this.params = new Array<TypeInfo>();
-  }
-
-  public FuncInfo(String name, TypeInfo type, List<TypeInfo> params) {
-    super(name);
-    this.type = type;
-    this.params = new Array<TypeInfo>();
-    for (TypeInfo param : params) {
+    for (var param : params) {
       this.params.add(param);
     }
   }
 
-  public void addParam(TypeInfo param) {
-    params.add(param);
-  }
-
-  public Array<TypeInfo> getParams() {
-    return params;
-  }
-
-  public TypeInfo getReturnType() {
-    return type;
-  }
-
-  public void exit() {
-    exited = true;
-  }
-
-  public boolean isExited() {
-    return exited;
+  public FuncInfo(String name, TypeInfo type, Array<VarDefNode> params) {
+    super(name);
+    this.type = type;
+    this.params = new Array<TypeInfo>();
+    for (var param : params) {
+      this.params.add(((VarInfo) param.getInfo()).getType());
+    }
   }
 
   @Override
   public String toString() {
-    String str = type.toString() + " " + name + "(";
+    String str = type.toString() + " " + getName() + "(";
     for (int i = 0; i < params.size(); i++) {
       str += params.get(i).toString();
       if (i != params.size() - 1) {

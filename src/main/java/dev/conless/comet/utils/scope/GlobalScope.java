@@ -25,11 +25,11 @@ public class GlobalScope extends BuiltInScope {
   @Override
   public void declare(BaseInfo info) {
     if (info instanceof ClassInfo) {
-      classes.put(info.name, (ClassInfo) info);
+      classes.put(info.getName(), (ClassInfo) info);
     } else if (info instanceof FuncInfo) {
-      funcs.put(info.name, (FuncInfo) info);
+      funcs.put(info.getName(), (FuncInfo) info);
     } else if (info instanceof VarInfo) {
-      vars.put(info.name, (VarInfo) info);
+      vars.put(info.getName(), (VarInfo) info);
     }
   }
 

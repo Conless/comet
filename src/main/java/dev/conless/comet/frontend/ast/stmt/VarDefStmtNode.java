@@ -2,27 +2,36 @@ package dev.conless.comet.frontend.ast.stmt;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.def.VarDefNode;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.error.BaseError;
 
-public class VarDefStmtNode extends StmtNode {
-  public VarDefNode def;
+import lombok.experimental.SuperBuilder;
+import lombok.Value;
+import lombok.EqualsAndHashCode;
 
-  public VarDefStmtNode(Position position, VarDefNode def) {
-    super(position);
-    this.def = def;
-  }
-
-  public VarDefNode getDef() {
-    return def;
-  }
+/**
+ * The VarDefStmtNode class represents a statement node that defines multiple variables.
+ */
+@SuperBuilder
+@Value
+@EqualsAndHashCode(callSuper = true)
+public final class VarDefStmtNode extends StmtNode {
+  private Array<VarDefNode> defs;
 
   @Override
   public String toString() {
-    return super.toString() + def.toString() + ";";
+    String str = super.toString() + defs.get(0).getType().toString() + " ";
+    for (int i = 0; i < defs.size(); i++) {
+      str += defs.get(i).getName();
+      if (i < defs.size() - 1) {
+        str += ", ";
+      }
+    }
+    return str + ";";
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 }

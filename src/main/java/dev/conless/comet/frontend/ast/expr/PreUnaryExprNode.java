@@ -1,17 +1,22 @@
 package dev.conless.comet.frontend.ast.expr;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 
-public class PreUnaryExprNode extends ExprNode {
-  public String op;
-  public ExprNode expr;
+import lombok.experimental.SuperBuilder;
+import lombok.Value;
+import lombok.EqualsAndHashCode;
 
-  public PreUnaryExprNode(Position position, ExprNode expr, String op) {
-    super(position);
-    this.expr = expr;
-    this.op = op;
-  }
+/**
+ * The `PreUnaryExprNode` class represents a pre-unary expression node in an abstract syntax tree (AST)
+ * and provides methods for converting the node to a string and accepting an AST visitor.
+ */
+@SuperBuilder
+@Value
+@EqualsAndHashCode(callSuper = true)
+public final class PreUnaryExprNode extends ExprNode {
+  private String op;
+  private ExprNode expr;
 
   @Override
   public String toString() {
@@ -19,7 +24,7 @@ public class PreUnaryExprNode extends ExprNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 }

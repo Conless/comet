@@ -1,16 +1,22 @@
 package dev.conless.comet.frontend.ast.stmt;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.frontend.ast.def.ClassDefNode;
-import dev.conless.comet.utils.container.Position;
 
-public class ClassDefStmtNode extends StmtNode {
-  public ClassDefNode def;
+import lombok.experimental.SuperBuilder;
+import lombok.Value;
+import lombok.EqualsAndHashCode;
 
-  public ClassDefStmtNode(Position position, ClassDefNode def) {
-    super(position);
-    this.def = def;
-  }
+/**
+ * The ClassDefStmtNode class represents a statement node that defines a class in an abstract syntax
+ * tree.
+ */
+@SuperBuilder
+@Value
+@EqualsAndHashCode(callSuper = true)
+public final class ClassDefStmtNode extends StmtNode {
+  private ClassDefNode def;
 
   @Override
   public String toString() {
@@ -18,7 +24,7 @@ public class ClassDefStmtNode extends StmtNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 }

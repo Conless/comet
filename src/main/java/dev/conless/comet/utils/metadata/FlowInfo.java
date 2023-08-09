@@ -1,16 +1,20 @@
 package dev.conless.comet.utils.metadata;
 
+import lombok.*;
+
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class FlowInfo extends BaseInfo {
   public FlowInfo(String name) {
     super(name);
   }
 
   public boolean isLoop() {
-    return name.equals("for") || name.equals("while");
+    return getName().equals("for") || getName().equals("while");
   }
 
   @Override
   public String toString() {
-    return name + "() {}";
+    return getName() + "() {}";
   }
 }

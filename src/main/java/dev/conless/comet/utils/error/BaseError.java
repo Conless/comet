@@ -12,6 +12,6 @@ abstract public class BaseError extends RuntimeException {
   }
 
   public String toString() {
-    return message + ": " + pos.toString();
+    return message + " at " + pos.toString();
   }
 }

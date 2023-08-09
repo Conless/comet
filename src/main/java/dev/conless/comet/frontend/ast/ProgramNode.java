@@ -2,25 +2,21 @@ package dev.conless.comet.frontend.ast;
 
 import dev.conless.comet.frontend.ast.def.*;
 import dev.conless.comet.utils.container.Array;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.scope.BaseScope;
 import dev.conless.comet.utils.scope.GlobalScope;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-public class ProgramNode extends ASTNode implements ScopedNode {
-  public GlobalScope scope;
-  public Array<BaseDefNode> defs;
-
-  public ProgramNode(Position position) {
-    super(position);
-    this.defs = new Array<BaseDefNode>();
-  }
+@SuperBuilder
+@Getter
+@Setter
+public final class ProgramNode extends ASTNode implements ScopedNode {
+  public GlobalScope globalScope;
+  public final Array<BaseDefNode> defs;
 
   public void addDef(BaseDefNode def) {
     defs.add(def);
-  }
-
-  public Array<BaseDefNode> getDefs() {
-    return defs;
   }
 
   @Override
@@ -38,19 +34,19 @@ public class ProgramNode extends ASTNode implements ScopedNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 
   @Override
   public BaseScope getScope() {
-    return scope;
+    return getGlobalScope();
   }
 
   @Override
   public void addScope(BaseScope scope) {
-    if (this.scope == null) {
-      this.scope = new GlobalScope();
+    if (this.globalScope == null) {
+      this.globalScope = new GlobalScope();
     }
   }
 }

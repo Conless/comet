@@ -1,17 +1,12 @@
 package dev.conless.comet.utils.metadata;
 
-public class BaseInfo {
-  public String name;
+import lombok.Getter;
+
+@Getter
+public abstract class BaseInfo {
+  private final String name;
 
   public BaseInfo(String name) {
     this.name = name;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String toString() {
-    return name + ";";
   }
 }

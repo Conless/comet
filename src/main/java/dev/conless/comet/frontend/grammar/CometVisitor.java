@@ -42,13 +42,6 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNewExpr(Comet.NewExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code indexExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIndexExpr(Comet.IndexExprContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code postUnaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
@@ -62,6 +55,13 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPreUnaryExpr(Comet.PreUnaryExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code arrayExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayExpr(Comet.ArrayExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code memberExpr}
 	 * labeled alternative in {@link Comet#expr}.
@@ -172,6 +172,18 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBlockStmt(Comet.BlockStmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Comet#exprStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExprStmt(Comet.ExprStmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Comet#emptyStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEmptyStmt(Comet.EmptyStmtContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Comet#stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -213,10 +225,4 @@ public interface CometVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitReturnStmt(Comet.ReturnStmtContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Comet#exprStmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExprStmt(Comet.ExprStmtContext ctx);
 }

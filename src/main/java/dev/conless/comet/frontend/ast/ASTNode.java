@@ -1,15 +1,21 @@
 package dev.conless.comet.frontend.ast;
 
 import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 
-public abstract class ASTNode {
-  public Position position;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-  public ASTNode(Position position) {
-    this.position = position;
+@SuperBuilder
+@Getter
+public class ASTNode {
+  protected Position position;
+
+  public void accept(ASTVisitor visitor) throws BaseError {
+    visitor.visit(this);
   }
 
-  public abstract void accept(ASTVisitor visitor) throws Exception;
-
-  public abstract String toString();
+  public String toString() {
+    return position.toString();
+  }
 }

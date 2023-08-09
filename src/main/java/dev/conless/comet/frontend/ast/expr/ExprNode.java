@@ -1,30 +1,20 @@
 package dev.conless.comet.frontend.ast.expr;
 
 import dev.conless.comet.frontend.ast.ASTNode;
-import dev.conless.comet.utils.container.Position;
-import dev.conless.comet.utils.metadata.BaseInfo;
+import dev.conless.comet.utils.metadata.ExprInfo;
 
+import lombok.experimental.SuperBuilder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.EqualsAndHashCode;
+
+/**
+ * The `ExprNode` class is an abstract class that extends `ASTNode` and includes a `BaseInfo` object.
+ */
+@SuperBuilder
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = false)
 public abstract class ExprNode extends ASTNode {
-  BaseInfo info;
-  boolean editable = false;
-
-  public BaseInfo getInfo() {
-    return info;
-  }
-
-  public void setInfo(BaseInfo info) {
-    this.info = info;
-  }
-
-  public boolean isEditable() {
-    return editable;
-  }
-
-  public void setEditable(boolean editable) {
-    this.editable = editable;
-  }
-
-  public ExprNode(Position position) {
-    super(position);
-  }
+  private ExprInfo info;
 }

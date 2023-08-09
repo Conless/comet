@@ -1,20 +1,28 @@
 package dev.conless.comet.frontend.ast.def;
 
 import dev.conless.comet.frontend.ast.ASTNode;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.frontend.ast.ASTVisitor;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.metadata.BaseInfo;
 
+import lombok.experimental.SuperBuilder;
+import lombok.Getter;
+
+@SuperBuilder
+@Getter
+/**
+ * The class BaseDefNode is an abstract class that extends ASTNode and has a private field info of type
+ * BaseInfo, and it provides a method getName() that returns the name of the info object.
+ */
 public abstract class BaseDefNode extends ASTNode {
-  public BaseInfo info;
+  private final BaseInfo info;
 
-  public BaseDefNode(Position position, BaseInfo info) {
-    super(position);
-    this.info = info;
+  public String getName() {
+    return getInfo().getName();
   }
 
-  public BaseInfo getInfo() {
-    return info;
+  @Override
+  public void accept(ASTVisitor visitor) throws BaseError {
+    visitor.visit(this);
   }
-
-  public abstract String getName() throws Exception;
 }

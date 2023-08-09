@@ -3,54 +3,31 @@ package dev.conless.comet.frontend.ast.def;
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.ScopedNode;
 import dev.conless.comet.utils.container.Array;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.metadata.ClassInfo;
-import dev.conless.comet.utils.metadata.FuncInfo;
-import dev.conless.comet.utils.metadata.TypeInfo;
-import dev.conless.comet.utils.metadata.VarInfo;
 import dev.conless.comet.utils.scope.BaseScope;
 import dev.conless.comet.utils.scope.ClassScope;
 
-public class ClassDefNode extends BaseDefNode implements ScopedNode {
-  public ClassScope scope;
-  public FuncDefNode constructor;
-  public Array<VarDefNode> varDefs;
-  public Array<FuncDefNode> funcDefs;
-  
-  public ClassDefNode(Position position, String name, FuncDefNode constructor) {
-    super(position, new ClassInfo(name));
-    this.constructor = constructor;
-    this.varDefs = new Array<VarDefNode>();
-    this.funcDefs = new Array<FuncDefNode>();
-  }
+import lombok.experimental.SuperBuilder;
+import lombok.Getter;
+import lombok.Setter;
 
-  public void addVarDef(VarDefNode varDef) {
-    varDefs.add(varDef);
-    for (var v : varDef.vars) {
-      ((ClassInfo) info).addVar(new VarInfo(v.a, (TypeInfo) varDef.getInfo()));
-    }
-  }
-
-  public void addFuncDef(FuncDefNode funcDef) {
-    funcDefs.add(funcDef);
-    ((ClassInfo) info).addFunc((FuncInfo) funcDef.getInfo());
-  }
-
-  public String getName() {
-    return info.name;
-  }
-
-  public Array<VarDefNode> getVarDefs() {
-    return varDefs;
-  }
-
-  public Array<FuncDefNode> getFuncDefs() {
-    return funcDefs;
-  }
+/**
+ * The ClassDefNode class represents a class definition in Mx* programming language and contains
+ * information about the class, its variables, and its functions.
+ */
+@SuperBuilder
+@Getter
+@Setter
+public final class ClassDefNode extends BaseDefNode implements ScopedNode {
+  private ClassScope classScope;
+  private final FuncDefNode constructor;
+  private final Array<VarDefNode> varDefs;
+  private final Array<FuncDefNode> funcDefs;
 
   @Override
   public String toString() {
-    String str = "class " + info.name + " {\n";
+    String str = "class " + getInfo().getName() + " {\n";
     if (constructor != null) {
       String ctorString = constructor.toString();
       str += "  " + ctorString.replace("\n", "\n  ") + "\n";
@@ -66,19 +43,19 @@ public class ClassDefNode extends BaseDefNode implements ScopedNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 
   @Override
   public void addScope(BaseScope scope) {
-    if (this.scope == null) {
-      this.scope = new ClassScope(scope, (ClassInfo) info);
+    if (this.classScope == null) {
+      this.classScope = new ClassScope(scope, (ClassInfo) getInfo());
     }
   }
 
   @Override
   public BaseScope getScope() {
-    return scope;
+    return getClassScope();
   }
 }

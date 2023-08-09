@@ -77,18 +77,6 @@ public class CometBaseListener implements CometListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIndexExpr(Comet.IndexExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIndexExpr(Comet.IndexExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterPostUnaryExpr(Comet.PostUnaryExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -108,6 +96,18 @@ public class CometBaseListener implements CometListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPreUnaryExpr(Comet.PreUnaryExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArrayExpr(Comet.ArrayExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayExpr(Comet.ArrayExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -317,6 +317,30 @@ public class CometBaseListener implements CometListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterExprStmt(Comet.ExprStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExprStmt(Comet.ExprStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEmptyStmt(Comet.EmptyStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEmptyStmt(Comet.EmptyStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterStmt(Comet.StmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -396,18 +420,6 @@ public class CometBaseListener implements CometListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitReturnStmt(Comet.ReturnStmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExprStmt(Comet.ExprStmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExprStmt(Comet.ExprStmtContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

@@ -1,14 +1,14 @@
 package dev.conless.comet.frontend.ast.stmt;
 
 import dev.conless.comet.frontend.ast.*;
-import dev.conless.comet.utils.container.Position;
 
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
+
+@SuperBuilder
+@EqualsAndHashCode(callSuper = false)
 public abstract class StmtNode extends ASTNode {
-  public static int indentDepth = 0;
-
-  public StmtNode(Position position) {
-    super(position);
-  }
+  protected static int indentDepth = 0;
 
   @Override
   public String toString() {

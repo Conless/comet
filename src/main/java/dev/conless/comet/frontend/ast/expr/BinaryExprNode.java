@@ -1,18 +1,22 @@
 package dev.conless.comet.frontend.ast.expr;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
 
-public class BinaryExprNode extends ExprNode {
-  public ExprNode lhs, rhs;
-  public String op;
+import lombok.experimental.SuperBuilder;
+import lombok.Value;
+import lombok.EqualsAndHashCode;
 
-  public BinaryExprNode(Position position, ExprNode lhs, String op, ExprNode rhs) {
-    super(position);
-    this.lhs = lhs;
-    this.op = op;
-    this.rhs = rhs;
-  }
+/**
+ * The `BinaryExprNode` class represents a binary expression node in an abstract syntax tree (AST) and
+ * provides methods for converting it to a string and accepting an AST visitor.
+ */
+@SuperBuilder
+@Value
+@EqualsAndHashCode(callSuper = true)
+public final class BinaryExprNode extends ExprNode {
+  private ExprNode lhs, rhs;
+  private String op;
 
   @Override
   public String toString() {
@@ -20,7 +24,7 @@ public class BinaryExprNode extends ExprNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 }

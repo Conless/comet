@@ -1,5 +1,5 @@
 package dev.conless.comet.utils;
 
-public enum Type {
+public enum AtomType {
   INT, BOOL, STRING, VOID, NULL, CUSTOM, THIS
 }

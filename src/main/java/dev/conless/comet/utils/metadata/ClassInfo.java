@@ -1,42 +1,52 @@
 package dev.conless.comet.utils.metadata;
 
-import java.util.List;
-
+import dev.conless.comet.frontend.ast.def.FuncDefNode;
+import dev.conless.comet.frontend.ast.def.VarDefNode;
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
 
-public class ClassInfo extends BaseInfo {
+import lombok.*;
+
+@Value
+@EqualsAndHashCode(callSuper = true)
+public final class ClassInfo extends BaseInfo {
   public Map<String, VarInfo> vars;
   public Map<String, FuncInfo> funcs;
 
-  public ClassInfo(String name) {
-    super(name);
-    vars = new Map<String, VarInfo>();
-    funcs = new Map<String, FuncInfo>();
-  }
-
-  public ClassInfo(String name, List<VarInfo> vars, List<FuncInfo> funcs) {
+  public ClassInfo(String name, Array<VarDefNode> vars, Array<FuncDefNode> funcs) {
     super(name);
     this.vars = new Map<String, VarInfo>();
     this.funcs = new Map<String, FuncInfo>();
-    for (VarInfo var : vars) {
-      this.vars.put(var.name, var);
+    for (var v : vars) {
+      this.vars.put(v.getName(), (VarInfo) v.getInfo());
     }
-    for (FuncInfo func : funcs) {
-      this.funcs.put(func.name, func);
+    for (var func : funcs) {
+      this.funcs.put(func.getName(), (FuncInfo) func.getInfo());
     }
   }
 
-  public void addVar(VarInfo var) {
-    vars.put(var.name, var);
+  public ClassInfo(String name, FuncInfo... funcs) {
+    super(name);
+    this.vars = new Map<String, VarInfo>();
+    this.funcs = new Map<String, FuncInfo>();
+    for (var func : funcs) {
+      this.funcs.put(func.getName(), func);
+    }
   }
 
-  public void addFunc(FuncInfo funcInfo) {
-    funcs.put(funcInfo.name, funcInfo);
+  public BaseInfo getMember(String name) {
+    if (vars.get(name) != null) {
+      return vars.get(name);
+    } else if (funcs.get(name) != null) {
+      return funcs.get(name);
+    } else {
+      return null;
+    }
   }
 
   @Override
   public String toString() {
-    String str = "class " + name + " {\n";
+    String str = "class " + getName() + " {\n";
     for (var varName : vars.keySet()) {
       str += "  " + vars.get(varName).toString() + "\n";
     }
@@ -45,28 +55,5 @@ public class ClassInfo extends BaseInfo {
     }
     str += "};";
     return str;
-  }
-
-  public BaseInfo get(String name) {
-    if (vars.containsKey(name)) {
-      return vars.get(name);
-    } else if (funcs.containsKey(name)) {
-      return funcs.get(name);
-    }
-    return null;
-  }
-  public BaseInfo get(String name, String type) {
-    if (type.equals("var")) {
-      if (vars.containsKey(name)) {
-        return vars.get(name);
-      }
-    } else if (type.equals("func")) {
-      if (funcs.containsKey(name)) {
-        return funcs.get(name);
-      }
-    } else {
-      throw new RuntimeException("ClassScope.get() called with unknown type");
-    }
-    return null;
   }
 }

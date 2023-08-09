@@ -1,18 +1,23 @@
 package dev.conless.comet.frontend.ast.expr;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.utils.Type;
-import dev.conless.comet.utils.container.Position;
+import dev.conless.comet.utils.error.BaseError;
+import dev.conless.comet.utils.AtomType;
 
-public class AtomExprNode extends ExprNode {
-  public Type atomType;
-  public String value;
+import lombok.experimental.SuperBuilder;
+import lombok.Value;
+import lombok.EqualsAndHashCode;
 
-  public AtomExprNode(Position position, Type atomType, String value) {
-    super(position);
-    this.atomType = atomType;
-    this.value = value;
-  }
+/**
+ * The AtomExprNode class represents an atomic expression node in an abstract syntax tree (AST) and
+ * contains information about the atom type and value.
+ */
+@SuperBuilder
+@Value
+@EqualsAndHashCode(callSuper = true)
+public final class AtomExprNode extends ExprNode {
+  private AtomType atomType;
+  private String value;
 
   @Override
   public String toString() {
@@ -20,7 +25,7 @@ public class AtomExprNode extends ExprNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 }

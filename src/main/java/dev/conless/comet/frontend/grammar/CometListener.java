@@ -60,18 +60,6 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitNewExpr(Comet.NewExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code indexExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterIndexExpr(Comet.IndexExprContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code indexExpr}
-	 * labeled alternative in {@link Comet#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitIndexExpr(Comet.IndexExprContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code postUnaryExpr}
 	 * labeled alternative in {@link Comet#expr}.
 	 * @param ctx the parse tree
@@ -95,6 +83,18 @@ public interface CometListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPreUnaryExpr(Comet.PreUnaryExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code arrayExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayExpr(Comet.ArrayExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code arrayExpr}
+	 * labeled alternative in {@link Comet#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayExpr(Comet.ArrayExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code memberExpr}
 	 * labeled alternative in {@link Comet#expr}.
@@ -280,6 +280,26 @@ public interface CometListener extends ParseTreeListener {
 	 */
 	void exitBlockStmt(Comet.BlockStmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Comet#exprStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprStmt(Comet.ExprStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Comet#exprStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprStmt(Comet.ExprStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Comet#emptyStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterEmptyStmt(Comet.EmptyStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Comet#emptyStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitEmptyStmt(Comet.EmptyStmtContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Comet#stmt}.
 	 * @param ctx the parse tree
 	 */
@@ -349,14 +369,4 @@ public interface CometListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitReturnStmt(Comet.ReturnStmtContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link Comet#exprStmt}.
-	 * @param ctx the parse tree
-	 */
-	void enterExprStmt(Comet.ExprStmtContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Comet#exprStmt}.
-	 * @param ctx the parse tree
-	 */
-	void exitExprStmt(Comet.ExprStmtContext ctx);
 }

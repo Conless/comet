@@ -1,5 +1,9 @@
 package dev.conless.comet.utils.metadata;
 
+import lombok.*;
+
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class VarInfo extends BaseInfo {
   TypeInfo type;
 
@@ -8,12 +12,8 @@ public class VarInfo extends BaseInfo {
     this.type = type;
   }
 
-  public TypeInfo getType() {
-    return type;
-  }
-
   @Override
   public String toString() {
-    return type.toString() + " " + name + ";";
+    return type.toString() + " " + getName() + ";";
   }
 }

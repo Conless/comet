@@ -6,11 +6,13 @@ import dev.conless.comet.utils.metadata.ClassInfo;
 import dev.conless.comet.utils.metadata.FlowInfo;
 import dev.conless.comet.utils.metadata.FuncInfo;
 import dev.conless.comet.utils.metadata.VarInfo;
+import lombok.Getter;
 
+@Getter
 public class BaseScope {
-  BaseScope parent;
-  Map<String, VarInfo> vars;
-  BaseInfo info;
+  private BaseScope parent;
+  private BaseInfo info;
+  protected Map<String, VarInfo> vars;
 
   public BaseScope(BaseScope parent, BaseInfo info) {
     this.parent = parent;
@@ -58,13 +60,9 @@ public class BaseScope {
     return null;
   }
 
-  public BaseInfo getInfo() {
-    return info;
-  }
-
   public void declare(BaseInfo info) {
     if (info instanceof VarInfo) {
-      vars.put(info.name, (VarInfo) info);
+      vars.put(info.getName(), (VarInfo) info);
     } else {
       throw new RuntimeException("BaseScope.declare() called with unknown type");
     }

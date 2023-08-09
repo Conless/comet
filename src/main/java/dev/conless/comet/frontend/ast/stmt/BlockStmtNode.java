@@ -3,26 +3,24 @@ package dev.conless.comet.frontend.ast.stmt;
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.ScopedNode;
 import dev.conless.comet.utils.container.Array;
-import dev.conless.comet.utils.container.Position;
-import dev.conless.comet.utils.metadata.BaseInfo;
+import dev.conless.comet.utils.error.BaseError;
+import dev.conless.comet.utils.metadata.FlowInfo;
 import dev.conless.comet.utils.scope.BaseScope;
 
-public class BlockStmtNode extends StmtNode implements ScopedNode {
-  public BaseScope scope;
-  public Array<StmtNode> stmts;
-  
-  public BlockStmtNode(Position position) {
-    super(position);
-    stmts = new Array<StmtNode>();
-  }
+import lombok.experimental.SuperBuilder;
+import lombok.Getter;
+import lombok.EqualsAndHashCode;
 
-  public void addStmt(StmtNode stmt) {
-    stmts.add(stmt);
-  }
-
-  public Array<StmtNode> getStmts() {
-    return stmts;
-  }
+/**
+ * The `BlockStmtNode` class represents a block statement node in an abstract syntax tree (AST) and
+ * implements the `ScopedNode` interface.
+ */
+@SuperBuilder
+@Getter
+@EqualsAndHashCode(callSuper = true)
+public final class BlockStmtNode extends StmtNode implements ScopedNode {
+  private BaseScope scope;
+  private final Array<StmtNode> stmts;
 
   @Override
   public String toString() {
@@ -34,14 +32,14 @@ public class BlockStmtNode extends StmtNode implements ScopedNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws Exception {
+  public void accept(ASTVisitor visitor) throws BaseError {
     visitor.visit(this);
   }
 
   @Override
   public void addScope(BaseScope scope) {
     if (this.scope == null) {
-      this.scope = new BaseScope(scope, new BaseInfo("block"));
+      this.scope = new BaseScope(scope, new FlowInfo("block"));
     }
   }
 
