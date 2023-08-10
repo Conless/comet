@@ -1,7 +1,6 @@
 package dev.conless.comet.frontend.ast.node.expr;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.frontend.utils.type.AtomType;
 import dev.conless.comet.utils.error.BaseError;
 import lombok.experimental.SuperBuilder;
 import lombok.Value;
@@ -15,7 +14,11 @@ import lombok.EqualsAndHashCode;
 @Value
 @EqualsAndHashCode(callSuper = true)
 public final class AtomExprNode extends ExprNode {
-  private AtomType atomType;
+  public static enum Type {
+    INT, BOOL, STRING, VOID, NULL, CUSTOM, THIS
+  }
+
+  private Type atomType;
   private String value;
 
   @Override
@@ -24,7 +27,7 @@ public final class AtomExprNode extends ExprNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws BaseError {
-    visitor.visit(this);
+  public <T> T accept(ASTVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 }

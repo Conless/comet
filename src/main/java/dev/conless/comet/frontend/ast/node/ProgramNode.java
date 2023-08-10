@@ -1,7 +1,6 @@
 package dev.conless.comet.frontend.ast.node;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
@@ -36,8 +35,8 @@ public final class ProgramNode extends ASTNode implements ScopedNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws BaseError {
-    visitor.visit(this);
+  public <T> T accept(ASTVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 
   @Override

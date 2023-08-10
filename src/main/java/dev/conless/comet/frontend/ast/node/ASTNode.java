@@ -12,8 +12,8 @@ import lombok.experimental.SuperBuilder;
 public class ASTNode {
   protected Position position;
 
-  public void accept(ASTVisitor visitor) throws BaseError {
-    visitor.visit(this);
+  public <T> T accept(ASTVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 
   public String toString() {

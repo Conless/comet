@@ -4,6 +4,7 @@ import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.error.BaseError;
+
 import lombok.experimental.SuperBuilder;
 import lombok.Value;
 import lombok.EqualsAndHashCode;
@@ -32,7 +33,7 @@ public final class TypeNameNode extends ASTNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws BaseError {
-    visitor.visit(this);
+  public <T> T accept(ASTVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 }

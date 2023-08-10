@@ -1,6 +1,5 @@
 package dev.conless.comet.frontend.ast.node.stmt;
 
-import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;

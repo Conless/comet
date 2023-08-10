@@ -5,7 +5,6 @@ import dev.conless.comet.frontend.utils.metadata.ClassInfo;
 import dev.conless.comet.frontend.utils.metadata.FuncInfo;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
-import dev.conless.comet.frontend.utils.type.AtomType;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
 import dev.conless.comet.utils.error.CompileError;
@@ -244,19 +243,19 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitAtomExpr(Comet.AtomExprContext ctx) {
-    AtomType atomType;
+    AtomExprNode.Type atomType;
     if (ctx.atom().IntegerLiteral() != null) {
-      atomType = AtomType.INT;
+      atomType = AtomExprNode.Type.INT;
     } else if (ctx.atom().StringLiteral() != null) {
-      atomType = AtomType.STRING;
+      atomType = AtomExprNode.Type.STRING;
     } else if (ctx.atom().True() != null || ctx.atom().False() != null) {
-      atomType = AtomType.BOOL;
+      atomType = AtomExprNode.Type.BOOL;
     } else if (ctx.atom().Null() != null) {
-      atomType = AtomType.NULL;
+      atomType = AtomExprNode.Type.NULL;
     } else if (ctx.atom().This() != null) {
-      atomType = AtomType.THIS;
+      atomType = AtomExprNode.Type.THIS;
     } else {
-      atomType = AtomType.CUSTOM;
+      atomType = AtomExprNode.Type.CUSTOM;
     }
     return AtomExprNode.builder()
         .position(new Position(ctx.start))

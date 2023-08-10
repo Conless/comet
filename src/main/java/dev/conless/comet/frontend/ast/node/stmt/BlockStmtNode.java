@@ -31,8 +31,8 @@ public final class BlockStmtNode extends StmtNode implements ScopedNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws BaseError {
-    visitor.visit(this);
+  public <T> T accept(ASTVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 
   @Override

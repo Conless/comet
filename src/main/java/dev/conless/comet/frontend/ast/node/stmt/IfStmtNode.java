@@ -6,6 +6,7 @@ import dev.conless.comet.frontend.ast.node.expr.ExprNode;
 import dev.conless.comet.frontend.utils.metadata.FlowInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.utils.error.BaseError;
+import dev.conless.comet.utils.error.RuntimeError;
 import lombok.experimental.SuperBuilder;
 import lombok.Getter;
 import lombok.EqualsAndHashCode;
@@ -53,13 +54,13 @@ public final class IfStmtNode extends StmtNode implements ScopedNode {
   }
 
   @Override
-  public void accept(ASTVisitor visitor) throws BaseError {
-    visitor.visit(this);
+  public <T> T accept(ASTVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 
   @Override
   public BaseScope getScope() {
-    throw new RuntimeException("Not implemented");
+    throw new RuntimeError("getScope() is not implemented for ifStmt", getPosition());
   }
 
   public BaseScope getScope(String str) {
