@@ -1,11 +1,13 @@
 package dev.conless.comet.frontend.ast.node.stmt;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.frontend.ast.node.ScopedNode;
 import dev.conless.comet.frontend.ast.node.expr.ExprNode;
+import dev.conless.comet.frontend.ast.node.special.HasExprNode;
+import dev.conless.comet.frontend.ast.node.special.ScopedNode;
 import dev.conless.comet.frontend.utils.metadata.FlowInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.utils.error.BaseError;
+import dev.conless.comet.utils.error.RuntimeError;
 import lombok.experimental.SuperBuilder;
 import lombok.Getter;
 import lombok.EqualsAndHashCode;
@@ -18,9 +20,9 @@ import lombok.EqualsAndHashCode;
 @SuperBuilder
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public final class WhileStmtNode extends StmtNode implements ScopedNode {
+public final class WhileStmtNode extends StmtNode implements ScopedNode, HasExprNode {
   private BaseScope scope;
-  private final ExprNode condition;
+  private ExprNode condition;
   private final StmtNode body;
 
   @Override
@@ -51,5 +53,14 @@ public final class WhileStmtNode extends StmtNode implements ScopedNode {
   @Override
   public BaseScope getScope() {
     return scope;
+  }
+
+  @Override
+  public void replaceExpr(ExprNode expr, ExprNode replacement) {
+    if (condition == expr) {
+      condition = replacement;
+    } else {
+      throw new RuntimeError("Cannot replace expression that does not exist in this node");
+    }
   }
 }

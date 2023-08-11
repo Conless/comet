@@ -1,21 +1,23 @@
 package dev.conless.comet.frontend.ast.node.expr;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.utils.error.BaseError;
+import dev.conless.comet.frontend.ast.node.special.HasExprNode;
+import dev.conless.comet.utils.error.*;
 import lombok.experimental.SuperBuilder;
-import lombok.Value;
-import lombok.EqualsAndHashCode;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * The `AssignExprNode` class represents an assignment expression in Java and extends the `ExprNode`
  * class.
  */
 @SuperBuilder
-@Value
-@EqualsAndHashCode(callSuper = true)
-public final class AssignExprNode extends ExprNode {
+@Getter
+@Setter
+public final class AssignExprNode extends ExprNode implements HasExprNode {
   private ExprNode lhs, rhs;
-  private String op;
+  private final String op;
 
   @Override
   public String toString() {
@@ -25,5 +27,16 @@ public final class AssignExprNode extends ExprNode {
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws BaseError {
     return visitor.visit(this);
+  }
+
+  @Override
+  public void replaceExpr(ExprNode expr, ExprNode replacement) {
+    if (lhs == expr) {
+      lhs = replacement;
+    } else if (rhs == expr) {
+      rhs = replacement;
+    } else {
+      throw new RuntimeError("Cannot replace expression that does not exist in this node");
+    }
   }
 }

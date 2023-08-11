@@ -1,6 +1,7 @@
-package dev.conless.comet.frontend.ast.node;
+package dev.conless.comet.frontend.ast.node.special;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
+import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
@@ -22,15 +23,7 @@ public final class ProgramNode extends ASTNode implements ScopedNode {
 
   @Override
   public String toString() {
-    String str = "";
-    for (ASTNode def : defs) {
-      str += def.toString();
-      if (def instanceof ClassDefNode || def instanceof VarDefNode) {
-        str += ";\n";
-      } else {
-        str += "\n";
-      }
-    }
+    String str = defs.toString("\n");
     return str;
   }
 

@@ -1,7 +1,8 @@
 package dev.conless.comet.frontend.ast.node.def;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.frontend.ast.node.ScopedNode;
+import dev.conless.comet.frontend.ast.node.special.ScopedNode;
+import dev.conless.comet.frontend.ast.node.stmt.StmtNode;
 import dev.conless.comet.frontend.utils.metadata.ClassInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.ClassScope;
@@ -27,17 +28,14 @@ public final class ClassDefNode extends BaseDefNode implements ScopedNode {
   @Override
   public String toString() {
     String str = "class " + getInfo().getName() + " {\n";
+    StmtNode.indentDepth++;
     if (constructor != null) {
-      String ctorString = constructor.toString();
-      str += "  " + ctorString.replace("\n", "\n  ") + "\n";
+      str += "  " + constructor.toString() + "\n";
     }
-    str += varDefs.toString("  ", ";\n", ";\n");
-    if (funcDefs.size() > 0) {
-      String funcStr = funcDefs.toString("  ", "\n");
-      funcStr = funcStr.replace("\n", "\n  ");
-      str += funcStr + "\n";
-    }
-    str += "}";
+    str += varDefs.toString("  ", "\n", "\n");
+    str += funcDefs.toString("  ", "\n");
+    StmtNode.indentDepth--;
+    str += "\n};";
     return str;
   }
 

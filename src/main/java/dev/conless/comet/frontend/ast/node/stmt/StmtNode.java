@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = false)
 public abstract class StmtNode extends ASTNode {
-  protected static int indentDepth = 0;
+  public static int indentDepth = 0;
 
   @Override
   public String toString() {

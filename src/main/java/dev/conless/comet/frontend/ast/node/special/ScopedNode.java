@@ -1,4 +1,4 @@
-package dev.conless.comet.frontend.ast.node;
+package dev.conless.comet.frontend.ast.node.special;
 
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 

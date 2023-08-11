@@ -2,9 +2,10 @@ package dev.conless.comet.frontend.ast.node.def;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.node.expr.ExprNode;
+import dev.conless.comet.frontend.ast.node.special.HasExprNode;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
-import dev.conless.comet.utils.error.BaseError;
+import dev.conless.comet.utils.error.*;
 import lombok.experimental.SuperBuilder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,16 +17,25 @@ import lombok.Setter;
 @SuperBuilder
 @Getter
 @Setter
-public final class VarDefNode extends BaseDefNode {
-  private final ExprNode init;
+public final class VarDefNode extends BaseDefNode implements HasExprNode {
+  private ExprNode init;
 
   @Override
   public String toString() {
-    return getInfo().toString() + (init != null ? " = " + init.toString() : "");
+    return getInfo().toString() + (init != null ? " = " + init.toString() : "") + ";";
   }
 
   public TypeInfo getType() {
     return ((VarInfo) getInfo()).getType();
+  }
+
+  @Override
+  public void replaceExpr(ExprNode expr, ExprNode replacement) {
+    if (init == expr) {
+      init = replacement;
+    } else {
+      throw new RuntimeError("Cannot replace expression that does not exist in this node");
+    }
   }
 
   @Override

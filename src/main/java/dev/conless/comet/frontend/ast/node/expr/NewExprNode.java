@@ -1,22 +1,22 @@
 package dev.conless.comet.frontend.ast.node.expr;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
+import dev.conless.comet.frontend.ast.node.special.HasExprNode;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.container.Array;
-import dev.conless.comet.utils.error.BaseError;
-
+import dev.conless.comet.utils.error.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import lombok.Value;
-import lombok.EqualsAndHashCode;
 
 /**
  * The `NewExprNode` class represents a new expression node in an abstract syntax tree (AST) and
  * includes information about the lengths of the array being created.
  */
 @SuperBuilder
-@Value
-@EqualsAndHashCode(callSuper = true)
-public final class NewExprNode extends ExprNode {
+@Getter
+@Setter
+public final class NewExprNode extends ExprNode implements HasExprNode {
   private Array<ExprNode> lengths;
   private TypeInfo type;
 
@@ -32,5 +32,16 @@ public final class NewExprNode extends ExprNode {
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws BaseError {
     return visitor.visit(this);
+  }
+
+  @Override
+  public void replaceExpr(ExprNode expr, ExprNode replacement) {
+    for (int i = 0; i < lengths.size(); i++) {
+      if (lengths.get(i) == expr) {
+        lengths.set(i, replacement);
+        return;
+      }
+    }
+    throw new RuntimeError("Cannot replace expression that does not exist in this node");
   }
 }

@@ -2,13 +2,15 @@ package dev.conless.comet.frontend.semantic;
 
 import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.ASTNode;
-import dev.conless.comet.frontend.ast.node.ProgramNode;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
+import dev.conless.comet.frontend.ast.node.special.HasExprNode;
+import dev.conless.comet.frontend.ast.node.special.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
 import dev.conless.comet.frontend.ast.node.type.*;
 import dev.conless.comet.frontend.utils.metadata.*;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
+import dev.conless.comet.frontend.utils.scope.ClassScope;
 import dev.conless.comet.frontend.utils.scope.FuncScope;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.error.*;
@@ -345,13 +347,24 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
 
   public CompileMsg visit(AtomExprNode node) throws BaseError {
     if (node.getAtomType() == AtomExprNode.Type.CUSTOM) {
-      BaseInfo info = currentScope.getRecur(node.toString());
-      if (info instanceof VarInfo) {
-        node.setInfo(new ExprInfo("atomExpr", ((VarInfo) info).getType(), true));
-      } else if (info instanceof FuncInfo) {
-        node.setInfo(new ExprInfo("atomExpr", info, false));
+      var info = currentScope.getRecurWithScope(node.getValue());
+      if (info.a instanceof VarInfo) {
+        node.setInfo(new ExprInfo("atomExpr", ((VarInfo) info.a).getType(), true));
+      } else if (info.a instanceof FuncInfo) {
+        node.setInfo(new ExprInfo("atomExpr", info.a, false));
       } else {
         return new CompileMsg("Use of undefined identifier " + node.toString(), node);
+      }
+      if (info.b instanceof ClassScope) {
+        var parent = node.getParent();
+        var replaceNode = MemberExprNode.builder()
+                .position(node.getPosition())
+                .parent(parent)
+                .object(AtomExprNode.builder().atomType(AtomExprNode.Type.THIS).value("this").build())
+                .member(node.getValue())
+                .build();
+        replaceNode.accept(this);
+        ((HasExprNode) parent).replaceExpr(node, replaceNode);
       }
     } else if (node.getAtomType() == AtomExprNode.Type.INT) {
       node.setInfo(new ExprInfo("atomExpr", GlobalScope.intType, false));
