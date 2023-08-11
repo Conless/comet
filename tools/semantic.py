@@ -53,11 +53,11 @@ def test(test_name):
     
   str = execute_command + " < " + test_cases_dir + test_name
   status, result = subprocess.getstatusoutput(str)
+  expected_status = 0 if expected == "Success" else 1
   if fail_only_tag == False & status == expected_status:
     print("Running test " + test_name + ":")
     print("  " + "Expected: " + expected + " " + comment)
     print("  " + "Result: " + result)
-  expected_status = 0 if expected == "Success" else 1
   if status != expected_status:
     print("Test fail at " + test_name + ".")
     if output_dir != "":
