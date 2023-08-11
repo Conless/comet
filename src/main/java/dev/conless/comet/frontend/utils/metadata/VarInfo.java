@@ -14,6 +14,6 @@ public class VarInfo extends BaseInfo {
 
   @Override
   public String toString() {
-    return type.toString() + " " + getName() + ";";
+    return type.toString() + " " + getName();
   }
 }

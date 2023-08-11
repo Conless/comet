@@ -1,6 +1,8 @@
-package dev.conless.comet.frontend.utils.scope;
+package dev.conless.comet.frontend.semantic;
 
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
+import dev.conless.comet.frontend.utils.scope.BaseScope;
+import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
 
 public class ScopeManager {

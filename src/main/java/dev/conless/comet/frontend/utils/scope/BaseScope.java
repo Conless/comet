@@ -7,6 +7,7 @@ import dev.conless.comet.frontend.utils.metadata.FuncInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
+import dev.conless.comet.utils.error.RuntimeError;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,7 @@ public class BaseScope {
     this.parent = parent;
     this.info = info;
     this.vars = new Map<String, VarInfo>();
+    this.count = 0;
     if (parent != null) {
       this.tags = new Array<Integer>(parent.getTags());
       int count = parent.getCount();
@@ -31,6 +33,14 @@ public class BaseScope {
     } else {
       this.tags = new Array<Integer>();
     }
+  }
+
+  public String getSuffix() {
+    String suffix = "";
+    for (int tag : tags) {
+      suffix += "." + tag;
+    }
+    return suffix;
   }
 
   public BaseScope getLastLoop() {
@@ -73,7 +83,7 @@ public class BaseScope {
     if (info instanceof VarInfo) {
       vars.put(info.getName(), (VarInfo) info);
     } else {
-      throw new RuntimeException("BaseScope.declare() called with unknown type");
+      throw new RuntimeError("BaseScope.declare() called with unknown type");
     }
   }
 
@@ -90,7 +100,7 @@ public class BaseScope {
         return vars.get(name);
       }
     } else {
-      throw new RuntimeException("ClassScope.get() called with unknown type");
+      throw new RuntimeError("ClassScope.get() called with unknown type");
     }
     return null;
   }

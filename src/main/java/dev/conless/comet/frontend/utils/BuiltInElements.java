@@ -1,8 +1,10 @@
 package dev.conless.comet.frontend.utils;
 
+import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.metadata.ClassInfo;
 import dev.conless.comet.frontend.utils.metadata.FuncInfo;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
+import dev.conless.comet.frontend.utils.scope.GlobalScope;
 
 public interface BuiltInElements {
   TypeInfo voidType = new TypeInfo("void", 0);
@@ -33,12 +35,12 @@ public interface BuiltInElements {
   ClassInfo stringClass = new ClassInfo("string", stringLengthFunc, stringSubstringFunc, stringParseintFunc, stringOrdFunc);
   ClassInfo[] builtInClasses = { intClass, boolClass, stringClass };
 
-  // FuncInfo stringLengthFunc = new FuncInfo(null, intType, "length", "string", null, 0);
-  // FuncInfo stringSubstringFunc = new FuncInfo(null, stringType, "substring", "string", intType, 2);
-  // FuncInfo stringParseintFunc = new FuncInfo(null, intType, "parseint", "string", null, 0);
-  // FuncInfo stringOrdFunc = new FuncInfo(null, intType, "ord", "string", intType, 1);
-
   // // ------------------ IR Builtin Types ------------------
+
+  IRType irVoidType = new IRType(GlobalScope.voidType);
+  IRType irIntType = new IRType(GlobalScope.intType);
+  IRType irBoolType = new IRType(GlobalScope.boolType);
+  IRType irPtrType = new IRType("ptr", 1);
 
   // IRType irvoidType = new IRvoidType();
   // IRType irintType = new IRintType(32);

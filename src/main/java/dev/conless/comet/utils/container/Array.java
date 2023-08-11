@@ -6,8 +6,16 @@ public class Array<E> extends ArrayList<E> {
   public Array() {
     super();
   }
+
   public Array(Array<E> tags) {
     super((ArrayList<E>) tags);
+  }
+
+  public Array(E firstTag, E... tags) {
+    super();
+    for (E tag : tags) {
+      this.add(tag);
+    }
   }
 
   public String toString(String separator) {

@@ -11,113 +11,144 @@ import dev.conless.comet.frontend.utils.metadata.*;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.FuncScope;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
-import dev.conless.comet.frontend.utils.scope.ScopeManager;
-import dev.conless.comet.frontend.utils.type.AtomType;
 import dev.conless.comet.utils.error.*;
+import dev.conless.comet.utils.msg.CompileMsg;
 
-public class SemanticChecker extends ScopeManager implements ASTVisitor {
-  public void visit(ASTNode node) throws BaseError {
+public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileMsg> {
+  public CompileMsg visit(ASTNode node) throws BaseError {
     throw new RuntimeError("SemanticChecker.visit(ASTNode) should not be called", node.getPosition());
   }
 
-  public void visit(ProgramNode node) throws BaseError {
+  public CompileMsg visit(ProgramNode node) throws BaseError {
+    var msg = new SymbolCollector().visit(node);
+    if (!msg.isEmpty()) {
+      throw new CompileError(msg.toString());
+    }
     node.addScope(null);
     enterScope(node.getScope());
     for (var def : node.defs) {
-      def.accept(this);
+      msg.append(def.accept(this));
+    }
+    if (!msg.isEmpty()) {
+      throw new CompileError(msg.toString());
     }
     exitScope();
+    return new CompileMsg();
   }
 
-  public void visit(FuncDefNode node) throws BaseError {
+  public CompileMsg visit(FuncDefNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
+    var msg = new CompileMsg();
     for (var stmt : node.getBody()) {
-      stmt.accept(this);
+      msg.append(stmt.accept(this));
+    }
+    if (!msg.isEmpty()) {
+      return msg;
     }
     if (!node.getReturnType().equals(GlobalScope.voidType) && !node.getInfo().getName().equals("main")) {
       if (!((FuncScope) currentScope).getIsExited()) {
-        throw new CompileError("Function " + node.getName() + " doesn't have a return statement", node);
+        msg.append(new CompileMsg("Function " + node.getName() + " doesn't have a return statement", node));
       }
     }
+    if (!msg.isEmpty()) {
+      return msg;
+    }
     exitScope();
+    return new CompileMsg();
   }
 
-  public void visit(ClassDefNode node) throws BaseError {
+  public CompileMsg visit(ClassDefNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
-    node.getConstructor().accept(this);
+    var msg = new CompileMsg();
+    msg.append(node.getConstructor().accept(this));
     for (var funcDef : node.getFuncDefs()) {
-      funcDef.accept(this);
+      msg.append(funcDef.accept(this));
+    }
+    if (!msg.isEmpty()) {
+      return msg;
     }
     exitScope();
+    return msg;
   }
 
-  public void visit(VarDefNode node) throws BaseError {
+  public CompileMsg visit(VarDefNode node) throws BaseError {
     var v = (VarInfo) node.getInfo();
+    var msg = new CompileMsg();
     if (!checkTypeValid(v.getType())) {
-      throw new CompileError("Invalid type " + v.getType().getName() + " is used", node);
+      return new CompileMsg("Invalid type " + v.getType().getName() + " is used", node);
     }
     if (currentScope.get(node.getName()) != null) {
-      throw new CompileError("Redefinition of " + node.getName(), node);
+      return new CompileMsg("Redefinition of " + node.getName(), node);
     } else {
       if (node.getInit() != null) {
-        node.getInit().accept(this);
+        msg.append(node.getInit().accept(this));
+        if (!msg.isEmpty()) {
+          return msg;
+        }
         BaseInfo initType = node.getInit().getInfo().getType();
         if (!(initType instanceof TypeInfo) || !v.getType().equals(initType)) {
-          throw new CompileError("Cannot assign " + node.getInit().toString() + " to " + node.getName().toString(),
+          return new CompileMsg("Cannot assign " + node.getInit().toString() + " to " + node.getName().toString(),
               node);
         }
       }
       currentScope.declare(new VarInfo(node.getName(), v.getType()));
     }
+    return msg;
   }
 
-  public void visit(TypeNameNode node) throws BaseError {
+  public CompileMsg visit(TypeNameNode node) throws BaseError {
     throw new RuntimeError("SemanticChecker.visit(TypeNameNode) should not be called", node.getPosition());
   }
 
-  public void visit(ExprNode node) throws BaseError {
+  public CompileMsg visit(ExprNode node) throws BaseError {
     throw new RuntimeError("SemanticChecker.visit(ExprNode) should not be called", node.getPosition());
   }
 
-  public void visit(NewExprNode node) throws BaseError {
+  public CompileMsg visit(NewExprNode node) throws BaseError {
     TypeInfo type = node.getType();
+    var msg = new CompileMsg();
     if (!checkTypeValid(type) || (type.isBuiltIn && type.depth == 0)) {
-      throw new CompileError(
+      return new CompileMsg(
           "Cannot initialize type " + type.getName(), node);
     }
     for (var expr : node.getLengths()) {
-      expr.accept(this);
+      msg.append(expr.accept(this));
+      if (!msg.isEmpty()) {
+        return msg;
+      }
       BaseInfo exprType = expr.getInfo().getType();
       if (!(exprType instanceof TypeInfo) || !exprType.equals(GlobalScope.intType)) {
-        throw new CompileError("Array size must be an integer", node);
+        return new CompileMsg("Array size must be an integer", node);
       }
     }
     node.setInfo(new ExprInfo("newExpr", type, true));
+    return msg;
   }
 
-  public void visit(MemberExprNode node) throws BaseError {
-    node.getObject().accept(this);
+  public CompileMsg visit(MemberExprNode node) throws BaseError {
+    var msg = node.getObject().accept(this);
     BaseInfo objectType = node.getObject().getInfo().getType();
     if (!(objectType instanceof TypeInfo)) {
-      throw new CompileError("Cannot access member of non-array type " + objectType.getName(), node);
+      return new CompileMsg("Cannot access member of non-array type " + objectType.getName(), node);
     }
     if (((TypeInfo) objectType).depth > 0) {
       if (node.getMember().equals("size")) {
         node.setInfo(new ExprInfo("memberExpr", GlobalScope.arraySizeFunc, false));
       } else {
-        throw new CompileError("Call to undefined member " + node.getMember() + " of array type " + objectType.getName(),
+        return new CompileMsg("Call to undefined member " + node.getMember() + " of array type " + objectType.getName(),
             node);
       }
     } else {
       ClassInfo classInfo = (ClassInfo) globalScope.get(objectType.getName(), "class");
       if (classInfo == null) {
-        throw new CompileError("Call to undefined class " + objectType.getName(), node);
+        return new CompileMsg("Call to undefined class " + objectType.getName(), node);
       }
       BaseInfo memberInfo = classInfo.getMember(node.getMember());
       if (memberInfo == null) {
-        throw new CompileError("Call to undefined member " + node.getMember() + " of type " + objectType.getName(), node);
+        return new CompileMsg("Call to undefined member " + node.getMember() + " of type " + objectType.getName(),
+            node);
       }
       if (memberInfo instanceof VarInfo) {
         node.setInfo(new ExprInfo("memberExpr", ((VarInfo) memberInfo).getType(), true));
@@ -125,331 +156,411 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor {
         node.setInfo(new ExprInfo("callExpr", memberInfo, false));
       }
     }
+    return msg;
   }
 
-  public void visit(CallExprNode node) throws BaseError {
-    node.getFunc().accept(this);
+  public CompileMsg visit(CallExprNode node) throws BaseError {
+    var msg = new CompileMsg();
+    msg.append(node.getFunc().accept(this));
     for (var arg : node.getArgs()) {
-      arg.accept(this);
+      msg.append(arg.accept(this));
+    }
+    if (!msg.isEmpty()) {
+      return msg;
     }
     BaseInfo infoType = node.getFunc().getInfo().getType();
     if (!(infoType instanceof FuncInfo)) {
-      throw new CompileError("Call to undefined function " + infoType.getName(), node);
+      return new CompileMsg("Call to undefined function " + infoType.getName(), node);
     }
     FuncInfo funcInfo = (FuncInfo) infoType;
     if (funcInfo.getParams().size() != node.getArgs().size()) { // TODO: add support for default parameters
-      throw new CompileError(
+      return new CompileMsg(
           "Function " + funcInfo.toString() + " expected to have " + funcInfo.getParams().size() + " arguments, got "
-              + node.getArgs().size(), node);
+              + node.getArgs().size(),
+          node);
     }
     for (int i = 0; i < node.getArgs().size(); i++) {
       BaseInfo argType = node.getArgs().get(i).getInfo().getType();
       TypeInfo paramType = funcInfo.getParams().get(i);
       if (!(argType instanceof TypeInfo) || !argType.equals(paramType)) {
-        throw new CompileError("Function " + funcInfo.toString() + " expected argument " + (i + 1)
+        return new CompileMsg("Function " + funcInfo.toString() + " expected argument " + (i + 1)
             + " to be of type " + paramType.getName() + ", got " + argType.getName(), node);
       }
     }
     node.setInfo(new ExprInfo("callExpr", funcInfo.getType(), false));
+    return msg;
   }
 
-  public void visit(ArrayExprNode node) throws BaseError {
-    node.getArray().accept(this);
+  public CompileMsg visit(ArrayExprNode node) throws BaseError {
+    var msg = new CompileMsg();
+    msg.append(node.getArray().accept(this));
+    if (!msg.isEmpty()) {
+      return msg;
+    }
     BaseInfo arrayType = node.getArray().getInfo().getType();
     if (!(arrayType instanceof TypeInfo) || ((TypeInfo) arrayType).depth == 0) {
-      throw new CompileError("Cannot access an non-array variable " + node.getArray().toString(), node);
+      return new CompileMsg("Cannot access an non-array variable " + node.getArray().toString(), node);
     }
-    node.getSubscript().accept(this);
+    msg.append(node.getSubscript().accept(this));
+    if (!msg.isEmpty()) {
+      return msg;
+    }
     BaseInfo indexType = node.getSubscript().getInfo().getType();
     if (!(indexType instanceof TypeInfo) || !indexType.equals(GlobalScope.intType)) {
-      throw new CompileError("Cannot access array " + node.getArray().toString() + " by a non-integer index of "
+      return new CompileMsg("Cannot access array " + node.getArray().toString() + " by a non-integer index of "
           + indexType.toString(), node);
     }
-    node.setInfo(new ExprInfo("arrayExpr", new TypeInfo(arrayType.getName(), ((TypeInfo) arrayType).depth - 1), node.getArray().getInfo().isLValue()));
+    node.setInfo(new ExprInfo("arrayExpr", new TypeInfo(arrayType.getName(), ((TypeInfo) arrayType).depth - 1),
+        node.getArray().getInfo().isLValue()));
+    return msg;
   }
 
-  public void visit(PostUnaryExprNode node) throws BaseError {
-    node.getExpr().accept(this);
+  public CompileMsg visit(PostUnaryExprNode node) throws BaseError {
+    var msg = node.getExpr().accept(this);
     BaseInfo exprType = node.getExpr().getInfo().getType();
     if (!(exprType instanceof TypeInfo) || !exprType.equals(GlobalScope.intType)) {
-      throw new CompileError("Cannot apply " + node.getOp() + " to a non-integer operand", node);
+      return new CompileMsg("Cannot apply " + node.getOp() + " to a non-integer operand", node);
     }
     if (!node.getExpr().getInfo().isLValue()) {
-      throw new CompileError("Cannot apply " + node.getOp() + " to a lvalue operand", node);
+      return new CompileMsg("Cannot apply " + node.getOp() + " to a lvalue operand", node);
     }
     node.setInfo(new ExprInfo("postUnaryExpr", GlobalScope.intType, false));
+    return msg;
   }
 
-  public void visit(PreUnaryExprNode node) throws BaseError {
-    node.getExpr().accept(this);
+  public CompileMsg visit(PreUnaryExprNode node) throws BaseError {
+    var msg = node.getExpr().accept(this);
     BaseInfo exprType = node.getExpr().getInfo().getType();
     if (!(exprType instanceof TypeInfo)) {
-      throw new CompileError("Cannot apply " + node.getOp() + " to a non-integer operand", node);
+      return new CompileMsg("Cannot apply " + node.getOp() + " to a non-integer operand", node);
     }
     if (node.getOp().equals("!")) {
       if (!exprType.equals(GlobalScope.boolType)) {
-        throw new CompileError("Cannot apply " + node.getOp() + " to a non-boolean operand", node);
+        return new CompileMsg("Cannot apply " + node.getOp() + " to a non-boolean operand", node);
       }
       node.setInfo(new ExprInfo("preUnaryExpr", GlobalScope.boolType, false));
     } else {
       if (!exprType.equals(GlobalScope.intType)) {
-        throw new CompileError("Cannot apply " + node.getOp() + " to a non-integer operand", node);
+        return new CompileMsg("Cannot apply " + node.getOp() + " to a non-integer operand", node);
       }
       if (node.getOp().equals("++") || node.getOp().equals("--")) {
         if (!node.getExpr().getInfo().isLValue()) {
-          throw new CompileError("Cannot apply " + node.getOp() + " to a right value operand", node);
+          return new CompileMsg("Cannot apply " + node.getOp() + " to a right value operand", node);
         }
         node.setInfo(new ExprInfo("preUnaryExpr", GlobalScope.intType, true));
       } else {
         node.setInfo(new ExprInfo("preUnaryExpr", GlobalScope.intType, true));
       }
     }
+    return msg;
   }
 
-  public void visit(BinaryExprNode node) throws BaseError {
-    node.getLhs().accept(this);
-    node.getRhs().accept(this);
+  public CompileMsg visit(BinaryExprNode node) throws BaseError {
+    var msg = new CompileMsg();
+    msg.append(node.getLhs().accept(this));
+    msg.append(node.getRhs().accept(this));
+    if (!msg.isEmpty()) {
+      return msg;
+    }
     BaseInfo lhsType = node.getLhs().getInfo().getType();
     BaseInfo rhsType = node.getRhs().getInfo().getType();
     if (!(lhsType instanceof TypeInfo) || !(rhsType instanceof TypeInfo)) {
-      throw new CompileError("Cannot apply " + node.getOp() + " to non-integer operands", node);
+      return new CompileMsg("Cannot apply " + node.getOp() + " to non-integer operands", node);
     }
     if (!lhsType.equals(rhsType)) {
-      throw new CompileError("Cannot apply " + node.getOp() + " to operands of different types", node);
+      return new CompileMsg("Cannot apply " + node.getOp() + " to operands of different types", node);
     }
     if (((TypeInfo) lhsType).getDepth() > 0 || lhsType.equals(GlobalScope.nullType)) { // TODO: compare two arrays?
       if (!node.getOp().equals("==") && !node.getOp().equals("!=")) {
-        throw new CompileError("Operator " + node.getOp() + " is not supported for arrays", node);
+        return new CompileMsg("Operator " + node.getOp() + " is not supported for arrays", node);
       }
     } else if (lhsType.equals(GlobalScope.boolType)) {
-      if (!node.getOp().equals("==") && !node.getOp().equals("!=") && !node.getOp().equals("&&") && !node.getOp().equals("||")) {
-        throw new CompileError("Operator " + node.getOp() + " is not supported for booleans", node);
+      if (!node.getOp().equals("==") && !node.getOp().equals("!=") && !node.getOp().equals("&&")
+          && !node.getOp().equals("||")) {
+        return new CompileMsg("Operator " + node.getOp() + " is not supported for booleans", node);
       }
     } else if (lhsType.equals(GlobalScope.stringType)) {
-      if (!node.getOp().equals("+") && !node.getOp().equals("==") && !node.getOp().equals("!=") && !node.getOp().equals("<")
+      if (!node.getOp().equals("+") && !node.getOp().equals("==") && !node.getOp().equals("!=")
+          && !node.getOp().equals("<")
           && !node.getOp().equals("<=") && !node.getOp().equals(">")
           && !node.getOp().equals(">=")) {
-        throw new CompileError("Operator " + node.getOp() + " is not supported for strings", node);
+        return new CompileMsg("Operator " + node.getOp() + " is not supported for strings", node);
       }
     } else if (lhsType.equals(GlobalScope.intType)) {
       if (node.getOp().equals("!")) {
-        throw new CompileError("Operator " + node.getOp() + " is not supported for integers", node);
+        return new CompileMsg("Operator " + node.getOp() + " is not supported for integers", node);
       }
     } else {
-      throw new CompileError("Operator " + node.getOp() + " is not supported for " + lhsType.getName(), node);
+      return new CompileMsg("Operator " + node.getOp() + " is not supported for " + lhsType.getName(), node);
     }
     if (node.getOp().equals("<") || node.getOp().equals(">") || node.getOp().equals("<=") || node.getOp().equals(">=")
-        || node.getOp().equals("==")|| node.getOp().equals("!=")) {
+        || node.getOp().equals("==") || node.getOp().equals("!=")) {
       node.setInfo(new ExprInfo("binaryExpr", GlobalScope.boolType, false));
     } else {
       node.setInfo(new ExprInfo("binaryExpr", lhsType, false));
     }
+    return msg;
   }
 
-  public void visit(ConditionalExprNode node) throws BaseError {
-    node.getCondition().accept(this);
-    node.getLhs().accept(this);
-    node.getRhs().accept(this);
+  public CompileMsg visit(ConditionalExprNode node) throws BaseError {
+    var msg = new CompileMsg();
+    msg.append(node.getCondition().accept(this));
+    msg.append(node.getLhs().accept(this));
+    msg.append(node.getRhs().accept(this));
+    if (!msg.isEmpty()) {
+      return msg;
+    }
     BaseInfo conditionType = node.getCondition().getInfo().getType();
     BaseInfo lhsType = node.getLhs().getInfo().getType();
     BaseInfo rhsType = node.getRhs().getInfo().getType();
     if (!(conditionType instanceof TypeInfo) || !conditionType.equals(GlobalScope.boolType)) {
-      throw new CompileError("Condition should be of type bool", node);
+      return new CompileMsg("Condition should be of type bool", node);
     }
     if (!(lhsType instanceof TypeInfo) || !(rhsType instanceof TypeInfo) || !lhsType.equals(rhsType)) {
-      throw new CompileError("Operands should be of the same type", node);
+      return new CompileMsg("Operands should be of the same type", node);
     }
     node.setInfo(new ExprInfo("conditionalExpr", lhsType, false));
+    return msg;
   }
 
-  public void visit(AssignExprNode node) throws BaseError {
-    node.getLhs().accept(this);
-    node.getRhs().accept(this);
+  public CompileMsg visit(AssignExprNode node) throws BaseError {
+    var msg = new CompileMsg();
+    msg.append(node.getLhs().accept(this));
+    msg.append(node.getRhs().accept(this));
+    if (!msg.isEmpty()) {
+      return msg;
+    }
     BaseInfo lhsType = node.getLhs().getInfo().getType();
     BaseInfo rhsType = node.getRhs().getInfo().getType();
     if (!(lhsType instanceof TypeInfo) || !(rhsType instanceof TypeInfo) || !lhsType.equals(rhsType)) {
-      throw new CompileError("Cannot assign " + rhsType.toString() + " to " + lhsType.toString(), node);
+      return new CompileMsg("Cannot assign " + rhsType.toString() + " to " + lhsType.toString(), node);
     }
     if (!node.getLhs().getInfo().isLValue()) {
-      throw new CompileError("Cannot assign " + rhsType.getName() + " to a left value " + node.getLhs().toString(), node);
+      return new CompileMsg("Cannot assign " + rhsType.getName() + " to a left value " + node.getLhs().toString(),
+          node);
     }
     node.setInfo(new ExprInfo("assignExpr", lhsType, true));
+    return msg;
   }
 
-  public void visit(AtomExprNode node) throws BaseError {
-    if (node.getAtomType() == AtomType.CUSTOM) {
+  public CompileMsg visit(AtomExprNode node) throws BaseError {
+    if (node.getAtomType() == AtomExprNode.Type.CUSTOM) {
       BaseInfo info = currentScope.getRecur(node.toString());
       if (info instanceof VarInfo) {
         node.setInfo(new ExprInfo("atomExpr", ((VarInfo) info).getType(), true));
       } else if (info instanceof FuncInfo) {
         node.setInfo(new ExprInfo("atomExpr", info, false));
       } else {
-        throw new CompileError("Use of undefined identifier " + node.toString(), node);
+        return new CompileMsg("Use of undefined identifier " + node.toString(), node);
       }
-      return;
-    }
-    if (node.getAtomType() == AtomType.INT) {
+    } else if (node.getAtomType() == AtomExprNode.Type.INT) {
       node.setInfo(new ExprInfo("atomExpr", GlobalScope.intType, false));
-      return;
-    }
-    if (node.getAtomType() == AtomType.STRING) {
+    } else if (node.getAtomType() == AtomExprNode.Type.STRING) {
       node.setInfo(new ExprInfo("atomExpr", GlobalScope.stringType, false));
-      return;
-    }
-    if (node.getAtomType() == AtomType.BOOL) {
+    } else if (node.getAtomType() == AtomExprNode.Type.BOOL) {
       node.setInfo(new ExprInfo("atomExpr", GlobalScope.boolType, false));
-      return;
-    }
-    if (node.getAtomType() == AtomType.NULL) {
+    } else if (node.getAtomType() == AtomExprNode.Type.NULL) {
       node.setInfo(new ExprInfo("atomExpr", GlobalScope.nullType, false));
-      return;
-    }
-    if (node.getAtomType() == AtomType.THIS) {
+    } else if (node.getAtomType() == AtomExprNode.Type.THIS) {
       BaseScope lastClass = currentScope.getLastClass();
       if (lastClass == null) {
-        throw new CompileError("Keyword this should be used in a class", node);
+        return new CompileMsg("Keyword this should be used in a class", node);
       }
       node.setInfo(new ExprInfo("atomExpr", new TypeInfo(lastClass.getInfo().getName(), 0), false));
-      return;
+    } else {
+      return new CompileMsg("Unknown atom type", node);
     }
-    throw new CompileError("Unknown atom type", node);
+    return new CompileMsg();
   }
 
-  public void visit(StmtNode node) throws BaseError {
+  public CompileMsg visit(StmtNode node) throws BaseError {
     throw new RuntimeError("SemanticChecker.visit(StmtNode) should not be called", node.getPosition());
   }
 
-  public void visit(BlockStmtNode node) throws BaseError {
+  public CompileMsg visit(BlockStmtNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
+    var msg = new CompileMsg();
     for (StmtNode stmt : node.getStmts()) {
-      stmt.accept(this);
+      msg.append(stmt.accept(this));
+    }
+    if (!msg.isEmpty()) {
+      return msg;
     }
     exitScope();
+    return new CompileMsg();
   }
 
-  public void visit(IfStmtNode node) throws BaseError {
-    node.getCondition().accept(this);
+  public CompileMsg visit(IfStmtNode node) throws BaseError {
+    var msg = new CompileMsg();
+    msg.append(node.getCondition().accept(this));
+    if (!msg.isEmpty()) {
+      return msg;
+    }
     BaseInfo conditionType = node.getCondition().getInfo().getType();
     if (!(conditionType instanceof TypeInfo) || !conditionType.equals(GlobalScope.boolType)) {
-      throw new CompileError("Condition should be of type bool", node);
+      return new CompileMsg("Condition should be of type bool", node);
     }
     node.addScope(currentScope);
     enterScope(node.getScope("then"));
     if (node.getThenStmt() instanceof BlockStmtNode) {
       for (StmtNode stmt : ((BlockStmtNode) node.getThenStmt()).getStmts()) {
-        stmt.accept(this);
+        msg.append(stmt.accept(this));
       }
     } else {
-      node.getThenStmt().accept(this);
+      msg.append(node.getThenStmt().accept(this));
+    }
+    if (!msg.isEmpty()) {
+      return msg;
     }
     exitScope();
     if (node.getElseStmt() != null) {
       enterScope(node.getScope("else"));
       if (node.getElseStmt() instanceof BlockStmtNode) {
         for (StmtNode stmt : ((BlockStmtNode) node.getElseStmt()).getStmts()) {
-          stmt.accept(this);
+          msg.append(stmt.accept(this));
         }
       } else {
-        node.getElseStmt().accept(this);
+        msg.append(node.getElseStmt().accept(this));
+      }
+      if (!msg.isEmpty()) {
+        return msg;
       }
       exitScope();
     }
+    return msg;
   }
 
-  public void visit(ForStmtNode node) throws BaseError {
+  public CompileMsg visit(ForStmtNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
+    var msg = new CompileMsg();
     if (node.getInit() != null) {
-      node.getInit().accept(this);
+      msg.append(node.getInit().accept(this));
+    }
+    if (!msg.isEmpty()) {
+      return msg;
     }
     if (node.getCondition() != null) {
-      node.getCondition().accept(this);
+      msg.append(node.getCondition().accept(this));
+      if (!msg.isEmpty()) {
+        return msg;
+      }
       BaseInfo conditionType = node.getCondition().getInfo().getType();
       if (!(conditionType instanceof TypeInfo) || !conditionType.equals(GlobalScope.boolType)) {
-        throw new RuntimeException("Condition should be of type bool");
+        return new CompileMsg("Condition should be of type bool", node);
       }
     }
     if (node.getUpdate() != null) {
-      node.getUpdate().accept(this);
+      msg.append(node.getUpdate().accept(this));
+    }
+    if (!msg.isEmpty()) {
+      return msg;
     }
     if (node.getBody() instanceof BlockStmtNode) {
       for (StmtNode stmt : ((BlockStmtNode) node.getBody()).getStmts()) {
-        stmt.accept(this);
+        msg.append(stmt.accept(this));
       }
     } else {
-      node.getBody().accept(this);
+      msg.append(node.getBody().accept(this));
+    }
+    if (!msg.isEmpty()) {
+      return msg;
     }
     exitScope();
+    return new CompileMsg();
   }
 
-  public void visit(WhileStmtNode node) throws BaseError {
+  public CompileMsg visit(WhileStmtNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
-    node.getCondition().accept(this);
+    var msg = new CompileMsg();
+    msg.append(node.getCondition().accept(this));
+    if (!msg.isEmpty()) {
+      return msg;
+    }
     BaseInfo conditionType = node.getCondition().getInfo().getType();
     if (!(conditionType instanceof TypeInfo) || !conditionType.equals(GlobalScope.boolType)) {
-      throw new CompileError("Condition should be of type bool", node);
+      return new CompileMsg("Condition should be of type bool", node);
     }
     if (node.getBody() instanceof BlockStmtNode) {
       for (StmtNode stmt : ((BlockStmtNode) node.getBody()).getStmts()) {
-        stmt.accept(this);
+        msg.append(stmt.accept(this));
       }
     } else {
-      node.getBody().accept(this);
+      msg.append(node.getBody().accept(this));
+    }
+    if (!msg.isEmpty()) {
+      return msg;
     }
     exitScope();
+    return new CompileMsg();
   }
 
-  public void visit(ContinueStmtNode node) throws BaseError {
+  public CompileMsg visit(ContinueStmtNode node) throws BaseError {
     if (currentScope.getLastLoop() == null) {
-      throw new CompileError("Keyword continue should be used in a loop", node);
+      return new CompileMsg("Keyword continue should be used in a loop", node);
     }
+    return new CompileMsg();
   }
 
-  public void visit(BreakStmtNode node) throws BaseError {
+  public CompileMsg visit(BreakStmtNode node) throws BaseError {
     if (currentScope.getLastLoop() == null) {
-      throw new CompileError("Keyword continue should be used in a loop", node);
+      return new CompileMsg("Keyword continue should be used in a loop", node);
     }
+    return new CompileMsg();
   }
 
-  public void visit(ReturnStmtNode node) throws BaseError {
+  public CompileMsg visit(ReturnStmtNode node) throws BaseError {
     var scope = currentScope.getLastFunc();
+    var msg = new CompileMsg();
     if (scope == null) {
-      throw new CompileError("Keyword return should be used in a function", node);
+      return new CompileMsg("Keyword return should be used in a function", node);
     }
     TypeInfo returnType = ((FuncInfo) scope.getInfo()).getType();
     if (node.getExpr() == null) {
       if (!returnType.equals(GlobalScope.voidType)) {
-        throw new CompileError("Function should return a value", node);
+        return new CompileMsg("Function should return a value", node);
       }
     } else {
-      node.getExpr().accept(this);
+      msg.append(node.getExpr().accept(this));
+      if (!msg.isEmpty()) {
+        return msg;
+      }
       BaseInfo exprType = node.getExpr().getInfo().getType();
       if (!(exprType instanceof TypeInfo) || !returnType.equals(exprType)) {
-        throw new CompileError("Function should return a value of type " + returnType.getName() + ", but got "
+        return new CompileMsg("Function should return a value of type " + returnType.getName() + ", but got "
             + exprType.getName() + " instead", node);
       }
       ((FuncScope) scope).setIsExited(true);
     }
+    return msg;
   }
 
-  public void visit(ExprStmtNode node) throws BaseError {
+  public CompileMsg visit(ExprStmtNode node) throws BaseError {
+    var msg = new CompileMsg();
     for (ExprNode expr : node.getExprs()) {
-      expr.accept(this);
+      msg.append(expr.accept(this));
+      if (!msg.isEmpty()) {
+        return msg;
+      }
       BaseInfo type = expr.getInfo().getType();
       if (type instanceof FuncInfo) {
-        throw new CompileError("Function call is not complete", node);
+        return new CompileMsg("Function call is not complete", node);
       }
     }
+    return msg;
   }
 
-  public void visit(VarDefStmtNode node) throws BaseError {
+  public CompileMsg visit(VarDefStmtNode node) throws BaseError {
+    var msg = new CompileMsg();
     for (VarDefNode varDef : node.getDefs()) {
-      varDef.accept(this);
+      msg.append(varDef.accept(this));
     }
+    return msg;
   }
 
-  public void visit(EmptyStmtNode node) throws BaseError {
+  public CompileMsg visit(EmptyStmtNode node) throws BaseError {
+    return new CompileMsg();
   }
 }

@@ -6,12 +6,17 @@ abstract public class BaseError extends RuntimeException {
   private Position pos;
   private String message;
 
+  public BaseError(String msg) {
+    this.message = msg;
+    this.pos = null;
+  }
+
   public BaseError(String msg, Position pos) {
     this.pos = pos;
     this.message = msg;
   }
 
   public String toString() {
-    return message + " at " + pos.toString();
+    return message + (pos == null ? "" : " at " + pos.toString());
   }
 }

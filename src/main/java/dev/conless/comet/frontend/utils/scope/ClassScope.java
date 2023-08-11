@@ -5,6 +5,7 @@ import dev.conless.comet.frontend.utils.metadata.ClassInfo;
 import dev.conless.comet.frontend.utils.metadata.FuncInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
 import dev.conless.comet.utils.container.Map;
+import dev.conless.comet.utils.error.RuntimeError;
 
 public class ClassScope extends BaseScope {
   Map<String, FuncInfo> funcs;
@@ -44,7 +45,7 @@ public class ClassScope extends BaseScope {
         return funcs.get(name);
       }
     } else {
-      throw new RuntimeException("ClassScope.get() called with unknown type");
+      throw new RuntimeError("ClassScope.get() called with unknown type");
     }
     return null;
   }
