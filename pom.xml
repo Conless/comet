@@ -57,7 +57,7 @@
               <goals>
                 <goal>antlr4</goal>
               </goals>
-              <phase>compile</phase>
+              <phase>validate</phase>
             </execution>
           </executions>
 
@@ -80,20 +80,25 @@
           <version>3.8.0</version>
         </plugin>
         <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+          <version>2.4.3</version>
           <configuration>
-            <archive>
-              <manifest>
+            <transformers>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                 <mainClass>dev.conless.comet.Compiler</mainClass>
-              </manifest>
-            </archive>
+              </transformer>
+            </transformers>
           </configuration>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
-        </plugin>
+          <executions>
+              <execution>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>shade</goal>
+                  </goals>
+              </execution>
+          </executions>
+         </plugin>
       </plugins>
     <!-- </pluginManagement> -->
   </build>

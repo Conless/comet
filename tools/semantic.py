@@ -6,7 +6,8 @@ import threading
 import atomic
 
 test_cases_dir = "./tutorial/Compiler-Design-Implementation/testcases/sema/"
-execute_command = "java -Xbootclasspath/a:/Library/Java/JavaVirtualMachines/openjdk-17.jdk/Contents/Home/lib/antlr-4.13.0-complete.jar -jar ./target/comet-0.1.0-alpha.jar"
+compile_command = "make"
+execute_command = "java -jar ./bin/comet-0.1.0-alpha.jar"
 
 pool = threading.BoundedSemaphore(1)
 start_testcase = ""
