@@ -1,12 +1,12 @@
-package dev.conless.comet.frontend.ir.node.inst;
+package dev.conless.comet.frontend.ir.node;
 
-import dev.conless.comet.frontend.ir.node.IRInstNode;
+import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
 import dev.conless.comet.utils.container.Array;
 
 import lombok.Getter;
 
 @Getter
-public final class IRInstListNode extends IRInstNode {
+public final class IRInstListNode extends IRNode {
   private Array<IRInstNode> insts;
 
   public IRInstListNode() {

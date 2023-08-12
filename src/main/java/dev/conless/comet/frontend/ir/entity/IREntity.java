@@ -12,9 +12,6 @@ public abstract class IREntity {
     this.type = type;
     this.value = value;
   }
-
-  @Override
-  public String toString() {
-    return type.toString() + " " + value;
-  }
+  
+  public abstract String toString();
 }

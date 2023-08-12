@@ -28,10 +28,7 @@ public class IRProgramNode extends IRNode {
 
   @Override
   public String toString() {
-    String str = "";
-    for (var module : modules) {
-      str += module.toString();
-    }
+    String str = modules.toString("\n\n");
     return str;
   }
   

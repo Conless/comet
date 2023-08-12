@@ -1,9 +1,10 @@
 package dev.conless.comet.frontend.ir.node.module;
 
 import dev.conless.comet.frontend.ir.node.IRBlockNode;
-import dev.conless.comet.frontend.ir.node.IRInstNode;
 import dev.conless.comet.frontend.ir.node.IRModuleNode;
-import dev.conless.comet.frontend.ir.type.IRType;
+import dev.conless.comet.frontend.ir.node.inst.IRGlobalNode;
+import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.RuntimeError;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,17 +12,33 @@ import lombok.Setter;
 @Getter
 @Setter
 public class IRGlobalDefNode extends IRModuleNode {
-  private IRType type;
-  private String name;
+  private Array<IRGlobalNode> globals;
 
-  public IRBlockNode getBlock() {
-    if (getBlocks().size() == 0) {
-      throw new RuntimeError("No block in global def");
-    }
-    return getBlocks().get(0);
+  public IRGlobalDefNode() {
+    globals = new Array<>();
   }
 
   public void addInst(IRInstNode inst) {
-    getBlock().addInst(inst);
+    globals.add((IRGlobalNode) inst);
+  }
+
+  @Override
+  public String getName() {
+    return "globalDef";
+  }
+
+  @Override
+  public IRBlockNode getBlock(String name) {
+    throw new RuntimeError("GlobalDef has no block");
+  }
+
+  @Override
+  public String toString() {
+    var builder = new StringBuilder();
+    builder.append("; The definition of global variables\n");
+    for (var global : globals) {
+      builder.append(global.toString()).append("\n");
+    }
+    return builder.toString();
   }
 }

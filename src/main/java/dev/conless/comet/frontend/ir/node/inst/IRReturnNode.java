@@ -1,7 +1,6 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.IRInstNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -19,6 +18,6 @@ public final class IRReturnNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return "ret " + type.toString() + " " + value.getValue(); // TODO: void type
+    return "ret " + type.toString() + " " + value.getName(); // TODO: void type
   }
 }

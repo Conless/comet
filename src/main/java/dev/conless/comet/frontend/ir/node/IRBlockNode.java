@@ -1,5 +1,6 @@
 package dev.conless.comet.frontend.ir.node;
 
+import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
 import dev.conless.comet.utils.container.Array;
 
 import lombok.Getter;
@@ -27,6 +28,10 @@ public class IRBlockNode extends IRNode {
 
   @Override
   public String toString() {
-    return null;
+    String str = tagName + ":\n";
+    for (var inst : insts) {
+      str += "  " + inst.toString() + "\n";
+    }
+    return str;
   }
 }

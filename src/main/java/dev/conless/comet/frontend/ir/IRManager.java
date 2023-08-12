@@ -1,7 +1,7 @@
 package dev.conless.comet.frontend.ir;
 
 import dev.conless.comet.frontend.ast.node.ASTNode;
-import dev.conless.comet.frontend.ast.node.ScopedNode;
+import dev.conless.comet.frontend.ast.node.special.ScopedNode;
 import dev.conless.comet.frontend.ir.node.*;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.module.*;

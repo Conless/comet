@@ -11,4 +11,9 @@ public final class IRLiteral extends IREntity {
   public IRLiteral(IRType type, String value) {
     super(type, value);
   }
+
+  @Override
+  public String toString() {
+    return getType().toString() + " " + getValue();
+  }
 }

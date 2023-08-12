@@ -1,6 +1,5 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
-import dev.conless.comet.frontend.ir.node.IRInstNode;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 

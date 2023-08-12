@@ -7,6 +7,7 @@ import dev.conless.comet.frontend.utils.metadata.FuncInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
+import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.error.RuntimeError;
 import lombok.Getter;
 import lombok.Setter;
@@ -111,6 +112,16 @@ public class BaseScope {
     }
     if (parent != null) {
       return parent.getRecur(name);
+    }
+    return null;
+  }
+
+  public Pair<BaseInfo, BaseScope> getRecurWithScope(String name) {
+    if (vars.containsKey(name)) {
+      return new Pair<>(vars.get(name), this);
+    }
+    if (parent != null) {
+      return parent.getRecurWithScope(name);
     }
     return null;
   }

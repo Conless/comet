@@ -1,7 +1,6 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.entity.IREntity;
-import dev.conless.comet.frontend.ir.node.IRInstNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Pair;

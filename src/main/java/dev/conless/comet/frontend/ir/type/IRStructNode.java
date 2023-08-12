@@ -7,6 +7,11 @@ import lombok.*;
 public class IRStructNode extends IRType {
   private Array<IRType> members;
 
+  public IRStructNode(String name, Array<IRType> members) {
+    super("class." + name, getTotalSize(members));
+    this.members = members;
+  }
+
   private static int getTotalSize(Array<IRType> members) {
     int totalSize = 0;
     for (IRType member : members) {

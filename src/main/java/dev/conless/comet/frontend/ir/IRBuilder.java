@@ -4,6 +4,7 @@ import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.*;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
+import dev.conless.comet.frontend.ast.node.special.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
 import dev.conless.comet.frontend.ast.node.type.*;
 import dev.conless.comet.frontend.utils.metadata.*;
@@ -36,7 +37,6 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var globalDefModule = new IRGlobalDefNode();
     programNode.addModule(globalDefModule);
     var initModule = new IRFuncNode("init", new Array<>(), GlobalScope.irVoidType);
-    initModule.addBlock(new IRBlockNode("entry"));
     programNode.addModule(initModule);
     for (var def : node.getDefs()) {
       if (def instanceof VarDefNode) {
@@ -45,7 +45,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
         for (var inst : instList.getInsts()) {
           if (!first) {
             first = true;
-            ((IRGlobalDefNode) programNode.getModule("globalDef")).getBlock().addInst(inst);
+            ((IRGlobalDefNode) programNode.getModule("globalDef")).addInst(inst);
             continue;
           }
           programNode.getModule("init").getBlock("entry").addInst(inst);
@@ -63,12 +63,33 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
 
   @Override
   public IRNode visit(FuncDefNode node) throws BaseError {
-    return null;
+    enterASTNode(node);
+    var paramNodes = new Array<IRVariable>();
+    for (var param : node.getParams()) {
+      paramNodes.add(new IRVariable(new IRType(param.getType()), param.getName() + ".param", false));
+    }
+    var funcNode = new IRFuncNode(node.getName(), paramNodes, new IRType(node.getReturnType()));
+    exitASTNode(node);
+    return funcNode;
   }
 
   @Override
   public IRNode visit(ClassDefNode node) throws BaseError {
-    return null;
+    enterASTNode(node);
+    var vars = new Array<IRVariable>();
+    for (var def : node.getVarDefs()) {
+      vars.add(new IRVariable(new IRType(def.getType()), def.getName(), false));
+    }
+    var funcs = new Array<IRFuncNode>();
+    for (var def : node.getFuncDefs()) {
+      def.getParams().add(0, VarDefNode.builder().info(new VarInfo("this", new TypeInfo(node.getName(), 0))).build());
+      var irFunc = (IRFuncNode) def.accept(this);
+      irFunc.setName(node.getName() + "::" + irFunc.getName());
+      funcs.add(irFunc);
+    }
+    var classNode = new IRClassDefNode(node.getName(), vars, funcs);
+    exitASTNode(node);
+    return classNode;
   }
 
   @Override

@@ -1,7 +1,6 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.IRInstNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -23,6 +22,6 @@ public final class IRIcmpNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return dest.getValue() + " = icmp " + op.toString() + " " + type.toString() + " " + lhs.getValue() + ", " + rhs.getValue();
+    return dest.getName() + " = icmp " + op.toString() + " " + type.toString() + " " + lhs.getName() + ", " + rhs.getName();
   }
 }

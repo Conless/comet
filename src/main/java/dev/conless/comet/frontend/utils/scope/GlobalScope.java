@@ -4,6 +4,7 @@ import dev.conless.comet.frontend.utils.metadata.BaseInfo;
 import dev.conless.comet.frontend.utils.metadata.ClassInfo;
 import dev.conless.comet.frontend.utils.metadata.FuncInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
+import dev.conless.comet.utils.container.Pair;
 
 public class GlobalScope extends BuiltInScope {
   public GlobalScope() {
@@ -73,6 +74,20 @@ public class GlobalScope extends BuiltInScope {
     }
     if (classes.containsKey(name)) {
       return classes.get(name);
+    }
+    return null;
+  }
+
+  @Override
+  public Pair<BaseInfo, BaseScope> getRecurWithScope(String name) {
+    if (vars.containsKey(name)) {
+      return new Pair<BaseInfo, BaseScope>(vars.get(name), this);
+    }
+    if (funcs.containsKey(name)) {
+      return new Pair<BaseInfo, BaseScope>(funcs.get(name), this);
+    }
+    if (classes.containsKey(name)) {
+      return new Pair<BaseInfo, BaseScope>(classes.get(name), this);
     }
     return null;
   }

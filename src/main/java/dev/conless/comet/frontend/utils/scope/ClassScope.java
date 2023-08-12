@@ -5,6 +5,7 @@ import dev.conless.comet.frontend.utils.metadata.ClassInfo;
 import dev.conless.comet.frontend.utils.metadata.FuncInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
 import dev.conless.comet.utils.container.Map;
+import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.error.RuntimeError;
 
 public class ClassScope extends BaseScope {
@@ -60,6 +61,20 @@ public class ClassScope extends BaseScope {
     }
     if (getParent() != null) {
       return getParent().getRecur(name);
+    }
+    return null;
+  }
+
+  @Override
+  public Pair<BaseInfo, BaseScope> getRecurWithScope(String name) {
+    if (vars.containsKey(name)) {
+      return new Pair<BaseInfo, BaseScope>(vars.get(name), this);
+    }
+    if (funcs.containsKey(name)) {
+      return new Pair<BaseInfo, BaseScope>(funcs.get(name), this);
+    }
+    if (getParent() != null) {
+      return getParent().getRecurWithScope(name);
     }
     return null;
   }

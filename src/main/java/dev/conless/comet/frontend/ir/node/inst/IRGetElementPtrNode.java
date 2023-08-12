@@ -2,7 +2,6 @@ package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.IRInstNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.container.Array;
 import lombok.EqualsAndHashCode;
@@ -24,6 +23,6 @@ public final class IRGetElementPtrNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return dest.getValue() + " = getelementptr " + type.toString() + ", " + src.toString() + ", " + idxs.toString();
+    return dest.getName() + " = getelementptr " + type.toString() + ", " + src.toString() + ", " + idxs.toString();
   }
 }

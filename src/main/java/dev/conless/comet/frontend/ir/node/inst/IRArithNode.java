@@ -1,7 +1,6 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.IRInstNode;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -20,6 +19,6 @@ public final class IRArithNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return dest.getValue() + " = " + op.toString() + " " + lhs.toString() + ", " + rhs.toString();
+    return dest.getName() + " = " + op.toString() + " " + lhs.toString() + ", " + rhs.toString();
   }
 }
