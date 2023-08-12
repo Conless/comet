@@ -1,7 +1,6 @@
 package dev.conless.comet.frontend.ir.entity;
 
 import dev.conless.comet.frontend.ir.type.IRType;
-
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 

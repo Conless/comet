@@ -4,15 +4,16 @@ import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.*;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
-import dev.conless.comet.frontend.ast.node.special.ProgramNode;
+import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
 import dev.conless.comet.frontend.ast.node.type.*;
 import dev.conless.comet.frontend.utils.metadata.*;
 import dev.conless.comet.frontend.utils.scope.*;
 import dev.conless.comet.frontend.ir.entity.*;
 import dev.conless.comet.frontend.ir.node.*;
+import dev.conless.comet.frontend.ir.node.global.*;
 import dev.conless.comet.frontend.ir.node.inst.*;
-import dev.conless.comet.frontend.ir.node.module.*;
+import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
 import dev.conless.comet.frontend.ir.type.*;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
@@ -28,47 +29,53 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   @Override
   public IRNode visit(ProgramNode node) throws BaseError {
     enterASTNode(node);
-    programNode = new IRProgramNode();
+    var program = new IRProgramNode();
     for (var def : node.getDefs()) {
       if (def instanceof ClassDefNode) {
-        programNode.addModule((IRModuleNode) def.accept(this));
+        var defs = (IRExprNode) def.accept(this);
+        program.addDef((IRGlobalDefNode) defs.getNodes().get(0));
+        defs.getNodes().remove(0);
+        for (var func : defs.getNodes()) {
+          program.addFunc((IRFuncNode) func);
+        }
       }
     }
-    var globalDefModule = new IRGlobalDefNode();
-    programNode.addModule(globalDefModule);
-    var initModule = new IRFuncNode("init", new Array<>(), GlobalScope.irVoidType);
-    programNode.addModule(initModule);
+    program.addDef(new IRGlobalDefNode(new IRVariable(GlobalScope.irArrayType, "builtIn.Array", false)));
+    program.addDef(new IRGlobalDefNode(new IRVariable(GlobalScope.irStringType, "builtIn.String", false)));
+    var initFunc = new IRFuncNode("__global_var_init", new Array<>(), GlobalScope.irVoidType);
+    program.addFunc(initFunc);
     for (var def : node.getDefs()) {
       if (def instanceof VarDefNode) {
-        var instList = (IRInstListNode) def.accept(this);
-        var first = false;
-        for (var inst : instList.getInsts()) {
-          if (!first) {
-            first = true;
-            ((IRGlobalDefNode) programNode.getModule("globalDef")).addInst(inst);
-            continue;
-          }
-          programNode.getModule("init").getBlock("entry").addInst(inst);
+        var exprs = (IRExprNode) def.accept(this);
+        program.addDef((IRGlobalDefNode) exprs.getNodes().get(0));
+        exprs.getNodes().remove(0);
+        for (var expr : exprs.getNodes()) {
+          initFunc.addNode(expr);
         }
+
       }
     }
     for (var def : node.getDefs()) {
       if (def instanceof FuncDefNode) {
-        programNode.addModule((IRModuleNode) def.accept(this));
+        program.addFunc((IRFuncNode) def.accept(this));
       }
     }
     exitASTNode(node);
-    return programNode;
+    return program;
   }
 
   @Override
   public IRNode visit(FuncDefNode node) throws BaseError {
+    resetCounter();
     enterASTNode(node);
     var paramNodes = new Array<IRVariable>();
     for (var param : node.getParams()) {
-      paramNodes.add(new IRVariable(new IRType(param.getType()), param.getName() + ".param", false));
+      paramNodes.add(new IRVariable(new IRType(param.getType()), getVarName(param.getName()) + ".param", false));
     }
     var funcNode = new IRFuncNode(node.getName(), paramNodes, new IRType(node.getReturnType()));
+    for (var stmt : node.getBlockedBody().getStmts()) {
+      funcNode.getNodes().appendNodes((IRExprNode) stmt.accept(this));
+    }
     exitASTNode(node);
     return funcNode;
   }
@@ -76,49 +83,72 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   @Override
   public IRNode visit(ClassDefNode node) throws BaseError {
     enterASTNode(node);
-    var vars = new Array<IRVariable>();
+    var nodes = new IRExprNode();
+    var vars = new Array<IRType>();
     for (var def : node.getVarDefs()) {
-      vars.add(new IRVariable(new IRType(def.getType()), def.getName(), false));
+      vars.add(new IRType(def.getType()));
     }
-    var funcs = new Array<IRFuncNode>();
+    var type = new IRStructType(node.getName(), vars);
+    var classNode = new IRGlobalDefNode(new IRVariable(type, "class." + node.getName(), false));
+    nodes.addNode(classNode);
     for (var def : node.getFuncDefs()) {
       def.getParams().add(0, VarDefNode.builder().info(new VarInfo("this", new TypeInfo(node.getName(), 0))).build());
       var irFunc = (IRFuncNode) def.accept(this);
       irFunc.setName(node.getName() + "::" + irFunc.getName());
-      funcs.add(irFunc);
+      nodes.addNode(irFunc);
     }
-    var classNode = new IRClassDefNode(node.getName(), vars, funcs);
     exitASTNode(node);
-    return classNode;
+    return nodes;
   }
 
   @Override
   public IRNode visit(VarDefNode node) throws BaseError {
-    return null;
+    enterASTNode(node);
+    var instList = new IRExprNode();
+    boolean isGlobal = currentScope instanceof GlobalScope;
+    var var = new IRVariable(new IRType(node.getType()), getVarName(node.getName()), isGlobal);
+    if (isGlobal) {
+      instList.addNode(new IRGlobalDefNode(var));
+    } else {
+      instList.addNode(new IRAllocaNode(var, new IRType(node.getType())));
+    }
+    if (node.getInit() != null) {
+      var init = (IRExprNode) node.getInit().accept(this);
+      instList.appendNodes(init);
+      if (!(init.getDest() instanceof IRVariable)) {
+        throw new RuntimeError("IRBuilder.visit(VarDefNode) init.getDest() should be IRVariable");
+      }
+      instList.addNode(new IRStoreNode(var, (IRVariable) init.getDest()));
+    }
+    exitASTNode(node);
+    return instList;
   }
 
   @Override
   public IRNode visit(TypeNameNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    throw new RuntimeError("IRBuilder.visit(TypeNameNode) should not be called");
   }
 
   @Override
   public IRNode visit(ExprNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    throw new RuntimeError("IRBuilder.visit(ExprNode) should not be called");
   }
 
   @Override
   public IRNode visit(NewExprNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    return allocaHelper(node.getType());
   }
 
   @Override
   public IRNode visit(MemberExprNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    var instList = new IRExprNode();
+    var objectType = (TypeInfo) node.getObject().getInfo().getType();
+    var objectInst = (IRExprNode) node.getObject().accept(this);
+    instList.appendNodes(objectInst);
+    var object = objectInst.getDest();
+    if (infoType instanceof FuncInfo) {
+      instList.setDest(new IRFunc(null));
+    }
   }
 
   @Override
@@ -219,19 +249,25 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
 
   @Override
   public IRNode visit(ExprStmtNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    var instList = new IRExprNode();
+    for (var expr : node.getExprs()) {
+      instList.appendNodes((IRExprNode) expr.accept(this));
+    }
+    return instList;
   }
 
   @Override
   public IRNode visit(VarDefStmtNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    var instList = new IRExprNode();
+    for (var def : node.getDefs()) {
+      instList.appendNodes((IRExprNode) def.accept(this));
+    }
+    return instList;
   }
 
   @Override
   public IRNode visit(EmptyStmtNode node) throws BaseError {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'visit'");
-  } 
+  }
 }

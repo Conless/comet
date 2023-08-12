@@ -1,7 +1,7 @@
 package dev.conless.comet.frontend.ast.node.def;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.frontend.ast.node.special.ScopedNode;
+import dev.conless.comet.frontend.ast.node.global.ScopedNode;
 import dev.conless.comet.frontend.ast.node.stmt.BlockStmtNode;
 import dev.conless.comet.frontend.ast.node.stmt.StmtNode;
 import dev.conless.comet.frontend.utils.metadata.FuncInfo;

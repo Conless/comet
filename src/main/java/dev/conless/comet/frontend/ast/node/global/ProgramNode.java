@@ -1,4 +1,4 @@
-package dev.conless.comet.frontend.ast.node.special;
+package dev.conless.comet.frontend.ast.node.global;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.node.ASTNode;

@@ -4,8 +4,8 @@ import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
-import dev.conless.comet.frontend.ast.node.special.HasExprNode;
-import dev.conless.comet.frontend.ast.node.special.ProgramNode;
+import dev.conless.comet.frontend.ast.node.global.HasExprNode;
+import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
 import dev.conless.comet.frontend.ast.node.type.*;
 import dev.conless.comet.frontend.utils.metadata.*;
@@ -131,7 +131,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
 
   public CompileMsg visit(MemberExprNode node) throws BaseError {
     var msg = node.getObject().accept(this);
-    BaseInfo objectType = node.getObject().getInfo().getType();
+    var objectType = node.getObject().getInfo().getType();
     if (!(objectType instanceof TypeInfo)) {
       return new CompileMsg("Cannot access member of non-array type " + objectType.getName(), node);
     }
@@ -143,11 +143,11 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
             node);
       }
     } else {
-      ClassInfo classInfo = (ClassInfo) globalScope.get(objectType.getName(), "class");
+      var classInfo = (ClassInfo) globalScope.get(objectType.getName(), "class");
       if (classInfo == null) {
         return new CompileMsg("Call to undefined class " + objectType.getName(), node);
       }
-      BaseInfo memberInfo = classInfo.getMember(node.getMember());
+      var memberInfo = classInfo.getMember(node.getMember());
       if (memberInfo == null) {
         return new CompileMsg("Call to undefined member " + node.getMember() + " of type " + objectType.getName(),
             node);

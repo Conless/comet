@@ -13,6 +13,7 @@ public class Array<E> extends ArrayList<E> {
 
   public Array(E firstTag, E... tags) {
     super();
+    this.add(firstTag);
     for (E tag : tags) {
       this.add(tag);
     }

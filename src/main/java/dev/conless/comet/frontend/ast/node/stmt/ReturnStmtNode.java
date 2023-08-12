@@ -2,7 +2,7 @@ package dev.conless.comet.frontend.ast.node.stmt;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.node.expr.ExprNode;
-import dev.conless.comet.frontend.ast.node.special.HasExprNode;
+import dev.conless.comet.frontend.ast.node.global.HasExprNode;
 import dev.conless.comet.utils.error.*;
 
 import lombok.experimental.SuperBuilder;

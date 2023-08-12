@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.*;
 
 import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.*;
-import dev.conless.comet.frontend.ast.node.special.ProgramNode;
+import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.grammar.*;
 import dev.conless.comet.frontend.ir.*;
 import dev.conless.comet.frontend.ir.node.*;
