@@ -44,6 +44,17 @@ public final class ClassInfo extends BaseInfo {
     }
   }
 
+  public int getOffset(String name) {
+    int offset = 0;
+    for (var varName : vars.keySet()) {
+      if (varName.equals(name)) {
+        return offset;
+      }
+      offset++;
+    }
+    return -1;
+  }
+
   @Override
   public String toString() {
     String str = "class " + getName() + " {\n";

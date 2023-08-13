@@ -11,6 +11,7 @@ import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
 import dev.conless.comet.frontend.ir.type.IRStructType;
 import dev.conless.comet.frontend.ir.type.IRType;
+import dev.conless.comet.frontend.ir.type.IRType.Case;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
@@ -44,16 +45,16 @@ public class IRManager {
 
   protected String getVarName(String name) {
     if (name.equals("this")) {
-      return name;
+      return "%" + name;
     }
     while (!(currentScope instanceof GlobalScope)) {
       if (currentScope.get(name, "var") != null) {
-        return name + currentScope.getSuffix();
+        return "%" + name + currentScope.getSuffix();
       }
       currentScope = currentScope.getParent();
     }
     if (currentScope.get(name, "var") != null) {
-      return name;
+      return "@" + name;
     }
     throw new RuntimeError("Variable " + name + " not found");
   }
@@ -65,15 +66,11 @@ public class IRManager {
   protected IRExprNode allocaHelper(TypeInfo typeInfo) {
     var instList = new IRExprNode();
     if (typeInfo.getDepth().equals(0)) {
-      var allocaVar = new IRVariable(GlobalScope.irPtrType, "alloca" + String.valueOf(counter.allocaCount++), false);
-      if (!typeInfo.getIsBuiltIn()) {
-        var alloca = new IRAllocaNode(allocaVar, "class." + typeInfo.getName());
-        instList.addNode(alloca);
-      } else {
-        var alloca = new IRAllocaNode(allocaVar, new IRType(typeInfo));
-        instList.addNode(alloca);
-      }
+      var allocaVar = new IRVariable(GlobalScope.irPtrType, "%alloca" + String.valueOf(counter.allocaCount++));
+      var alloca = new IRAllocaNode(allocaVar, new IRType(typeInfo, Case.USE));
+      instList.addNode(alloca);
       instList.setDest(allocaVar);
+      instList.setDestAddr(allocaVar);
     } else {
       throw new RuntimeError("IRBuilder.visit(NewExprNode) should not be called");
     }

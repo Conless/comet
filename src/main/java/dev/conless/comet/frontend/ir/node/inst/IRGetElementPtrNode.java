@@ -11,10 +11,17 @@ import lombok.Value;
 @EqualsAndHashCode(callSuper = true)
 public final class IRGetElementPtrNode extends IRInstNode {
   private IRVariable dest, src;
-  private IRType type;
+  private String type;
   private Array<IREntity> idxs;
 
   public IRGetElementPtrNode(IRVariable dest, IRVariable src, IRType type, Array<IREntity> idxs) {
+    this.type = type.getTypeName();
+    this.dest = dest;
+    this.src = src;
+    this.idxs = idxs;
+  }
+
+  public IRGetElementPtrNode(IRVariable dest, IRVariable src, String type, Array<IREntity> idxs) {
     this.type = type;
     this.dest = dest;
     this.src = src;
@@ -23,6 +30,6 @@ public final class IRGetElementPtrNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return dest.getName() + " = getelementptr " + type.toString() + ", " + src.toString() + ", " + idxs.toString();
+    return dest.getValue() + " = getelementptr " + type.toString() + ", " + src.toString() + ", " + idxs.toString(", ");
   }
 }

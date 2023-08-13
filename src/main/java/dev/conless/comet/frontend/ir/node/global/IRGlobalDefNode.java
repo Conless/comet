@@ -15,11 +15,11 @@ public class IRGlobalDefNode extends IRNode {
 
   @Override
   public String toString() {
-    String str = var.getName() + " = global ";
+    String str = var.getValue() + " = global ";
     if (var.getType().equals(GlobalScope.irIntType) || var.getType().equals(GlobalScope.irBoolType)) {
       str += new IRLiteral(var.getType(), "0").toString();
     } else if (var.getType() instanceof IRStructType) {
-      str = var.getName() + " = " + var.getType().toString();
+      str = var.getValue() + " = " + var.getType().toString();
     } else {
       str += "ptr null";
     }

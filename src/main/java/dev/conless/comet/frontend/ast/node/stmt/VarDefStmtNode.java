@@ -23,6 +23,9 @@ public final class VarDefStmtNode extends StmtNode {
     String str = super.toString() + defs.get(0).getType().toString() + " ";
     for (int i = 0; i < defs.size(); i++) {
       str += defs.get(i).getName();
+      if (defs.get(i).getInit() != null) {
+        str += " = " + defs.get(i).getInit().toString();
+      }
       if (i < defs.size() - 1) {
         str += ", ";
       }

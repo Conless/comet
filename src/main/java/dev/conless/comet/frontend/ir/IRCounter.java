@@ -5,4 +5,6 @@ public class IRCounter {
   public int allocaCount = 0;
   public int callCount = 0;
   public int forCount = 0;
+  public int elementCount = 0;
+  public int loadCount = 0;
 }

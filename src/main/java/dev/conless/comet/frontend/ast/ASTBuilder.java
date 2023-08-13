@@ -8,6 +8,9 @@ import dev.conless.comet.frontend.utils.metadata.VarInfo;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Position;
 import dev.conless.comet.utils.error.CompileError;
+
+import java.util.Comparator;
+
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
@@ -88,13 +91,26 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
         vars.add(v);
       }
     }
+    vars.sort(new Comparator<VarDefNode>() {
+      @Override
+      public int compare(VarDefNode o1, VarDefNode o2) {
+        return o1.getInfo().getName().compareTo(o2.getInfo().getName());
+      }
+    });
     var funcs = new Array<FuncDefNode>();
     for (var def : ctx.funcDef()) {
       if (def.name.getText() == ctx.name.getText()) {
-        throw new CompileError("Functions cannot have the same name as class " + ctx.name.getText(), new Position(def.start));
+        throw new CompileError("Functions cannot have the same name as class " + ctx.name.getText(),
+            new Position(def.start));
       }
       funcs.add((FuncDefNode) visit(def));
     }
+    funcs.sort(new Comparator<FuncDefNode>() {
+      @Override
+      public int compare(FuncDefNode o1, FuncDefNode o2) {
+        return o1.getInfo().getName().compareTo(o2.getInfo().getName());
+      }
+    });
     var classDef = ClassDefNode.builder()
         .info(new ClassInfo(ctx.name.getText(), vars, funcs))
         .constructor(constructor)

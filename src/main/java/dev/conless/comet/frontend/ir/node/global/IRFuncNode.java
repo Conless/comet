@@ -36,15 +36,15 @@ public class IRFuncNode extends IRNode {
     addNode(new IRCommentNode("The definition of function " + name));
     addNode(new IRTagNode("entry"));
     if (name.equals("main")) {
-      addNode(new IRCallNode(GlobalScope.irVoidType, "__global_var_init", new Array<>()));
+      addNode(new IRCallNode("__global_var_init", new Array<>()));
     }
     for (var param : params) {
-      if (!param.getName().endsWith(".param")) {
-        throw new RuntimeError("Invalid parameter name: " + param.getName());
+      if (!param.getValue().endsWith(".param")) {
+        throw new RuntimeError("Invalid parameter name: " + param.getValue());
       }
-      var paramPtr = new IRVariable(GlobalScope.irPtrType, param.getValue().replace(".param", ""), false);
+      var paramPtr = new IRVariable(GlobalScope.irPtrType, param.getValue().replace(".param", ""));
       addNode(new IRAllocaNode(paramPtr, param.getType()));
-      addNode(new IRStoreNode(new IRVariable(param.getType(), param.getValue(), false), paramPtr));
+      addNode(new IRStoreNode(param, paramPtr));
     }
   }
 

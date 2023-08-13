@@ -3,6 +3,7 @@ package dev.conless.comet.frontend.ir.node.inst;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.type.IRType;
+import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
 
 import lombok.EqualsAndHashCode;
@@ -16,8 +17,8 @@ public final class IRCallNode extends IRInstNode {
   private String funcName;
   private Array<IREntity> args;
 
-  public IRCallNode(IRType type, String funcName, Array<IREntity> args) {
-    this.type = type;
+  public IRCallNode(String funcName, Array<IREntity> args) {
+    this.type = GlobalScope.irVoidType;
     this.dest = null;
     this.funcName = funcName;
     this.args = args;
@@ -32,6 +33,6 @@ public final class IRCallNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return (dest == null ? "" : dest.getName() + " = ") + "call " + type.toString() + " @" + funcName + "(" + args.toString(", ") + ")";
+    return (dest == null ? "" : dest.getValue() + " = ") + "call " + type.toString() + " @" + funcName + "(" + args.toString(", ") + ")";
   }
 }

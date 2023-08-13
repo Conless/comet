@@ -8,12 +8,7 @@ public class IRStructType extends IRType {
   private Array<IRType> members;
 
   public IRStructType(String name, Array<IRType> members) {
-    super(name, getTotalSize(members));
-    this.members = members;
-  }
-
-  public IRStructType(Array<IRType> members) {
-    super("struct", getTotalSize(members));
+    super("%" + name, getTotalSize(members));
     this.members = members;
   }
 

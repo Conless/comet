@@ -23,6 +23,6 @@ public final class IRAllocaNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return dest.getName() + " = alloca " + type;
+    return dest.getValue() + " = alloca " + type;
   }
 }

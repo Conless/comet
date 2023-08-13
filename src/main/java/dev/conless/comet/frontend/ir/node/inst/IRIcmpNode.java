@@ -22,6 +22,6 @@ public final class IRIcmpNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return dest.getName() + " = icmp " + op.toString() + " " + type.toString() + " " + lhs.getName() + ", " + rhs.getName();
+    return dest.getValue() + " = icmp " + op.toString() + " " + type.toString() + " " + lhs.getValue() + ", " + rhs.getValue();
   }
 }

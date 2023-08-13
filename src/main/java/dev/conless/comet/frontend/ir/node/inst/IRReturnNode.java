@@ -18,6 +18,6 @@ public final class IRReturnNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return "ret " + type.toString() + " " + value.getName(); // TODO: void type
+    return "ret " + type.toString() + " " + value.getValue(); // TODO: void type
   }
 }
