@@ -7,4 +7,5 @@ public class IRCounter {
   public int forCount = 0;
   public int elementCount = 0;
   public int loadCount = 0;
+  public static int strCount = 0;
 }

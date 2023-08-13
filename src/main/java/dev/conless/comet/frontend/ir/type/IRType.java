@@ -32,7 +32,7 @@ public class IRType {
       this.typeName = "void";
       this.typeSize = 0;
     } else {
-      if (caze.equals(Case.PARAM) || caze.equals(Case.CTOR)) {
+      if (type.equals(GlobalScope.stringClass) || caze.equals(Case.PARAM) || caze.equals(Case.CTOR)) {
         this.typeName = "ptr";
         this.typeSize = 4;
       } else {

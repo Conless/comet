@@ -7,12 +7,15 @@ import lombok.Value;
 @Value
 @EqualsAndHashCode(callSuper = true)
 public final class IRLiteral extends IREntity {
-  public IRLiteral(IRType type, String value) {
-    super(type, value);
+  public IRLiteral(IRType type, Integer value) {
+    super(type, value.toString());
   }
 
   @Override
   public String toString() {
+    if (getType().toString().equals("ptr") && getValue().equals("0")) {
+      return "ptr null";
+    }
     return getType().toString() + " " + getValue();
   }
 }

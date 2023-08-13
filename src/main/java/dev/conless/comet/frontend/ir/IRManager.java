@@ -2,27 +2,23 @@ package dev.conless.comet.frontend.ir;
 
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.ast.node.global.ScopedNode;
-import dev.conless.comet.frontend.ir.entity.IREntity;
-import dev.conless.comet.frontend.ir.entity.IRLiteral;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.*;
-import dev.conless.comet.frontend.ir.node.global.*;
+import dev.conless.comet.frontend.ir.node.global.IRFuncNode;
+import dev.conless.comet.frontend.ir.node.global.IRProgramNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
-import dev.conless.comet.frontend.ir.type.IRStructType;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.ir.type.IRType.Case;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
-import dev.conless.comet.utils.container.Array;
-import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.error.*;
 
 public class IRManager {
   protected GlobalScope globalScope;
   protected BaseScope currentScope;
-  protected Map<String, IRStructType> structTypes;
+  protected IRProgramNode programNode;
+  protected IRFuncNode initNode;
   protected IRCounter counter;
 
   protected void enterASTNode(ASTNode node) {

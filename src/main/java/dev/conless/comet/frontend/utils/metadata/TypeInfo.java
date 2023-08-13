@@ -19,10 +19,10 @@ public class TypeInfo extends BaseInfo {
       return false;
     }
     var other = (TypeInfo) otherInfo;
-    if (this.getName() == "null") {
+    if (this.getName().equals("null")) {
       return other.getName().equals("null") || other.depth > 0 || !other.isBuiltIn;
     }
-    if (other.getName() == "null") {
+    if (other.getName().equals("null")) {
       return this.depth > 0 || !this.isBuiltIn;
     }
     return this.getName().equals(other.getName()) && this.depth.equals(other.depth);

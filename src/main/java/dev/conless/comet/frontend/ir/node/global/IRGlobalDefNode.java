@@ -5,7 +5,9 @@ import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.type.IRStructType;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
+import lombok.Getter;
 
+@Getter
 public class IRGlobalDefNode extends IRNode {
   private IRVariable var;
 
@@ -17,7 +19,7 @@ public class IRGlobalDefNode extends IRNode {
   public String toString() {
     String str = var.getValue() + " = global ";
     if (var.getType().equals(GlobalScope.irIntType) || var.getType().equals(GlobalScope.irBoolType)) {
-      str += new IRLiteral(var.getType(), "0").toString();
+      str += new IRLiteral(var.getType(), 0).toString();
     } else if (var.getType() instanceof IRStructType) {
       str = var.getValue() + " = " + var.getType().toString();
     } else {

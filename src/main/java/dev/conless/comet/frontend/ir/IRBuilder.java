@@ -1,11 +1,10 @@
 package dev.conless.comet.frontend.ir;
 
-import javax.sound.sampled.AudioFileFormat.Type;
-
 import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.*;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
+import dev.conless.comet.frontend.ast.node.expr.AtomExprNode.Type;
 import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
 import dev.conless.comet.frontend.ast.node.type.*;
@@ -34,29 +33,21 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(ProgramNode node) throws BaseError {
     enterASTNode(node);
     var program = new IRProgramNode();
+    programNode = program;
     for (var def : node.getDefs()) {
       if (def instanceof ClassDefNode) {
         var defs = (IRExprNode) def.accept(this);
         program.addDef((IRGlobalDefNode) defs.getNodes().get(0));
-        defs.getNodes().remove(0);
-        for (var func : defs.getNodes()) {
-          program.addFunc((IRFuncNode) func);
-        }
       }
     }
     program.addDef(new IRGlobalDefNode(new IRVariable(GlobalScope.irArrayType, "%builtIn.Array")));
-    program.addDef(new IRGlobalDefNode(new IRVariable(GlobalScope.irStringType, "%builtIn.String")));
     var initFunc = new IRFuncNode("__global_var_init", new Array<>(), GlobalScope.irVoidType);
     program.addFunc(initFunc);
+    initNode = initFunc;
     for (var def : node.getDefs()) {
       if (def instanceof VarDefNode) {
         var exprs = (IRExprNode) def.accept(this);
         program.addDef((IRGlobalDefNode) exprs.getNodes().get(0));
-        exprs.getNodes().remove(0);
-        for (var expr : exprs.getNodes()) {
-          initFunc.addNode(expr);
-        }
-
       }
     }
     for (var def : node.getDefs()) {
@@ -100,7 +91,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       def.getParams().add(0, VarDefNode.builder().info(new VarInfo("this", new TypeInfo(node.getName(), 0))).build());
       var irFunc = (IRFuncNode) def.accept(this);
       irFunc.setName(node.getName() + "::" + irFunc.getName());
-      nodes.addNode(irFunc);
+      programNode.addFunc(irFunc);
     }
     exitASTNode(node);
     return nodes;
@@ -114,7 +105,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     if (currentScope instanceof GlobalScope) {
       instList.addNode(new IRGlobalDefNode(var));
     } else {
-      instList.addNode(new IRAllocaNode(var, new IRType(node.getType(), Case.USE)));
+      instList.addNode(new IRAllocaNode(var, new IRType(node.getType(), Case.CTOR)));
     }
     if (node.getInit() != null) {
       var init = (IRExprNode) node.getInit().accept(this);
@@ -122,7 +113,6 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       if (!(init.getDest() instanceof IRVariable)) {
         throw new RuntimeError("IRBuilder.visit(VarDefNode) init.getDest() should be IRVariable");
       }
-      instList.addNode(new IRStoreNode(var, (IRVariable) init.getDest()));
     }
     exitASTNode(node);
     return instList;
@@ -159,11 +149,11 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
         instList.setDest(new IRFunc(classInfo.getName() + "::" + infoType.getName(), object, new IRType(((FuncInfo) infoType).getType(), Case.PARAM)));
       } else {
         var offset = classInfo.getOffset(node.getMember());
-        var destAddr = new IRVariable(GlobalScope.irPtrType, "%element" + String.valueOf(counter.elementCount++));
-        instList.addNode(new IRGetElementPtrNode(destAddr, object, "class." + objectType.getName(), new Array<IREntity>(
-            new IRLiteral(GlobalScope.irIntType, "0"), new IRLiteral(GlobalScope.irIntType, String.valueOf(offset)))));
+        var destAddr = new IRVariable(GlobalScope.irPtrType, "%__element_" + String.valueOf(counter.elementCount++));
+        instList.addNode(new IRGetElementPtrNode(destAddr, object, "%class." + objectType.getName(), new Array<IREntity>(
+            new IRLiteral(GlobalScope.irIntType, 0), new IRLiteral(GlobalScope.irIntType, offset))));
         var dest = new IRVariable(new IRType((TypeInfo) infoType, Case.USE),
-            "%load" + String.valueOf(counter.loadCount++));
+            "%__load_" + String.valueOf(counter.loadCount++));
         instList.addNode(new IRLoadNode(dest, destAddr, dest.getType()));
         instList.setDest(dest);
         instList.setDestAddr(destAddr);
@@ -190,7 +180,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     if (func.getReturnType().equals(GlobalScope.irVoidType)) {
       instList.addNode(new IRCallNode(func.getValue(), destList));
     } else {
-      var dest = new IRVariable(func.getReturnType(), "%call" + String.valueOf(counter.callCount++));
+      var dest = new IRVariable(func.getReturnType(), "%__call_" + String.valueOf(counter.callCount++));
       instList.addNode(new IRCallNode(dest, func.getReturnType(), func.getValue(), destList));
       instList.setDestAddr(dest);
     }
@@ -208,10 +198,49 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var instList = new IRExprNode();
     var exprInst = (IRExprNode) node.getExpr().accept(this);
     instList.appendNodes(exprInst);
-    var exprDest = (IRVariable) exprInst.getDest();
-    var exprDestAddr = (IRVariable) exprInst.getDestAddr();
-    var dest = new IRVariable(exprDest.getType(), "%arith" + String.valueOf(counter.arithCount++));
-    instList.addNode(new IRArithNode(dest, exprDest.getType(), exprDest, new IRLiteral(GlobalScope.irIntType, "1"), "add"));
+    var exprDest = (IRVariable) exprInst.getDest(); // exprDest is the result of last expr
+    var exprDestAddr = (IRVariable) exprInst.getDestAddr(); // exprDestAddr is the address of exprDest
+    var dest = new IRVariable(exprDest.getType(), "%__arith_" + String.valueOf(counter.arithCount++)); // dest is the result of current expr
+    if (node.getOp().equals("++")) {
+      instList.addNode(new IRArithNode(dest, exprDest.getType(), exprDest, new IRLiteral(GlobalScope.irIntType, 1), "add"));
+    } else if (node.getOp().equals("--")) {
+      instList.addNode(new IRArithNode(dest, exprDest.getType(), exprDest, new IRLiteral(GlobalScope.irIntType, 1), "sub"));
+    } else {
+      throw new RuntimeError("IRBuilder.visit(PostUnaryExprNode) unknown op");
+    }
+    
+    instList.addNode(new IRStoreNode(exprDestAddr, dest));
+    instList.setDest(exprDest);
+    return instList;
+  }
+
+  @Override
+  public IRNode visit(PreUnaryExprNode node) throws BaseError {
+    var instList = new IRExprNode();
+    var exprInst = (IRExprNode) node.getExpr().accept(this);
+    instList.appendNodes(exprInst);
+    var exprDest = (IRVariable) exprInst.getDest(); // exprDest is the result of last expr
+    var exprDestAddr = (IRVariable) exprInst.getDestAddr(); // exprDestAddr is the address of exprDest
+    var dest = new IRVariable(exprDest.getType(), "%__arith_" + String.valueOf(counter.arithCount++)); // dest is the result of current expr
+    if (node.getOp().equals("++")) {
+      instList.addNode(new IRArithNode(dest, exprDest.getType(), exprDest, new IRLiteral(GlobalScope.irIntType, 1), "add"));
+    } else if (node.getOp().equals("--")) {
+      instList.addNode(new IRArithNode(dest, exprDest.getType(), exprDest, new IRLiteral(GlobalScope.irIntType, 1), "sub"));
+    } else if (node.getOp().equals("~")) {
+      instList.addNode(
+          new IRArithNode(dest, exprDest.getType(), exprDest, new IRLiteral(GlobalScope.irIntType, -1), "xor"));
+    } else if (node.getOp().equals("!")) {
+      instList.addNode(
+          new IRArithNode(dest, exprDest.getType(), exprDest, new IRLiteral(GlobalScope.irBoolType, 1), "xor"));
+    } else if (node.getOp().equals("+")) {
+      instList.addNode(new IRArithNode(dest, exprDest.getType(), new IRLiteral(GlobalScope.irIntType, 0), exprDest,
+          "add"));
+    } else if (node.getOp().equals("-")) {
+      instList.addNode(new IRArithNode(dest, exprDest.getType(), new IRLiteral(GlobalScope.irIntType, 0), exprDest,
+          "sub"));
+    } else {
+      throw new RuntimeError("IRBuilder.visit(PostUnaryExprNode) unknown op");
+    }
     instList.addNode(new IRStoreNode(exprDestAddr, dest));
     instList.setDest(dest);
     instList.setDestAddr(exprDestAddr);
@@ -219,27 +248,94 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   }
 
   @Override
-  public IRNode visit(PreUnaryExprNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
-  }
-
-  @Override
   public IRNode visit(BinaryExprNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    var instList = new IRExprNode();
+    var lhsInst = (IRExprNode) node.getLhs().accept(this);
+    var rhsInst = (IRExprNode) node.getRhs().accept(this);
+    instList.appendNodes(lhsInst);
+    instList.appendNodes(rhsInst);
+    var lhsDest = (IRVariable) lhsInst.getDest();
+    var rhsDest = (IRVariable) rhsInst.getDest();
+    var resultType = new IRType((TypeInfo) node.getInfo().getType(), Case.USE);
+    var dest = new IRVariable(resultType , "%__arith_" + String.valueOf(counter.arithCount++));
+    if (node.getOp().equals("+")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "add"));
+    } else if (node.getOp().equals("-")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "sub"));
+    } else if (node.getOp().equals("*")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "mul"));
+    } else if (node.getOp().equals("/")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "sdiv"));
+    } else if (node.getOp().equals("%")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "srem"));
+    } else if (node.getOp().equals("<<")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "shl"));
+    } else if (node.getOp().equals(">>")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "ashr"));
+    } else if (node.getOp().equals("&")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "and"));
+    } else if (node.getOp().equals("|")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "or"));
+    } else if (node.getOp().equals("^")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "xor"));
+    } else if (node.getOp().equals("&&")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "and"));
+    } else if (node.getOp().equals("||")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "or"));
+    } else if (node.getOp().equals("<")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "slt"));
+    } else if (node.getOp().equals(">")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "sgt"));
+    } else if (node.getOp().equals("<=")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "sle"));
+    } else if (node.getOp().equals(">=")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "sge"));
+    } else if (node.getOp().equals("==")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "eq"));
+    } else if (node.getOp().equals("!=")) {
+      instList.addNode(new IRArithNode(dest, resultType, lhsDest, rhsDest, "ne"));
+    } else {
+      throw new RuntimeError("IRBuilder.visit(BinaryExprNode) unknown op");
+    }
+    instList.setDest(dest);
+    return instList;
   }
 
   @Override
   public IRNode visit(ConditionalExprNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    var instList = new IRExprNode();
+    var condInst = (IRExprNode) node.getCondition().accept(this);
+    var trueInst = (IRExprNode) node.getLhs().accept(this);
+    var falseInst = (IRExprNode) node.getRhs().accept(this);
+    instList.appendNodes(condInst);
+    instList.appendNodes(trueInst);
+    instList.appendNodes(falseInst);
+    var condDest = (IRVariable) condInst.getDest();
+    var trueDest = (IRVariable) trueInst.getDest();
+    var falseDest = (IRVariable) falseInst.getDest();
+    var resultType = new IRType((TypeInfo) node.getInfo().getType(), Case.USE);
+    var dest = new IRVariable(resultType, "%__arith_" + String.valueOf(counter.arithCount++));
+    instList.addNode(new IRSelectNode(dest, condDest, trueDest, falseDest));
+    instList.setDest(dest);
+    return instList;
   }
 
   @Override
   public IRNode visit(AssignExprNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    var instList = new IRExprNode();
+    var rhsInst = (IRExprNode) node.getRhs().accept(this);
+    var lhsInst = (IRExprNode) node.getLhs().accept(this);
+    instList.appendNodes(rhsInst);
+    instList.appendNodes(lhsInst);
+    if (((TypeInfo) node.getRhs().getInfo().getType()).equals(GlobalScope.stringClass)) {
+      
+    }
+    var lhsDestAddr = (IRVariable) lhsInst.getDestAddr();
+    var rhsDest = (IREntity) rhsInst.getDest();
+    instList.addNode(new IRStoreNode(lhsDestAddr, rhsDest));
+    instList.setDest(rhsDest);
+    instList.setDestAddr(lhsDestAddr);
+    return instList;
   }
 
   @Override
@@ -249,26 +345,42 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       var info = currentScope.getRecur(node.getValue());
       if (info instanceof VarInfo) {
         var varType = ((VarInfo) info).getType();
-        var dest = new IRVariable(new IRType(varType, Case.USE), "%load" + String.valueOf(counter.loadCount++));
+        var dest = new IRVariable(new IRType(varType, Case.USE), "%__load_" + String.valueOf(counter.loadCount++));
         var src = new IRVariable(GlobalScope.irPtrType, getVarName(node.getValue()));
         instList.addNode(new IRLoadNode(dest, src, new IRType(varType, Case.USE)));
         instList.setDest(dest);
         instList.setDestAddr(src);
+      } else {
+        instList.setDest(new IRFunc(node.getValue(), null, new IRType(((FuncInfo) globalScope.get(node.getValue(), "func")).getType(), Case.PARAM)));
       }
+    } else if (node.getAtomType() == AtomExprNode.Type.INT) {
+      instList.setDest(new IRLiteral(GlobalScope.irIntType, Integer.valueOf(node.getValue())));
+    } else if (node.getAtomType() == AtomExprNode.Type.STRING) {
+      var dest = new IRVariable(GlobalScope.irPtrType, "@__string_" + String.valueOf(IRCounter.strCount++));
+      programNode.addDef(new IRStrDefNode(dest, node.getValue()));
+      instList.setDest(dest);
+    } else if (node.getAtomType() == AtomExprNode.Type.NULL) {
+      instList.setDest(new IRLiteral(GlobalScope.irPtrType, 0));
+    } else if (node.getAtomType() == AtomExprNode.Type.THIS) {
+      instList.setDestAddr(new IRVariable(GlobalScope.irPtrType, "%this"));
+    } else {
+      throw new RuntimeError("IRBuilder.visit(AtomExprNode) unknown atom type");
     }
     return instList;
   }
 
   @Override
   public IRNode visit(StmtNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    throw new RuntimeError("IRBuilder.visit(StmtNode) should not be called");
   }
 
   @Override
   public IRNode visit(BlockStmtNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    var instList = new IRExprNode();
+    for (var stmt : node.getStmts()) {
+      instList.appendNodes((IRExprNode) stmt.accept(this));
+    }
+    return instList;
   }
 
   @Override
@@ -303,8 +415,16 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
 
   @Override
   public IRNode visit(ReturnStmtNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    var instList = new IRExprNode();
+    instList.addNode(new IRCommentNode(node.toString()));
+    if (node.getExpr() != null) {
+      var exprInst = (IRExprNode) node.getExpr().accept(this);
+      instList.appendNodes(exprInst);
+      instList.addNode(new IRReturnNode(exprInst.getDest()));
+    } else {
+      instList.addNode(new IRReturnNode(null));
+    }
+    return instList;
   }
 
   @Override
@@ -329,7 +449,8 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
 
   @Override
   public IRNode visit(EmptyStmtNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    var instList = new IRExprNode();
+    instList.addNode(new IRCommentNode(node.toString()));
+    return instList;
   }
 }
