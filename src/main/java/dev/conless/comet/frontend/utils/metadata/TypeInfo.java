@@ -2,7 +2,8 @@ package dev.conless.comet.frontend.utils.metadata;
 
 import lombok.*;
 
-@Value
+@Getter
+@Setter
 public class TypeInfo extends BaseInfo {
   public Integer depth;
   public Boolean isBuiltIn;

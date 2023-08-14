@@ -18,6 +18,6 @@ public class IRFunc extends IREntity {
 
   @Override
   public String toString() {
-    return "%" + getValue();
+    return "@" + getValue();
   }
 }

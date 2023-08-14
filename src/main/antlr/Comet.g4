@@ -49,7 +49,7 @@ expr:
 	| <assoc = right> expr '?' expr ':' expr # conditionalExpr
 
 	// Assignment exprs, requires lvalue and results with lvalue
-	| expr op = (
+	| <assoc = right> expr op = (
 		Assign
 		| AddAssign
 		| SubAssign

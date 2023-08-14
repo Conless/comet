@@ -1,8 +1,10 @@
 package dev.conless.comet.frontend.ir.type;
 
+import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.error.RuntimeError;
 import lombok.*;
 
 @Getter
@@ -31,18 +33,16 @@ public class IRType {
     } else if (type.equals(GlobalScope.voidType)) {
       this.typeName = "void";
       this.typeSize = 0;
+    } else if (type.equals(GlobalScope.stringType)) {
+      this.typeName = "ptr";
+      this.typeSize = 4;
     } else {
-      if (type.equals(GlobalScope.stringClass) || caze.equals(Case.PARAM) || caze.equals(Case.CTOR)) {
+      if (type.getDepth() > 0 || caze.equals(Case.PARAM) || caze.equals(Case.CTOR)) {
         this.typeName = "ptr";
         this.typeSize = 4;
       } else {
-        if (type.getDepth() > 0) {
-          this.typeName = "%builtIn.array";
-          this.typeSize = 8;
-        } else {
-          this.typeName = "%class." + type.getName();
-          this.typeSize = 0;
-        }
+        this.typeName = "%class." + type.getName();
+        this.typeSize = 0;
       }
     }
   }

@@ -15,6 +15,7 @@ import dev.conless.comet.utils.error.*;
 
 public class Compiler {
   public static void main(String[] args) throws Exception {
+  try {
     var input = CharStreams.fromStream(new FileInputStream("./src/test/mx/input.mx"));
     // var input = CharStreams.fromStream(System.in);
     var output = new FileOutputStream("./src/test/mx/output.mx");
@@ -33,5 +34,9 @@ public class Compiler {
     output = new FileOutputStream("./src/test/mx/output.ll");
     output.write(irProgram.toString().getBytes());
     output.close();
+  } catch (BaseError e) {
+    System.err.println(e.getMessage());
+    System.exit(1);
+  }
   }
 }

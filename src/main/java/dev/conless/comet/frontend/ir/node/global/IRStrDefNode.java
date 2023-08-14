@@ -12,6 +12,6 @@ public class IRStrDefNode extends IRGlobalDefNode {
 
   @Override
   public String toString() {
-    return getVar().getValue() + " = private constant" + String.format(" [%d x i8] c", value.length() - 1) + "\"" + value.substring(1, value.length() - 1) + "\\00\"";
+    return getVar().getValue() + " = constant" + String.format(" [%d x i8] c", value.length() - 1) + "\"" + value.substring(1, value.length() - 1) + "\\00\"";
   }
 }
