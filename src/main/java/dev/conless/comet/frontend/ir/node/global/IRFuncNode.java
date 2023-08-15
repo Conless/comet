@@ -36,7 +36,7 @@ public class IRFuncNode extends IRNode {
     addNode(new IRCommentNode("The definition of function " + name));
     addNode(new IRTagNode("entry"));
     if (name.equals("main")) {
-      addNode(new IRCallNode("__global_var_init", new Array<>()));
+      addNode(new IRCallNode("global.var.init", new Array<>()));
     }
     for (var param : params) {
       if (!param.getValue().endsWith(".param")) {

@@ -43,7 +43,7 @@ public interface BuiltInElements {
   IRType irVoidType = new IRType(GlobalScope.voidType, Case.CTOR);
   IRType irIntType = new IRType(GlobalScope.intType, Case.CTOR);
   IRType irBoolType = new IRType(GlobalScope.boolType, Case.CTOR);
-  IRType irPtrType = new IRType("ptr", 1);
+  IRType irPtrType = new IRType("ptr");
 
   // IRType irNullType = new IRPtrType(irvoidType);
   // IRType irBoolType = new IRintType(8), irCharType = irBoolType;

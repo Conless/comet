@@ -11,7 +11,7 @@ public class IRFunc extends IREntity {
   private IRType returnType;
 
   public IRFunc(String value, IRVariable caller, IRType returnType) {
-    super(new IRType("function", 0), value);
+    super(new IRType("function"), value);
     this.caller = caller;
     this.returnType = returnType;
   }

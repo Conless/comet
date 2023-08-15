@@ -10,7 +10,6 @@ import lombok.*;
 @Getter
 public class IRType {
   private String typeName;
-  private int typeSize;
 
   public enum Case {
     PARAM,
@@ -18,41 +17,26 @@ public class IRType {
     USE
   };
 
-  public IRType(String typeName, int typeSize) {
+  public IRType(String typeName) {
     this.typeName = typeName;
-    this.typeSize = typeSize;
   }
 
   public IRType(TypeInfo type, Case caze) {
     if (type.equals(GlobalScope.intType)) {
       this.typeName = "i32";
-      this.typeSize = 4;
     } else if (type.equals(GlobalScope.boolType)) {
       this.typeName = "i1";
-      this.typeSize = 1;
     } else if (type.equals(GlobalScope.voidType)) {
       this.typeName = "void";
-      this.typeSize = 0;
     } else if (type.equals(GlobalScope.stringType)) {
       this.typeName = "ptr";
-      this.typeSize = 4;
     } else {
       if (type.getDepth() > 0 || caze.equals(Case.PARAM) || caze.equals(Case.CTOR)) {
         this.typeName = "ptr";
-        this.typeSize = 4;
       } else {
         this.typeName = "%class." + type.getName();
-        this.typeSize = 0;
       }
     }
-  }
-
-  protected static int getTotalSize(Array<IRType> members) {
-    int totalSize = 0;
-    for (IRType member : members) {
-      totalSize += member.getTypeSize();
-    }
-    return totalSize;
   }
 
   @Override

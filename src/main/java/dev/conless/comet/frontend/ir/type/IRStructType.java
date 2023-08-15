@@ -8,7 +8,7 @@ public class IRStructType extends IRType {
   private Array<IRType> members;
 
   public IRStructType(String name, Array<IRType> members) {
-    super("%" + name, getTotalSize(members));
+    super(name);
     this.members = members;
   }
 
