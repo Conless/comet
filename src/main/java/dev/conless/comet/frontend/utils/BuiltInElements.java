@@ -1,5 +1,6 @@
 package dev.conless.comet.frontend.utils;
 
+import dev.conless.comet.frontend.ir.node.global.IRFuncDeclareNode;
 import dev.conless.comet.frontend.ir.type.IRStructType;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.ir.type.IRType.Case;
@@ -44,6 +45,35 @@ public interface BuiltInElements {
   IRType irIntType = new IRType(GlobalScope.intType, Case.CTOR);
   IRType irBoolType = new IRType(GlobalScope.boolType, Case.CTOR);
   IRType irPtrType = new IRType("ptr");
+
+  IRFuncDeclareNode irPrintFunc = new IRFuncDeclareNode("print", irVoidType, new Array<>(irPtrType));
+  IRFuncDeclareNode irPrintlnFunc = new IRFuncDeclareNode("println", irVoidType, new Array<>(irPtrType));
+  IRFuncDeclareNode irPrintIntFunc = new IRFuncDeclareNode("printInt", irVoidType, new Array<>(irIntType));
+  IRFuncDeclareNode irPrintlnIntFunc = new IRFuncDeclareNode("printlnInt", irVoidType, new Array<>(irIntType));
+  IRFuncDeclareNode irGetStringFunc = new IRFuncDeclareNode("getString", irPtrType, new Array<>());
+  IRFuncDeclareNode irGetIntFunc = new IRFuncDeclareNode("getInt", irIntType, new Array<>());
+  IRFuncDeclareNode irToStringFunc = new IRFuncDeclareNode("toString", irPtrType, new Array<>(irIntType));
+  IRFuncDeclareNode irArrayAllocateFunc = new IRFuncDeclareNode("__array_alloca", irPtrType,
+      new Array<>(irIntType, irIntType));
+  IRFuncDeclareNode irArraySizeFunc = new IRFuncDeclareNode("__array_size", irIntType, new Array<>(irPtrType));
+  IRFuncDeclareNode irStringLengthFunc = new IRFuncDeclareNode("__string_length", irIntType, new Array<>(irPtrType));
+  IRFuncDeclareNode irStringSubstringFunc = new IRFuncDeclareNode("__string_substring", irPtrType,
+      new Array<>(irPtrType, irIntType, irIntType));
+  IRFuncDeclareNode irStringParseintFunc = new IRFuncDeclareNode("__string_parseInt", irIntType,
+      new Array<>(irPtrType));
+  IRFuncDeclareNode irStringOrdFunc = new IRFuncDeclareNode("__string_ord", irIntType,
+      new Array<>(irPtrType, irIntType));
+  IRFuncDeclareNode irStringCompareFunc = new IRFuncDeclareNode("__string_compare", irIntType,
+      new Array<>(irPtrType, irPtrType));
+  IRFuncDeclareNode irStringConcatFunc = new IRFuncDeclareNode("__string_concat", irPtrType,
+      new Array<>(irPtrType, irPtrType));
+  IRFuncDeclareNode irStringCopyFunc = new IRFuncDeclareNode("__string_copy", irVoidType,
+      new Array<>(irPtrType, irPtrType));
+  Array<IRFuncDeclareNode> irBuiltInFuncs = new Array<>(irPrintFunc, irPrintlnFunc, irPrintIntFunc, irPrintlnIntFunc,
+      irGetStringFunc, irGetIntFunc, irToStringFunc, irArrayAllocateFunc, irArraySizeFunc, irStringLengthFunc,
+      irStringSubstringFunc, irStringParseintFunc, irStringOrdFunc, irStringCompareFunc, irStringConcatFunc,
+      irStringCopyFunc );
+
 
   // IRType irNullType = new IRPtrType(irvoidType);
   // IRType irBoolType = new IRintType(8), irCharType = irBoolType;

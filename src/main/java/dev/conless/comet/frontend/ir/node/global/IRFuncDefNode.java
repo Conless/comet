@@ -5,7 +5,6 @@ import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.node.inst.IRAllocaNode;
 import dev.conless.comet.frontend.ir.node.inst.IRCallNode;
 import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
-import dev.conless.comet.frontend.ir.node.inst.IRJumpNode;
 import dev.conless.comet.frontend.ir.node.inst.IRStoreNode;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
@@ -13,7 +12,6 @@ import dev.conless.comet.frontend.ir.node.utils.IRTagNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
-import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.error.RuntimeError;
 
 import lombok.Getter;
@@ -21,13 +19,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class IRFuncNode extends IRNode {
+public class IRFuncDefNode extends IRNode {
   private String name;
   private Array<IRVariable> params;
   private IRType returnType;
   private IRExprNode nodes;
 
-  public IRFuncNode(String name, Array<IRVariable> params, IRType returnType) {
+  public IRFuncDefNode(String name, Array<IRVariable> params, IRType returnType) {
     this.name = name;
     this.params = params;
     this.returnType = returnType;

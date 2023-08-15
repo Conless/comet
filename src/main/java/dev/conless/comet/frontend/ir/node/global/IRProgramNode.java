@@ -1,6 +1,7 @@
 package dev.conless.comet.frontend.ir.node.global;
 
 import dev.conless.comet.frontend.ir.node.IRNode;
+import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
 
 import lombok.*;
@@ -9,7 +10,7 @@ import lombok.*;
 @Setter
 public class IRProgramNode extends IRNode {
   private Array<IRGlobalDefNode> defs;
-  private Array<IRFuncNode> funcs;
+  private Array<IRFuncDefNode> funcs;
 
   public IRProgramNode() {
     defs = new Array<>();
@@ -20,15 +21,18 @@ public class IRProgramNode extends IRNode {
     defs.add(def);
   }
 
-  public void addFunc(IRFuncNode func) {
+  public void addFunc(IRFuncDefNode func) {
     funcs.add(func);
   }
 
   @Override
   public String toString() {
     String str = defs.toString("\n");
+    str += "\n\n";
+    str += GlobalScope.irBuiltInFuncs.toString("\n");
+    str += "\n\n";
+    str += funcs.toString("\n\n");
     str += "\n";
-    str += funcs.toString("\n");
     return str;
   }
   

@@ -6,7 +6,7 @@ import dev.conless.comet.frontend.ast.node.stmt.IfStmtNode;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRLiteral;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.global.IRFuncNode;
+import dev.conless.comet.frontend.ir.node.global.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.global.IRProgramNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
@@ -28,7 +28,7 @@ public class IRManager {
   protected Map<String, Integer> name2Size;
 
   protected IRProgramNode programNode;
-  protected IRFuncNode initNode;
+  protected IRFuncDefNode initNode;
 
   protected IRCounter counter;
 
@@ -120,7 +120,7 @@ public class IRManager {
       typeInfo.setDepth(typeInfo.getDepth() - 1);
       var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
       instList.addNode(new IRCommentNode(String.format("%s = alloca %s%s[%s]", allocaVar.getValue(), typeInfo.getName(), "*".repeat(typeInfo.getDepth()), length.getValue())));
-      instList.addNode(new IRCallNode(allocaVar, GlobalScope.irPtrType, "__builtIn_alloc_array",
+      instList.addNode(new IRCallNode(allocaVar, GlobalScope.irPtrType, "__array_alloca",
           new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, Case.USE).getTypeName())),
               length)));
       if (lengths.size() > 0) {
