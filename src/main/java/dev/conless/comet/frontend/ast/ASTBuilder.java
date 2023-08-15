@@ -49,6 +49,9 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
           .info(new VarInfo(v.name.getText(), typeName.getInfo()))
           .init(v.expr() != null ? (ExprNode) visit(v.expr()) : null)
           .build();
+      if (varDef.getInit() != null) {
+        varDef.getInit().setParent(varDef);
+      }
       vars.add(varDef);
     }
     var varDefStmt = VarDefStmtNode.builder()
