@@ -212,8 +212,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
       return new CompileMsg("Cannot access array " + node.getArray().toString() + " by a non-integer index of "
           + indexType.toString(), node);
     }
-    node.setInfo(new ExprInfo("arrayExpr", new TypeInfo(arrayType.getName(), ((TypeInfo) arrayType).depth - 1),
-        node.getArray().getInfo().isLValue()));
+    node.setInfo(new ExprInfo("arrayExpr", new TypeInfo(arrayType.getName(), ((TypeInfo) arrayType).depth - 1), true));
     return msg;
   }
 
@@ -358,11 +357,11 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
       if (info.b instanceof ClassScope) {
         var parent = node.getParent();
         var replaceNode = MemberExprNode.builder()
-                .position(node.getPosition())
-                .parent(parent)
-                .object(AtomExprNode.builder().atomType(AtomExprNode.Type.THIS).value("this").build())
-                .member(node.getValue())
-                .build();
+            .position(node.getPosition())
+            .parent(parent)
+            .object(AtomExprNode.builder().atomType(AtomExprNode.Type.THIS).value("this").build())
+            .member(node.getValue())
+            .build();
         replaceNode.accept(this);
         ((HasExprNode) parent).replaceExpr(node, replaceNode);
       }
