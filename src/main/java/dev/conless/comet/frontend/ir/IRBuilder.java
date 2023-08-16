@@ -476,7 +476,10 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     } else if (node.getAtomType() == AtomExprNode.Type.NULL) {
       instList.setDest(new IRLiteral(GlobalScope.irPtrType, 0));
     } else if (node.getAtomType() == AtomExprNode.Type.THIS) {
-      instList.setDestAddr(new IRVariable(GlobalScope.irPtrType, "%this"));
+      var src = new IRVariable(GlobalScope.irPtrType, "%this");
+      var dest = new IRVariable(GlobalScope.irPtrType, "%.load." + String.valueOf(++counter.loadCount));
+      instList.addNode(new IRLoadNode(dest, src, GlobalScope.irPtrType));
+      instList.setDest(dest);
     } else {
       throw new RuntimeError("IRBuilder.visit(AtomExprNode) unknown atom type");
     }

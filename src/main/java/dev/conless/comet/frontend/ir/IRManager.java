@@ -124,16 +124,15 @@ public class IRManager {
               length)));
       if (lengths.size() > 0) {
         counter.loopCount++;
-        var initTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".init");
         var condTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".cond");
         var updateTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".update");
         var bodyTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".body");
         var endTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".end");
         var forVar = new IRVariable(GlobalScope.irPtrType, "%.for." + String.valueOf(counter.loopCount) + ".0");
         instList.addNode(new IRCommentNode("for " + forVar.getValue() + " in range (0, " + length.getValue() + ")"));
-        instList.addNode(initTag);
         instList.addNode(new IRAllocaNode(forVar, GlobalScope.irIntType));
         instList.addNode(new IRStoreNode(forVar, new IRLiteral(GlobalScope.irIntType, 0)));
+        instList.addNode(new IRJumpNode(condTag.getName()));
         instList.addNode(condTag);
         var forVarLoadedCmp = new IRVariable(GlobalScope.irIntType,
             "%.for." + String.valueOf(counter.loopCount) + ".1");

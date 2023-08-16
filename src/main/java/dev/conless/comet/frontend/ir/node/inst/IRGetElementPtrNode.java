@@ -5,6 +5,7 @@ import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.error.RuntimeError;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -16,17 +17,19 @@ public final class IRGetElementPtrNode extends IRInstNode {
   private Array<IREntity> idxs;
 
   public IRGetElementPtrNode(IRVariable dest, IRVariable src, TypeInfo type, Array<IREntity> idxs) {
-    if (!type.getIsBuiltIn() && type.getDepth() == 0) {
-      this.type = "%class." + type.getName();
-    } else {
-      this.type = new IRType(type).getTypeName();
+    if (src == null) {
+      throw new RuntimeError("src cannot be null");
     }
     this.dest = dest;
     this.src = src;
+    this.type = new IRType(type, true).getTypeName();
     this.idxs = idxs;
   }
 
   public IRGetElementPtrNode(IRVariable dest, IRVariable src, String type, Array<IREntity> idxs) {
+    if (src == null) {
+      throw new RuntimeError("src cannot be null");
+    }
     this.type = type;
     this.dest = dest;
     this.src = src;
