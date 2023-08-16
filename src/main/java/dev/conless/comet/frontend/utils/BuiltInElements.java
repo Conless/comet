@@ -55,7 +55,7 @@ public interface BuiltInElements {
   IRFuncDeclareNode irToStringFunc = new IRFuncDeclareNode("toString", irPtrType, new Array<>(irIntType));
   IRFuncDeclareNode irArrayAllocateFunc = new IRFuncDeclareNode("__array_alloca", irPtrType,
       new Array<>(irIntType, irIntType));
-  IRFuncDeclareNode irArraySizeFunc = new IRFuncDeclareNode("__array_size", irIntType, new Array<>(irPtrType));
+  IRFuncDeclareNode irArraySizeFunc = new IRFuncDeclareNode("__builtIn_array_size", irIntType, new Array<>(irPtrType));
   IRFuncDeclareNode irStringLengthFunc = new IRFuncDeclareNode("__string_length", irIntType, new Array<>(irPtrType));
   IRFuncDeclareNode irStringSubstringFunc = new IRFuncDeclareNode("__string_substring", irPtrType,
       new Array<>(irPtrType, irIntType, irIntType));

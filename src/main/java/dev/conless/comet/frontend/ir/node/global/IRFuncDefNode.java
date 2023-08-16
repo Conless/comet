@@ -5,6 +5,7 @@ import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.node.inst.IRAllocaNode;
 import dev.conless.comet.frontend.ir.node.inst.IRCallNode;
 import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
+import dev.conless.comet.frontend.ir.node.inst.IRReturnNode;
 import dev.conless.comet.frontend.ir.node.inst.IRStoreNode;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
@@ -42,7 +43,7 @@ public class IRFuncDefNode extends IRNode {
       }
       var paramPtr = new IRVariable(GlobalScope.irPtrType, param.getValue().replace(".param", ""));
       addNode(new IRAllocaNode(paramPtr, param.getType()));
-      addNode(new IRStoreNode(param, paramPtr));
+      addNode(new IRStoreNode(paramPtr, param));
     }
   }
 
@@ -52,7 +53,11 @@ public class IRFuncDefNode extends IRNode {
   @Override
   public String toString() {
     String str = "define " + returnType.toString() + " @" + name + "(";
-    str += params.toString(".param, ") + ") {\n";
+    str += params.toString(", ") + ") {\n";
+    var endNode = nodes.getNodes().get(nodes.getNodes().size() - 1);
+    if (!(endNode instanceof IRReturnNode)) {
+      nodes.addNode(new IRReturnNode(returnType));
+    }
     for (var node : nodes.getNodes()) {
       if (node instanceof IRInstNode) {
         str += "  ";

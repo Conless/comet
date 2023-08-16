@@ -10,32 +10,19 @@ import lombok.*;
 @Getter
 public class IRType {
   private String typeName;
-
-  public enum Case {
-    PARAM,
-    CTOR,
-    USE
-  };
-
   public IRType(String typeName) {
     this.typeName = typeName;
   }
 
-  public IRType(TypeInfo type, Case caze) {
+  public IRType(TypeInfo type) {
     if (type.equals(GlobalScope.intType)) {
       this.typeName = "i32";
     } else if (type.equals(GlobalScope.boolType)) {
       this.typeName = "i1";
     } else if (type.equals(GlobalScope.voidType)) {
       this.typeName = "void";
-    } else if (type.equals(GlobalScope.stringType)) {
-      this.typeName = "ptr";
     } else {
-      if (type.getDepth() > 0 || caze.equals(Case.PARAM) || caze.equals(Case.CTOR)) {
-        this.typeName = "ptr";
-      } else {
-        this.typeName = "%class." + type.getName();
-      }
+      this.typeName = "ptr";
     }
   }
 

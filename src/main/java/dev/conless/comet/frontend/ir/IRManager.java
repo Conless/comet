@@ -113,13 +113,13 @@ public class IRManager {
       var alloca = new IRAllocaNode(allocaVar, new IRType(typeInfo, Case.USE));
       instList.addNode(alloca);
       instList.setDest(allocaVar);
-      instList.setDestAddr(allocaVar);
     } else if (lengths.size() > 0) {
       var length = lengths.get(0);
       lengths.remove(0);
       typeInfo.setDepth(typeInfo.getDepth() - 1);
       var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
-      instList.addNode(new IRCommentNode(String.format("%s = alloca %s%s[%s]", allocaVar.getValue(), typeInfo.getName(), "*".repeat(typeInfo.getDepth()), length.getValue())));
+      instList.addNode(new IRCommentNode(String.format("%s = alloca %s%s[%s]", allocaVar.getValue(), typeInfo.getName(),
+          "*".repeat(typeInfo.getDepth()), length.getValue())));
       instList.addNode(new IRCallNode(allocaVar, GlobalScope.irPtrType, "__array_alloca",
           new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, Case.USE).getTypeName())),
               length)));
@@ -140,7 +140,7 @@ public class IRManager {
             "%.for." + String.valueOf(counter.loopCount) + ".1");
         var condVar = new IRVariable(GlobalScope.irBoolType, "%.for." + String.valueOf(counter.loopCount) + ".2");
         instList.addNode(new IRLoadNode(forVarLoadedCmp, forVar, GlobalScope.irIntType));
-        instList.addNode(new IRIcmpNode(condVar, forVarLoadedCmp, length, "slt", GlobalScope.irIntType));
+        instList.addNode(new IRArithNode(condVar, forVarLoadedCmp, length, "slt"));
         instList.addNode(new IRBranchNode(condVar, bodyTag.getName(), endTag.getName()));
         instList.addNode(updateTag);
         var forVarLoadedUpd = new IRVariable(GlobalScope.irIntType,
@@ -148,8 +148,8 @@ public class IRManager {
         instList.addNode(new IRLoadNode(forVarLoadedUpd, forVar, GlobalScope.irIntType));
         var forVarAfterUpd = new IRVariable(GlobalScope.irIntType,
             "%.for." + String.valueOf(counter.loopCount) + ".4");
-        instList.addNode(new IRArithNode(forVarAfterUpd, GlobalScope.irIntType, forVarLoadedUpd,
-            new IRLiteral(GlobalScope.irIntType, 1), "add"));
+        instList
+            .addNode(new IRArithNode(forVarAfterUpd, forVarLoadedUpd, new IRLiteral(GlobalScope.irIntType, 1), "add"));
         instList.addNode(new IRStoreNode(forVar, forVarAfterUpd));
         instList.addNode(new IRJumpNode(condTag.getName()));
         instList.addNode(bodyTag);
@@ -168,11 +168,10 @@ public class IRManager {
 
       }
       instList.setDest(allocaVar);
-      instList.setDestAddr(allocaVar);
     }
     return instList;
   }
-  
+
   void initSize(String name, Array<IRType> types) {
     var totalSize = 0;
     for (var type : types) {

@@ -19,6 +19,6 @@ public final class IRLoadNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return dest.getValue() + " = load " + type.toString() + ", " + src.getValue();
+    return dest.getValue() + " = load " + type.toString() + ", " + src.toString();
   }
 }
