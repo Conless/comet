@@ -5,8 +5,8 @@ import lombok.*;
 @Getter
 @Setter
 public class TypeInfo extends BaseInfo {
-  public Integer depth;
-  public Boolean isBuiltIn;
+  private Integer depth;
+  private Boolean isBuiltIn;
 
   public TypeInfo(String typeName, Integer arrayDepth) {
     super(typeName);

@@ -1,9 +1,7 @@
 package dev.conless.comet.frontend.utils;
 
 import dev.conless.comet.frontend.ir.node.global.IRFuncDeclareNode;
-import dev.conless.comet.frontend.ir.type.IRStructType;
 import dev.conless.comet.frontend.ir.type.IRType;
-import dev.conless.comet.frontend.ir.type.IRType.Case;
 import dev.conless.comet.frontend.utils.metadata.ClassInfo;
 import dev.conless.comet.frontend.utils.metadata.FuncInfo;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
@@ -41,9 +39,9 @@ public interface BuiltInElements {
 
   // // ------------------ IR Builtin Types ------------------
 
-  IRType irVoidType = new IRType(GlobalScope.voidType, Case.CTOR);
-  IRType irIntType = new IRType(GlobalScope.intType, Case.CTOR);
-  IRType irBoolType = new IRType(GlobalScope.boolType, Case.CTOR);
+  IRType irVoidType = new IRType(GlobalScope.voidType);
+  IRType irIntType = new IRType(GlobalScope.intType);
+  IRType irBoolType = new IRType(GlobalScope.boolType);
   IRType irPtrType = new IRType("ptr");
 
   IRFuncDeclareNode irPrintFunc = new IRFuncDeclareNode("print", irVoidType, new Array<>(irPtrType));

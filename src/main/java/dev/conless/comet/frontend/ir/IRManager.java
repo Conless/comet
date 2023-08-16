@@ -13,7 +13,6 @@ import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
 import dev.conless.comet.frontend.ir.node.utils.IRTagNode;
 import dev.conless.comet.frontend.ir.type.IRType;
-import dev.conless.comet.frontend.ir.type.IRType.Case;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
@@ -110,7 +109,7 @@ public class IRManager {
     var instList = new IRExprNode();
     if (typeInfo.getDepth().equals(0)) {
       var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
-      var alloca = new IRAllocaNode(allocaVar, new IRType(typeInfo, Case.USE));
+      var alloca = new IRAllocaNode(allocaVar, new IRType(typeInfo, true));
       instList.addNode(alloca);
       instList.setDest(allocaVar);
     } else if (lengths.size() > 0) {
@@ -121,7 +120,7 @@ public class IRManager {
       instList.addNode(new IRCommentNode(String.format("%s = alloca %s%s[%s]", allocaVar.getValue(), typeInfo.getName(),
           "*".repeat(typeInfo.getDepth()), length.getValue())));
       instList.addNode(new IRCallNode(allocaVar, GlobalScope.irPtrType, "__array_alloca",
-          new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, Case.USE).getTypeName())),
+          new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName())),
               length)));
       if (lengths.size() > 0) {
         counter.loopCount++;
@@ -161,11 +160,10 @@ public class IRManager {
         var addrToFill = new IRVariable(GlobalScope.irPtrType, "%.element." + String.valueOf(++counter.elementCount));
         instList
             .addNode(
-                new IRGetElementPtrNode(addrToFill, allocaVar, new IRType(typeInfo, Case.USE), new Array<>(index)));
+                new IRGetElementPtrNode(addrToFill, allocaVar, typeInfo, new Array<>(index)));
         instList.addNode(new IRStoreNode(addrToFill, allocaEle.getDest()));
         instList.addNode(new IRJumpNode(updateTag.getName()));
         instList.addNode(endTag);
-
       }
       instList.setDest(allocaVar);
     }

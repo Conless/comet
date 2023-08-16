@@ -23,7 +23,7 @@ public final class NewExprNode extends ExprNode implements HasExprNode {
   @Override
   public String toString() {
     String str = "new " + type.getName();
-    for (int i = 0; i < type.depth; i++) {
+    for (int i = 0; i < type.getDepth(); i++) {
       str += "[" + (i < lengths.size() ? lengths.get(i).toString() : "") + "]";
     }
     return str;

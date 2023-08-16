@@ -4,7 +4,7 @@ int printf(const char *format, ...);
 
 int sprintf(char *str, const char *format, ...);
 
-void *malloc(unsigned int size); // NOLINT
+void *malloc(unsigned long size); // NOLINT
 
 void print(char *s) { printf("%s", s); }
 
@@ -38,7 +38,7 @@ void *__array_alloca(int size, int length) {
   return a + 1;
 }
 
-int __array_size(void *array) { return ((int *)array)[-1]; }
+int __builtIn_array_size(void *array) { return ((int *)array)[-1]; }
 
 int __string_length(char *s) {
   int i = 0;
@@ -100,6 +100,7 @@ char *__string_concat(char *s1, char *s2) {
 
 void __string_copy(char *s1, char *s2) {
   int len = __string_length(s2);
+  s1 = (char *) malloc(sizeof(char) * (len + 1));
   for (int i = 0; i < len; i++) {
     s1[i] = s2[i];
   }

@@ -32,9 +32,9 @@ public class Compiler {
     // output.close();
     IRNode irProgram = new IRBuilder().visit((ProgramNode) astProgram);
     System.out.print(irProgram.toString());
-    // output = new FileOutputStream("./src/test/mx/output.ll");
-    // output.write(irProgram.toString().getBytes());
-    // output.close();
+    var output = new FileOutputStream("./src/test/mx/output.ll");
+    output.write(irProgram.toString().getBytes());
+    output.close();
   // } catch (BaseError e) {
   //   System.err.println(e.getMessage());
   //   System.exit(1);

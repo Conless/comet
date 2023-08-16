@@ -21,7 +21,7 @@ public class IRGlobalDefNode extends IRNode {
     if (var.getType().equals(GlobalScope.irIntType) || var.getType().equals(GlobalScope.irBoolType)) {
       str += new IRLiteral(var.getType(), 0).toString();
     } else if (var.getType() instanceof IRStructType) {
-      str = var.getValue() + " = " + var.getType().toString();
+      str = var.getValue() + " = type " + var.getType().toString();
     } else {
       str += "ptr null";
     }

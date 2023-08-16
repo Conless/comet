@@ -111,7 +111,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
   public CompileMsg visit(NewExprNode node) throws BaseError {
     TypeInfo type = node.getType();
     var msg = new CompileMsg();
-    if (!checkTypeValid(type) || (type.isBuiltIn && type.depth == 0)) {
+    if (!checkTypeValid(type) || (type.getIsBuiltIn() && type.getDepth() == 0)) {
       return new CompileMsg(
           "Cannot initialize type " + type.getName(), node);
     }
@@ -135,7 +135,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     if (!(objectType instanceof TypeInfo)) {
       return new CompileMsg("Cannot access member of non-array type " + objectType.getName(), node);
     }
-    if (((TypeInfo) objectType).depth > 0) {
+    if (((TypeInfo) objectType).getDepth() > 0) {
       if (node.getMember().equals("size")) {
         node.setInfo(new ExprInfo("memberExpr", GlobalScope.arraySizeFunc, false));
       } else {
@@ -200,7 +200,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
       return msg;
     }
     BaseInfo arrayType = node.getArray().getInfo().getType();
-    if (!(arrayType instanceof TypeInfo) || ((TypeInfo) arrayType).depth == 0) {
+    if (!(arrayType instanceof TypeInfo) || ((TypeInfo) arrayType).getDepth() == 0) {
       return new CompileMsg("Cannot access an non-array variable " + node.getArray().toString(), node);
     }
     msg.append(node.getSubscript().accept(this));
@@ -212,7 +212,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
       return new CompileMsg("Cannot access array " + node.getArray().toString() + " by a non-integer index of "
           + indexType.toString(), node);
     }
-    node.setInfo(new ExprInfo("arrayExpr", new TypeInfo(arrayType.getName(), ((TypeInfo) arrayType).depth - 1), true));
+    node.setInfo(new ExprInfo("arrayExpr", new TypeInfo(arrayType.getName(), ((TypeInfo) arrayType).getDepth() - 1), true));
     return msg;
   }
 

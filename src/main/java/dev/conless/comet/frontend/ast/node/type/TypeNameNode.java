@@ -26,7 +26,7 @@ public final class TypeNameNode extends ASTNode {
   @Override
   public String toString() {
     String str = info.getName();
-    for (int i = 1; i <= info.depth; i++) {
+    for (int i = 1; i <= info.getDepth(); i++) {
       str += "[]";
     }
     return str;

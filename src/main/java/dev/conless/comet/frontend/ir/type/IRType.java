@@ -1,9 +1,7 @@
 package dev.conless.comet.frontend.ir.type;
 
-import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
-import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.RuntimeError;
 import lombok.*;
 
@@ -23,6 +21,25 @@ public class IRType {
       this.typeName = "void";
     } else {
       this.typeName = "ptr";
+    }
+  }
+
+  public IRType(TypeInfo type, boolean isAlloca) {
+    if (!isAlloca) {
+      throw new RuntimeError("IRType constructor called with isAlloca = false");
+    }
+    if (type.getDepth() > 0) {
+      this.typeName = "ptr";
+    } else if (type.equals(GlobalScope.intType)) {
+      this.typeName = "i32";
+    } else if (type.equals(GlobalScope.boolType)) {
+      this.typeName = "i1";
+    } else if (type.equals(GlobalScope.voidType)) {
+      this.typeName = "void";
+    } else if (!type.getIsBuiltIn()) {
+      this.typeName = "%class." + type.getName();
+    } else {
+      throw new RuntimeError("IRType constructor called with invalid type");
     }
   }
 
