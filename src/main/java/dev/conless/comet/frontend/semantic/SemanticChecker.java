@@ -347,6 +347,9 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
   public CompileMsg visit(AtomExprNode node) throws BaseError {
     if (node.getAtomType() == AtomExprNode.Type.CUSTOM) {
       var info = currentScope.getRecurWithScope(node.getValue());
+      if (info == null) {
+        return new CompileMsg("Use of undefined identifier " + node.toString(), node);
+      }
       if (info.a instanceof VarInfo) {
         node.setInfo(new ExprInfo("atomExpr", ((VarInfo) info.a).getType(), true));
       } else if (info.a instanceof FuncInfo) {

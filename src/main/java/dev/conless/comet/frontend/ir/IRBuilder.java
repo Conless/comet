@@ -322,13 +322,37 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var instList = new IRExprNode();
     var lhsInst = (IRExprNode) node.getLhs().accept(this);
     var rhsInst = (IRExprNode) node.getRhs().accept(this);
-    instList.appendNodes(lhsInst);
-    instList.appendNodes(rhsInst);
     var lhsDest = lhsInst.getDest();
     var rhsDest = rhsInst.getDest();
     var operandType = (TypeInfo) node.getLhs().getInfo().getType();
     var resultType = new IRType((TypeInfo) node.getInfo().getType());
     var dest = new IRVariable(resultType, "%.arith." + String.valueOf(++counter.arithCount));
+    if (node.getOp().equals("&&") || node.getOp().equals("||")) { // circuiting
+      counter.ifCount++;
+      var rhsTag = new IRTagNode("if." + String.valueOf(counter.ifCount) + ".rhs");
+      var endTag = new IRTagNode("if." + String.valueOf(counter.ifCount) + ".end");
+      instList.appendNodes(lhsInst);
+      if (node.getOp().equals("&&")) {
+        instList.addNode(new IRBranchNode(lhsDest, rhsTag.getName(), endTag.getName()));
+      } else {
+        instList.addNode(new IRBranchNode(lhsDest, endTag.getName(), rhsTag.getName()));
+      }
+      instList.addNode(rhsTag);
+      instList.appendNodes(rhsInst);
+      instList.addNode(new IRJumpNode(endTag.getName()));
+      instList.addNode(endTag);
+      if (node.getOp().equals("&&")) {
+        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "and"));
+      } else {
+        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "or"));
+      }
+      instList.setDest(dest);
+      exitASTNode(node);
+      return instList;
+    }
+    instList.appendNodes(lhsInst);
+    instList.appendNodes(rhsInst);
+    instList.setDest(dest);
     if (operandType.equals(GlobalScope.stringType)) {
       if (node.getOp().equals("+")) {
         instList.addNode(new IRCallNode(dest, resultType, "__string_concat",
@@ -383,10 +407,6 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
         instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "or"));
       } else if (node.getOp().equals("^")) {
         instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "xor"));
-      } else if (node.getOp().equals("&&")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "and"));
-      } else if (node.getOp().equals("||")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "or"));
       } else if (node.getOp().equals("<")) {
         instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "slt"));
       } else if (node.getOp().equals(">")) {
@@ -403,7 +423,6 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
         throw new RuntimeError("IRBuilder.visit(BinaryExprNode) unknown op");
       }
     }
-    instList.setDest(dest);
     exitASTNode(node);
     return instList;
   }
