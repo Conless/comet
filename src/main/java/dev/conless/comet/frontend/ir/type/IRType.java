@@ -28,7 +28,7 @@ public class IRType {
     if (!isAlloca) {
       throw new RuntimeError("IRType constructor called with isAlloca = false");
     }
-    if (type.getDepth() > 0) {
+    if (type.getDepth() > 0 || type.equals(GlobalScope.stringType)) {
       this.typeName = "ptr";
     } else if (type.equals(GlobalScope.intType)) {
       this.typeName = "i32";

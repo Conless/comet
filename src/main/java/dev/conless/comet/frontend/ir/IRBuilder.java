@@ -170,7 +170,11 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       instList.addNode(new IRCommentNode(String.format("%s = malloc %s%s", dest.getValue(), type.getName(),
           "*".repeat(type.getDepth()))));
       var eleType = new TypeInfo(type.getName(), 0);
-      instList.addNode(new IRCustomNode(String.format("%s = call ptr (i32, i32, ...) @__array_alloca(%s, %s, %s)", dest.getValue(), new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(eleType).getTypeName())), new IRLiteral(GlobalScope.irIntType, sizes.size()), sizes.toString(", "))));
+      instList
+          .addNode(new IRCustomNode(String.format("%s = call ptr (i32, i32, i32, ...) @__array_alloca(%s, %s, %s, %s)",
+              dest.getValue(), new IRLiteral(GlobalScope.irIntType, type.getDepth()),
+              new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(eleType).getTypeName())),
+              new IRLiteral(GlobalScope.irIntType, sizes.size()), sizes.toString(", "))));
     }
     instList.setDest(dest);
     exitASTNode(node);
@@ -576,22 +580,30 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var updateTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".update");
     var bodyTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".body");
     var endTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".end");
-    var initInst = (IRExprNode) node.getInit().accept(this);
-    var condInst = (IRExprNode) node.getCondition().accept(this);
-    var updateInst = (IRExprNode) node.getUpdate().accept(this);
-    var bodyInst = (IRExprNode) node.getBody().accept(this);
     instList.addNode(new IRCommentNode(
-        "for " + node.getInit().toString() + node.getCondition().toString() + ";" + node.getUpdate().toString()));
-    instList.appendNodes(initInst);
+        "for ("
+            + (node.getInit() == null ? ";" : node.getInit().toString()) + " "
+            + (node.getCondition() == null ? "" : node.getCondition().toString()) + "; "
+            + (node.getUpdate() == null ? "" : node.getUpdate().toString()) + ")"));
+    if (node.getInit() != null) {
+      instList.appendNodes((IRExprNode) node.getInit().accept(this));
+    }
     instList.addNode(new IRJumpNode(condTag.getName()));
     instList.addNode(condTag);
-    instList.appendNodes(condInst);
-    instList.addNode(new IRBranchNode(condInst.getDest(), bodyTag.getName(), endTag.getName()));
+    if (node.getCondition() != null) {
+      var condInst = (IRExprNode) node.getCondition().accept(this);
+      instList.appendNodes(condInst);
+      instList.addNode(new IRBranchNode(condInst.getDest(), bodyTag.getName(), endTag.getName()));
+    } else {
+      instList.addNode(new IRJumpNode(bodyTag.getName()));
+    }
     instList.addNode(updateTag);
-    instList.appendNodes(updateInst);
+    if (node.getUpdate() != null) {
+      instList.appendNodes((IRExprNode) node.getUpdate().accept(this));
+    }
     instList.addNode(new IRJumpNode(condTag.getName()));
     instList.addNode(bodyTag);
-    instList.appendNodes(bodyInst);
+    instList.appendNodes((IRExprNode) node.getBody().accept(this));
     instList.addNode(new IRJumpNode(updateTag.getName()));
     instList.addNode(endTag);
     exitASTNode(node);

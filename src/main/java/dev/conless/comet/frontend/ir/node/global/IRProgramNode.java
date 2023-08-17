@@ -32,7 +32,7 @@ public class IRProgramNode extends IRNode {
     str += "\n\n";
     str += GlobalScope.irBuiltInFuncs.toString("\n");
     str += "\n";
-    str += new IRCustomNode("declare ptr @__array_alloca(i32, i32, ...)\n");
+    str += new IRCustomNode("declare ptr @__array_alloca(i32, i32, i32, ...)\n");
     str += "\n";
     str += funcs.toString("\n\n");
     str += "\n";

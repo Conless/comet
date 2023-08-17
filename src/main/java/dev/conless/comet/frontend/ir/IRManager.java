@@ -36,7 +36,7 @@ public class IRManager {
     counter = new IRCounter();
     name2Size = new Map<>();
     name2Size.put("i32", 4);
-    name2Size.put("ptr", 4);
+    name2Size.put("ptr", 8);
     name2Size.put("i1", 1);
   }
 
