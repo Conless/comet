@@ -15,6 +15,7 @@ import dev.conless.comet.frontend.ir.node.*;
 import dev.conless.comet.frontend.ir.node.global.*;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
+import dev.conless.comet.frontend.ir.node.utils.IRCustomNode;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
 import dev.conless.comet.frontend.ir.node.utils.IRTagNode;
 import dev.conless.comet.frontend.ir.type.*;
@@ -152,16 +153,26 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(NewExprNode node) throws BaseError {
     enterASTNode(node);
     var instList = new IRExprNode();
-    var sizes = new Array<IREntity>();
-    for (var size : node.getLengths()) {
-      var sizeInst = (IRExprNode) size.accept(this);
-      instList.appendNodes(sizeInst);
-      sizes.add(sizeInst.getDest());
+    var type = (TypeInfo) node.getInfo().getType();
+    var dest = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
+    if (type.getDepth() == 0) {
+      var alloca = new IRAllocaNode(dest, "%class." + type.getName());
+      instList.addNode(alloca);
+      instList
+          .addNode(new IRCallNode(String.format("__class.%s", type.getName(), type.getName()), new Array<>(dest)));
+    } else {
+      var sizes = new Array<IREntity>();
+      for (var size : node.getLengths()) {
+        var sizeInst = (IRExprNode) size.accept(this);
+        instList.appendNodes(sizeInst);
+        sizes.add(sizeInst.getDest());
+      }
+      instList.addNode(new IRCommentNode(String.format("%s = malloc %s%s", dest.getValue(), type.getName(),
+          "*".repeat(type.getDepth()))));
+      var eleType = new TypeInfo(type.getName(), 0);
+      instList.addNode(new IRCustomNode(String.format("%s = call ptr (i32, i32, ...) @__array_alloca(%s, %s, %s)", dest.getValue(), new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(eleType).getTypeName())), new IRLiteral(GlobalScope.irIntType, sizes.size()), sizes.toString(", "))));
     }
-    var allocaInst = allocaHelper(node.getType(), sizes);
-    instList.appendNodes(allocaInst);
-    instList.setDest(allocaInst.getDest());
-    instList.setDestAddr(allocaInst.getDestAddr());
+    instList.setDest(dest);
     exitASTNode(node);
     return instList;
   }

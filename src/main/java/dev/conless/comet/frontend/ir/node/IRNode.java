@@ -6,11 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class IRNode {
-  private IRNode parent;
-
-  protected IRNode() {
-    this.parent = null;
-  }
-
   public abstract String toString(); 
 }

@@ -16,6 +16,11 @@ public final class IRAllocaNode extends IRInstNode {
     this.dest = dest;
   }
 
+  public IRAllocaNode(IRVariable dest, String type) {
+    this.type = type;
+    this.dest = dest;
+  }
+
   @Override
   public String toString() {
     return dest.getValue() + " = alloca " + type;

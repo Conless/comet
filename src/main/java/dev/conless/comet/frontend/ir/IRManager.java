@@ -10,6 +10,7 @@ import dev.conless.comet.frontend.ir.node.global.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.global.IRProgramNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
+import dev.conless.comet.frontend.ir.node.utils.IRCustomNode;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
 import dev.conless.comet.frontend.ir.node.utils.IRTagNode;
 import dev.conless.comet.frontend.ir.type.IRType;
@@ -131,6 +132,7 @@ public class IRManager {
         var updateTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".update");
         var bodyTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".body");
         var endTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".end");
+        // Building a for loop
         var forVar = new IRVariable(GlobalScope.irPtrType, "%.for." + String.valueOf(counter.loopCount) + ".0");
         instList.addNode(new IRCommentNode("for " + forVar.getValue() + " in range (0, " + length.getValue() + ")"));
         instList.addNode(new IRAllocaNode(forVar, GlobalScope.irIntType));
@@ -153,6 +155,7 @@ public class IRManager {
             .addNode(new IRArithNode(forVarAfterUpd, forVarLoadedUpd, new IRLiteral(GlobalScope.irIntType, 1), "add"));
         instList.addNode(new IRStoreNode(forVar, forVarAfterUpd));
         instList.addNode(new IRJumpNode(condTag.getName()));
+        // Here starts the body of construction
         instList.addNode(bodyTag);
         var allocaEle = allocaHelper(typeInfo, lengths);
         instList.appendNodes(allocaEle);

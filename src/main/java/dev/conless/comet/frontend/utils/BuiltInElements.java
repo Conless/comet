@@ -51,8 +51,6 @@ public interface BuiltInElements {
   IRFuncDeclareNode irGetStringFunc = new IRFuncDeclareNode("getString", irPtrType, new Array<>());
   IRFuncDeclareNode irGetIntFunc = new IRFuncDeclareNode("getInt", irIntType, new Array<>());
   IRFuncDeclareNode irToStringFunc = new IRFuncDeclareNode("toString", irPtrType, new Array<>(irIntType));
-  IRFuncDeclareNode irArrayAllocateFunc = new IRFuncDeclareNode("__array_alloca", irPtrType,
-      new Array<>(irIntType, irIntType));
   IRFuncDeclareNode irArraySizeFunc = new IRFuncDeclareNode("__builtIn_array_size", irIntType, new Array<>(irPtrType));
   IRFuncDeclareNode irStringLengthFunc = new IRFuncDeclareNode("__string_length", irIntType, new Array<>(irPtrType));
   IRFuncDeclareNode irStringSubstringFunc = new IRFuncDeclareNode("__string_substring", irPtrType,
@@ -68,7 +66,7 @@ public interface BuiltInElements {
   IRFuncDeclareNode irStringCopyFunc = new IRFuncDeclareNode("__string_copy", irVoidType,
       new Array<>(irPtrType, irPtrType));
   Array<IRFuncDeclareNode> irBuiltInFuncs = new Array<>(irPrintFunc, irPrintlnFunc, irPrintIntFunc, irPrintlnIntFunc,
-      irGetStringFunc, irGetIntFunc, irToStringFunc, irArrayAllocateFunc, irArraySizeFunc, irStringLengthFunc,
+      irGetStringFunc, irGetIntFunc, irToStringFunc, irArraySizeFunc, irStringLengthFunc,
       irStringSubstringFunc, irStringParseintFunc, irStringOrdFunc, irStringCompareFunc, irStringConcatFunc,
       irStringCopyFunc );
 

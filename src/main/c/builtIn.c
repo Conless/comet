@@ -1,10 +1,6 @@
-int scanf(const char *format, ...);
-
-int printf(const char *format, ...);
-
-int sprintf(char *str, const char *format, ...);
-
-void *malloc(unsigned int size); // NOLINT
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
 
 void print(char *s) { printf("%s", s); }
 
@@ -33,10 +29,24 @@ char *toString(int i) {
   return s;
 }
 
-void *__array_alloca(int size, int length) {
+void *__alloca_helper(int size, int length) {
   int *a = (int *) malloc(size * length + 4);
   a[0] = length;
   return a + 1;
+}
+
+void *__array_alloca(int size, int depth, ...) {
+  va_list ap;
+  va_start(ap, depth);
+  int length = va_arg(ap, int);
+  void *array = __alloca_helper(size, length);
+  if (depth > 1) {
+    for (int i = 0; i < length; i++) {
+      ((void **)array)[i] = __array_alloca(size, depth - 1, va_arg(ap, int));
+    }
+  }
+  va_end(ap);
+  return array;
 }
 
 int __builtIn_array_size(void *array) { return ((int *)array)[-1]; }
