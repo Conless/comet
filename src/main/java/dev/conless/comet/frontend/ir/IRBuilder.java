@@ -92,6 +92,11 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(ClassDefNode node) throws BaseError {
     enterASTNode(node);
     var nodes = new IRExprNode();
+    var ctorDef = node.getConstructor();
+    ctorDef.getParams().add(0, VarDefNode.builder().info(new VarInfo("this", new TypeInfo(node.getName(), 0))).build());
+    var irCtor = (IRFuncDefNode) ctorDef.accept(this);
+    irCtor.setName("__class." + node.getName());
+    nodes.addNode(irCtor);
     for (var def : node.getFuncDefs()) {
       def.getParams().add(0, VarDefNode.builder().info(new VarInfo("this", new TypeInfo(node.getName(), 0))).build());
       var irFunc = (IRFuncDefNode) def.accept(this);
@@ -230,7 +235,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var instList = new IRExprNode();
     var arrayInst = (IRExprNode) node.getArray().accept(this);
     instList.appendNodes(arrayInst);
-    var array = (IRVariable) arrayInst.getDestAddr();
+    var array = (IRVariable) arrayInst.getDest();
     var astElementType = (TypeInfo) node.getInfo().getType();
     var elementType = new IRType(astElementType);
     var indexInst = (IRExprNode) node.getSubscript().accept(this);
@@ -433,11 +438,10 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     instList.appendNodes(rhsInst);
     instList.appendNodes(lhsInst);
     var rhsType = ((TypeInfo) node.getRhs().getInfo().getType());
-    var lhsDest = (IRVariable) lhsInst.getDest();
     var lhsDestAddr = (IRVariable) lhsInst.getDestAddr();
     var rhsDest = (IREntity) rhsInst.getDest();
     if (rhsType.equals(GlobalScope.stringType)) {
-      instList.addNode(new IRCallNode("__string_copy", new Array<>(lhsDest, rhsDest)));
+      instList.addNode(new IRCallNode("__string_copy", new Array<>(lhsDestAddr, rhsDest)));
     } else {
       instList.addNode(new IRStoreNode(lhsDestAddr, rhsDest));
     }

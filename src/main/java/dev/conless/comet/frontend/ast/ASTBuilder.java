@@ -82,6 +82,7 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
       constructor = FuncDefNode.builder()
           .position(new Position(ctor.start))
           .info(new FuncInfo(ctor.name.getText(), new TypeInfo("void", 0), new Array<>()))
+          .params(new Array<>())
           .blockedBody((BlockStmtNode) visit(ctor.blockStmt()))
           .build();
     } else {

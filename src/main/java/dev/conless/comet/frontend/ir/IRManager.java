@@ -111,6 +111,9 @@ public class IRManager {
       var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
       var alloca = new IRAllocaNode(allocaVar, new IRType(typeInfo, true));
       instList.addNode(alloca);
+      if (!typeInfo.getIsBuiltIn()) {
+        instList.addNode(new IRCallNode(String.format("__class.%s", typeInfo.getName(), typeInfo.getName()), lengths)); 
+      }
       instList.setDest(allocaVar);
     } else if (lengths.size() > 0) {
       var length = lengths.get(0);
