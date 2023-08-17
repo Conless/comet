@@ -4,7 +4,7 @@ int printf(const char *format, ...);
 
 int sprintf(char *str, const char *format, ...);
 
-void *malloc(unsigned long size); // NOLINT
+void *malloc(unsigned int size); // NOLINT
 
 void print(char *s) { printf("%s", s); }
 
@@ -15,7 +15,7 @@ void printInt(int n) { printf("%d", n); }
 void printlnInt(int n) { printf("%d\n", n); }
 
 char *getString() {
-  char *s;
+  char *s = (char *) malloc(sizeof(char) * 1024);
   scanf("%s", s);
   return s;
 }
@@ -28,12 +28,13 @@ int getInt() {
 
 char *toString(int i) {
   char *s;
+  s = (char *) malloc(sizeof(char) * 12);
   sprintf(s, "%d", i);
   return s;
 }
 
 void *__array_alloca(int size, int length) {
-  int *a = (int *) malloc(sizeof(int) * (length + 1));
+  int *a = (int *) malloc(size * length + 4);
   a[0] = length;
   return a + 1;
 }
@@ -98,11 +99,11 @@ char *__string_concat(char *s1, char *s2) {
   return result;
 }
 
-void __string_copy(char *s1, char *s2) {
+void __string_copy(char **s1, char *s2) {
   int len = __string_length(s2);
-  s1 = (char *) malloc(sizeof(char) * (len + 1));
+  *s1 = (char *) malloc(sizeof(char) * (len + 1));
   for (int i = 0; i < len; i++) {
-    s1[i] = s2[i];
+    (*s1)[i] = s2[i];
   }
-  s1[len] = '\0';
+  (*s1)[len] = '\0';
 }
