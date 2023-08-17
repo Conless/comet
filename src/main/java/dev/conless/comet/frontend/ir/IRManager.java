@@ -10,7 +10,6 @@ import dev.conless.comet.frontend.ir.node.global.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.global.IRProgramNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
-import dev.conless.comet.frontend.ir.node.utils.IRCustomNode;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
 import dev.conless.comet.frontend.ir.node.utils.IRTagNode;
 import dev.conless.comet.frontend.ir.type.IRType;
@@ -36,7 +35,7 @@ public class IRManager {
     counter = new IRCounter();
     name2Size = new Map<>();
     name2Size.put("i32", 4);
-    name2Size.put("ptr", 8);
+    name2Size.put("ptr", 8); // TODO: 32-bit
     name2Size.put("i1", 1);
   }
 
@@ -110,7 +109,7 @@ public class IRManager {
     var instList = new IRExprNode();
     if (typeInfo.getDepth().equals(0)) {
       var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
-      var alloca = new IRAllocaNode(allocaVar, new IRType(typeInfo, true));
+      var alloca = new IRCallNode(allocaVar, GlobalScope.irPtrType, "malloc", new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName()))));
       instList.addNode(alloca);
       if (!typeInfo.getIsBuiltIn()) {
         instList.addNode(new IRCallNode(String.format("__class.%s", typeInfo.getName(), typeInfo.getName()), lengths)); 
