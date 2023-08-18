@@ -17,7 +17,7 @@ import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
 import dev.conless.comet.frontend.ir.node.utils.IRCustomNode;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
-import dev.conless.comet.frontend.ir.node.utils.IRTagNode;
+import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 import dev.conless.comet.frontend.ir.type.*;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.*;
@@ -347,8 +347,8 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var dest = new IRVariable(resultType, "%.arith." + String.valueOf(++counter.arithCount));
     if (node.getOp().equals("&&") || node.getOp().equals("||")) { // circuiting
       counter.ifCount++;
-      var rhsTag = new IRTagNode("if." + String.valueOf(counter.ifCount) + ".rhs");
-      var endTag = new IRTagNode("if." + String.valueOf(counter.ifCount) + ".end");
+      var rhsTag = new IRLabelNode("if." + String.valueOf(counter.ifCount) + ".rhs");
+      var endTag = new IRLabelNode("if." + String.valueOf(counter.ifCount) + ".end");
       instList.appendNodes(lhsInst);
       if (node.getOp().equals("&&")) {
         instList.addNode(new IRBranchNode(lhsDest, rhsTag.getName(), endTag.getName()));
@@ -453,9 +453,9 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var trueDest = (IRVariable) trueInst.getDest();
     var falseDest = (IRVariable) falseInst.getDest();
     counter.ifCount++;
-    var trueTag = new IRTagNode("if." + String.valueOf(counter.ifCount) + ".true");
-    var falseTag = new IRTagNode("if." + String.valueOf(counter.ifCount) + ".false");
-    var endTag = new IRTagNode("if." + String.valueOf(counter.ifCount) + ".end");
+    var trueTag = new IRLabelNode("if." + String.valueOf(counter.ifCount) + ".true");
+    var falseTag = new IRLabelNode("if." + String.valueOf(counter.ifCount) + ".false");
+    var endTag = new IRLabelNode("if." + String.valueOf(counter.ifCount) + ".end");
     if (trueDest == null) {
       instList.appendNodes(condInst);
       instList.addNode(new IRBranchNode(condDest, trueTag.getName(), falseTag.getName()));
@@ -588,9 +588,9 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(IfStmtNode node) throws BaseError {
     var instList = new IRExprNode();
     counter.ifCount++;
-    var trueTag = new IRTagNode("if." + String.valueOf(counter.ifCount) + ".true");
-    var falseTag = new IRTagNode("if." + String.valueOf(counter.ifCount) + ".false");
-    var endTag = new IRTagNode("if." + String.valueOf(counter.ifCount) + ".end");
+    var trueTag = new IRLabelNode("if." + String.valueOf(counter.ifCount) + ".true");
+    var falseTag = new IRLabelNode("if." + String.valueOf(counter.ifCount) + ".false");
+    var endTag = new IRLabelNode("if." + String.valueOf(counter.ifCount) + ".end");
     var condInst = (IRExprNode) node.getCondition().accept(this);
     enterASTNode(node, "then");
     var trueInst = (IRExprNode) node.getThenStmt().accept(this);
@@ -619,10 +619,10 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     enterASTNode(node);
     var instList = new IRExprNode();
     ((LoopScope) currentScope).setLoopCount(++counter.loopCount);
-    var condTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".cond");
-    var updateTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".update");
-    var bodyTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".body");
-    var endTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".end");
+    var condTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".cond");
+    var updateTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".update");
+    var bodyTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".body");
+    var endTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".end");
     instList.addNode(new IRCommentNode(
         "for ("
             + (node.getInit() == null ? ";" : node.getInit().toString()) + " "
@@ -658,10 +658,10 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     enterASTNode(node);
     var instList = new IRExprNode();
     ((LoopScope) currentScope).setLoopCount(++counter.loopCount);
-    var condTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".cond");
-    var updateTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".update");
-    var bodyTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".body");
-    var endTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".end");
+    var condTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".cond");
+    var updateTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".update");
+    var bodyTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".body");
+    var endTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".end");
     var condInst = (IRExprNode) node.getCondition().accept(this);
     var bodyInst = (IRExprNode) node.getBody().accept(this);
     instList.addNode(new IRJumpNode(condTag.getName()));

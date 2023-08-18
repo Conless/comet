@@ -4,10 +4,10 @@ import dev.conless.comet.frontend.ir.node.IRNode;
 import lombok.Getter;
 
 @Getter
-public class IRTagNode extends IRNode {
+public class IRLabelNode extends IRNode {
   private String name;
 
-  public IRTagNode(String name) {
+  public IRLabelNode(String name) {
     this.name = name;
   }
 

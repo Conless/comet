@@ -9,7 +9,7 @@ import dev.conless.comet.frontend.ir.node.inst.IRReturnNode;
 import dev.conless.comet.frontend.ir.node.inst.IRStoreNode;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
-import dev.conless.comet.frontend.ir.node.utils.IRTagNode;
+import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
@@ -33,7 +33,7 @@ public class IRFuncDefNode extends IRNode {
     this.nodes = new IRExprNode();
 
     addNode(new IRCommentNode("The definition of function " + name));
-    addNode(new IRTagNode("entry"));
+    addNode(new IRLabelNode("entry"));
     if (name.equals("main")) {
       addNode(new IRCallNode("global.var.init", new Array<>()));
     }

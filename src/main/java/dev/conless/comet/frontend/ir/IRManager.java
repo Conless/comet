@@ -11,7 +11,7 @@ import dev.conless.comet.frontend.ir.node.global.IRProgramNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
 import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
-import dev.conless.comet.frontend.ir.node.utils.IRTagNode;
+import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
@@ -120,10 +120,10 @@ public class IRManager {
               length)));
       if (lengths.size() > 0) {
         counter.loopCount++;
-        var condTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".cond");
-        var updateTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".update");
-        var bodyTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".body");
-        var endTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".end");
+        var condTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".cond");
+        var updateTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".update");
+        var bodyTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".body");
+        var endTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".end");
         // Building a for loop
         var forVar = new IRVariable(GlobalScope.irPtrType, "%.for." + String.valueOf(counter.loopCount) + ".0");
         instList.addNode(new IRCommentNode("for " + forVar.getValue() + " in range (0, " + length.getValue() + ")"));
