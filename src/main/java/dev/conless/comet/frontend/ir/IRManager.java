@@ -1,7 +1,7 @@
 package dev.conless.comet.frontend.ir;
 
 import dev.conless.comet.frontend.ast.node.ASTNode;
-import dev.conless.comet.frontend.ast.node.global.ScopedNode;
+import dev.conless.comet.frontend.ast.node.global.NodeWithScope;
 import dev.conless.comet.frontend.ast.node.stmt.IfStmtNode;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRLiteral;
@@ -40,8 +40,8 @@ public class IRManager {
   }
 
   protected void enterASTNode(ASTNode node) {
-    if (node instanceof ScopedNode) {
-      var scope = ((ScopedNode) node).getScope();
+    if (node instanceof NodeWithScope) {
+      var scope = ((NodeWithScope) node).getScope();
       if (scope == null) {
         return;
       }
@@ -66,8 +66,8 @@ public class IRManager {
   }
 
   protected void exitASTNode(ASTNode node) {
-    if (node instanceof ScopedNode) {
-      var scope = ((ScopedNode) node).getScope();
+    if (node instanceof NodeWithScope) {
+      var scope = ((NodeWithScope) node).getScope();
       if (scope != null) {
         currentScope = scope.getParent();
       }
@@ -108,11 +108,11 @@ public class IRManager {
   protected IRExprNode allocaHelper(TypeInfo typeInfo, Array<IREntity> lengths) {
     var instList = new IRExprNode();
     if (typeInfo.getDepth().equals(0)) {
-      var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
+      var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(++counter.allocaCount));
       var alloca = new IRCallNode(allocaVar, GlobalScope.irPtrType, "malloc", new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName()))));
       instList.addNode(alloca);
       if (!typeInfo.getIsBuiltIn()) {
-        instList.addNode(new IRCallNode(String.format("__class.%s", typeInfo.getName(), typeInfo.getName()), lengths)); 
+        instList.addNode(new IRCallNode(String.format("__class.%s", typeInfo.getName(), typeInfo.getName()), new Array<>(allocaVar))); 
       }
       instList.setDest(allocaVar);
     } else if (lengths.size() > 0) {
@@ -162,9 +162,6 @@ public class IRManager {
             "%.for." + String.valueOf(counter.loopCount) + ".5");
         instList.addNode(new IRLoadNode(index, forVar, GlobalScope.irIntType));
         var addrToFill = new IRVariable(GlobalScope.irPtrType, "%.element." + String.valueOf(++counter.elementCount));
-        instList
-            .addNode(
-                new IRGetElementPtrNode(addrToFill, allocaVar, typeInfo, new Array<>(index)));
         instList.addNode(new IRStoreNode(addrToFill, allocaEle.getDest()));
         instList.addNode(new IRJumpNode(updateTag.getName()));
         instList.addNode(endTag);

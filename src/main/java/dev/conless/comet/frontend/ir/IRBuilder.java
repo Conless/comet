@@ -159,7 +159,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       instList.addNode(allocaInst);
       instList.setDest(allocaInst.getDest());
     } else {
-      var dest = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
+      var dest = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(++counter.allocaCount));
       var sizes = new Array<IREntity>();
       for (var size : node.getLengths()) {
         var sizeInst = (IRExprNode) size.accept(this);
@@ -171,8 +171,8 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       var eleType = new TypeInfo(type.getName(), 0);
       instList
           .addNode(new IRCustomNode(String.format("%s = call ptr (i32, i32, i32, ...) @__array_alloca(%s, %s, %s, %s)",
-              dest.getValue(), new IRLiteral(GlobalScope.irIntType, type.getDepth()),
-              new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(eleType).getTypeName())),
+              dest.getValue(), new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(eleType).getTypeName())),
+              new IRLiteral(GlobalScope.irIntType, type.getDepth()),
               new IRLiteral(GlobalScope.irIntType, sizes.size()), sizes.toString(", "))));
       instList.setDest(dest);
     }
@@ -256,7 +256,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     instList.appendNodes(indexInst);
     var index = (IREntity) indexInst.getDest();
     var destAddr = new IRVariable(GlobalScope.irPtrType, "%.element." + String.valueOf(++counter.elementCount));
-    instList.addNode(new IRGetElementPtrNode(destAddr, array, astElementType, new Array<>(index)));
+    instList.addNode(new IRGetElementPtrNode(destAddr, array, elementType.getTypeName(), new Array<>(index)));
     var dest = new IRVariable(elementType, "%.load." + String.valueOf(++counter.loadCount));
     instList.addNode(new IRLoadNode(dest, destAddr, elementType));
     instList.setDest(dest);
@@ -513,9 +513,9 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
         if (c == '\\') {
           ++i;
           switch (str.charAt(i)) {
-            case 'n': value += '\n'; break;
-            case '\"': value += '\"'; break;
-            default: value += '\\';
+            case 'n' -> value += '\n';
+            case '\"'-> value += '\"'; 
+            default -> value += '\\';
           }
         } else {
           value += c;
@@ -652,6 +652,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(ContinueStmtNode node) throws BaseError {
     enterASTNode(node);
     var instList = new IRExprNode();
+    instList.addNode(new IRCommentNode(node.toString()));
     instList.addNode(new IRJumpNode("loop." + String.valueOf(counter.loopCount) + ".update"));
     exitASTNode(node);
     return instList;
@@ -661,6 +662,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(BreakStmtNode node) throws BaseError {
     enterASTNode(node);
     var instList = new IRExprNode();
+    instList.addNode(new IRCommentNode(node.toString()));
     instList.addNode(new IRJumpNode("loop." + String.valueOf(counter.loopCount) + ".end"));
     exitASTNode(node);
     return instList;

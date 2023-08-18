@@ -16,16 +16,6 @@ public final class IRGetElementPtrNode extends IRInstNode {
   private String type;
   private Array<IREntity> idxs;
 
-  public IRGetElementPtrNode(IRVariable dest, IRVariable src, TypeInfo type, Array<IREntity> idxs) {
-    if (src == null) {
-      throw new RuntimeError("src cannot be null");
-    }
-    this.dest = dest;
-    this.src = src;
-    this.type = new IRType(type, true).getTypeName();
-    this.idxs = idxs;
-  }
-
   public IRGetElementPtrNode(IRVariable dest, IRVariable src, String type, Array<IREntity> idxs) {
     if (src == null) {
       throw new RuntimeError("src cannot be null");
