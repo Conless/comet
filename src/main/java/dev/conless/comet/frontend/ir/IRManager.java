@@ -84,21 +84,14 @@ public class IRManager {
     }
   }
 
-  protected String getVarName(String name) {
+  protected String getVarName(String name, BaseScope scope) {
     if (name.equals("this")) {
       return "%" + name;
     }
-    var scope = currentScope;
-    while (!(scope instanceof GlobalScope)) {
-      if (scope.get(name, "var") != null) {
-        return "%" + name + scope.getSuffix();
-      }
-      scope = scope.getParent();
-    }
-    if (globalScope.get(name, "var") != null) {
+    if (scope instanceof GlobalScope) {
       return "@" + name;
     }
-    throw new RuntimeError("Variable " + name + " not found");
+    return "%" + name + scope.getSuffix();
   }
 
   protected void resetCounter() {

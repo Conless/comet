@@ -18,11 +18,13 @@ public class BaseScope {
   private Array<Integer> tags;
   private Integer count;
   protected Map<String, VarInfo> vars;
+  protected Map<String, VarInfo> regVars;
 
   public BaseScope(BaseScope parent, BaseInfo info) {
     this.parent = parent;
     this.info = info;
     this.vars = new Map<String, VarInfo>();
+    this.regVars = new Map<String, VarInfo>();
     this.count = 0;
     if (parent != null) {
       this.tags = new Array<Integer>(parent.getTags());
@@ -84,6 +86,14 @@ public class BaseScope {
     }
   }
 
+  public void register(String varName) {
+    if (vars.containsKey(varName)) {
+      regVars.put(varName, vars.get(varName));
+    } else {
+      throw new RuntimeError("BaseScope.register() called with unknown variable");
+    }
+  }
+
   public BaseInfo get(String name) {
     if (vars.containsKey(name)) {
       return vars.get(name);
@@ -118,6 +128,16 @@ public class BaseScope {
     }
     if (parent != null) {
       return parent.getRecurWithScope(name);
+    }
+    return null;
+  }
+
+  public Pair<BaseInfo, BaseScope> getRegWithScope(String name) {
+    if (regVars.containsKey(name)) {
+      return new Pair<>(vars.get(name), this);
+    }
+    if (parent != null) {
+      return parent.getRegWithScope(name);
     }
     return null;
   }
