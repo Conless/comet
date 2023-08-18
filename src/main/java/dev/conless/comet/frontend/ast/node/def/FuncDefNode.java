@@ -1,7 +1,7 @@
 package dev.conless.comet.frontend.ast.node.def;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.frontend.ast.node.global.ScopedNode;
+import dev.conless.comet.frontend.ast.node.global.NodeWithScope;
 import dev.conless.comet.frontend.ast.node.stmt.BlockStmtNode;
 import dev.conless.comet.frontend.ast.node.stmt.StmtNode;
 import dev.conless.comet.frontend.utils.metadata.FuncInfo;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @SuperBuilder
 @Getter
 @Setter
-public final class FuncDefNode extends BaseDefNode implements ScopedNode {
+public final class FuncDefNode extends BaseDefNode implements NodeWithScope {
   private FuncScope scope;
   private final Array<VarDefNode> params;
   private final BlockStmtNode blockedBody;

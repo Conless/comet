@@ -39,6 +39,9 @@ void *__array_alloca_inside(int size, int depth, int *lengths, int remaining) {
   if (depth == 1) {
     return __alloca_helper(size, *lengths);
   }
+  if (remaining == 1) {
+    return __alloca_helper(sizeof(void *), *lengths);
+  }
   void *array = __alloca_helper(sizeof(void *), *lengths);
   for (int i = 0; i < *lengths; i++) {
     ((void **)array)[i] =

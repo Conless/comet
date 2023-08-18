@@ -587,7 +587,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(ForStmtNode node) throws BaseError {
     enterASTNode(node);
     var instList = new IRExprNode();
-    counter.loopCount++;
+    ((LoopScope) currentScope).setLoopCount(++counter.loopCount);
     var condTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".cond");
     var updateTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".update");
     var bodyTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".body");
@@ -626,7 +626,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(WhileStmtNode node) throws BaseError {
     enterASTNode(node);
     var instList = new IRExprNode();
-    counter.loopCount++;
+    ((LoopScope) currentScope).setLoopCount(++counter.loopCount);
     var condTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".cond");
     var updateTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".update");
     var bodyTag = new IRTagNode("loop." + String.valueOf(counter.loopCount) + ".body");
@@ -653,7 +653,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     enterASTNode(node);
     var instList = new IRExprNode();
     instList.addNode(new IRCommentNode(node.toString()));
-    instList.addNode(new IRJumpNode("loop." + String.valueOf(counter.loopCount) + ".update"));
+    instList.addNode(new IRJumpNode("loop." + currentScope.getLastLoop().getLoopCount().toString() + ".update"));
     exitASTNode(node);
     return instList;
   }
@@ -663,7 +663,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     enterASTNode(node);
     var instList = new IRExprNode();
     instList.addNode(new IRCommentNode(node.toString()));
-    instList.addNode(new IRJumpNode("loop." + String.valueOf(counter.loopCount) + ".end"));
+    instList.addNode(new IRJumpNode("loop." + currentScope.getLastLoop().getLoopCount().toString() + ".end"));
     exitASTNode(node);
     return instList;
   }

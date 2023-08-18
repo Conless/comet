@@ -2,7 +2,7 @@ package dev.conless.comet.frontend.ast.node.def;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.node.expr.ExprNode;
-import dev.conless.comet.frontend.ast.node.global.HasExprNode;
+import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
 import dev.conless.comet.utils.error.*;
@@ -17,7 +17,7 @@ import lombok.Setter;
 @SuperBuilder
 @Getter
 @Setter
-public final class VarDefNode extends BaseDefNode implements HasExprNode {
+public final class VarDefNode extends BaseDefNode implements NodeWithExpr {
   private ExprNode init;
 
   @Override

@@ -1,7 +1,7 @@
 package dev.conless.comet.frontend.ast.node.expr;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
-import dev.conless.comet.frontend.ast.node.global.HasExprNode;
+import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
 import dev.conless.comet.utils.error.*;
 import dev.conless.comet.utils.container.Array;
 
@@ -16,7 +16,7 @@ import lombok.Setter;
 @SuperBuilder
 @Getter
 @Setter
-public final class CallExprNode extends ExprNode implements HasExprNode {
+public final class CallExprNode extends ExprNode implements NodeWithExpr {
   private ExprNode func;
   private Array<ExprNode> args;
 

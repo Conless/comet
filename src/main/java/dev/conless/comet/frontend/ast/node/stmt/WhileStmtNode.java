@@ -2,10 +2,11 @@ package dev.conless.comet.frontend.ast.node.stmt;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.node.expr.ExprNode;
-import dev.conless.comet.frontend.ast.node.global.HasExprNode;
-import dev.conless.comet.frontend.ast.node.global.ScopedNode;
+import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
+import dev.conless.comet.frontend.ast.node.global.NodeWithScope;
 import dev.conless.comet.frontend.utils.metadata.FlowInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
+import dev.conless.comet.frontend.utils.scope.LoopScope;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 import lombok.experimental.SuperBuilder;
@@ -20,8 +21,8 @@ import lombok.EqualsAndHashCode;
 @SuperBuilder
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public final class WhileStmtNode extends StmtNode implements ScopedNode, HasExprNode {
-  private BaseScope scope;
+public final class WhileStmtNode extends StmtNode implements NodeWithScope, NodeWithExpr {
+  private LoopScope scope;
   private ExprNode condition;
   private final StmtNode body;
 
@@ -46,7 +47,7 @@ public final class WhileStmtNode extends StmtNode implements ScopedNode, HasExpr
   @Override
   public void addScope(BaseScope scope) {
     if (this.scope == null) {
-      this.scope = new BaseScope(scope, new FlowInfo("while"));
+      this.scope = new LoopScope(scope, new FlowInfo("while"));
     }
   }
 

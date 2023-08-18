@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Getter
 @Setter
-public final class ProgramNode extends ASTNode implements ScopedNode {
+public final class ProgramNode extends ASTNode implements NodeWithScope {
   public GlobalScope globalScope;
   public final Array<BaseDefNode> defs;
 

@@ -4,7 +4,7 @@ import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
-import dev.conless.comet.frontend.ast.node.global.HasExprNode;
+import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
 import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
 import dev.conless.comet.frontend.ast.node.type.*;
@@ -366,7 +366,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
             .member(node.getValue())
             .build();
         replaceNode.accept(this);
-        ((HasExprNode) parent).replaceExpr(node, replaceNode);
+        ((NodeWithExpr) parent).replaceExpr(node, replaceNode);
       }
     } else if (node.getAtomType() == AtomExprNode.Type.INT) {
       node.setInfo(new ExprInfo("atomExpr", GlobalScope.intType, false));

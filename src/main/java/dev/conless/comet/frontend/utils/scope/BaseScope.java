@@ -2,8 +2,6 @@ package dev.conless.comet.frontend.utils.scope;
 
 import dev.conless.comet.frontend.utils.metadata.BaseInfo;
 import dev.conless.comet.frontend.utils.metadata.ClassInfo;
-import dev.conless.comet.frontend.utils.metadata.FlowInfo;
-import dev.conless.comet.frontend.utils.metadata.FuncInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
@@ -44,24 +42,22 @@ public class BaseScope {
     return suffix;
   }
 
-  public BaseScope getLastLoop() {
+  public LoopScope getLastLoop() {
     BaseScope scope = this;
     while (scope != null) {
-      BaseInfo info = scope.getInfo();
-      if (info instanceof FlowInfo && ((FlowInfo) info).isLoop()) {
-        return scope;
+      if (scope instanceof LoopScope) {
+        return (LoopScope) scope;
       }
       scope = scope.getParent();
     }
     return null;
   }
 
-  public BaseScope getLastFunc() {
+  public FuncScope getLastFunc() {
     BaseScope scope = this;
     while (scope != null) {
-      BaseInfo info = scope.getInfo();
-      if (info instanceof FuncInfo) {
-        return scope;
+      if (scope instanceof FuncScope) {
+        return (FuncScope) scope;
       }
       scope = scope.getParent();
     }

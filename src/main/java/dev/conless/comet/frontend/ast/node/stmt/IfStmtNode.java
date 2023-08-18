@@ -2,8 +2,8 @@ package dev.conless.comet.frontend.ast.node.stmt;
 
 import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.node.expr.ExprNode;
-import dev.conless.comet.frontend.ast.node.global.HasExprNode;
-import dev.conless.comet.frontend.ast.node.global.ScopedNode;
+import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
+import dev.conless.comet.frontend.ast.node.global.NodeWithScope;
 import dev.conless.comet.frontend.utils.metadata.FlowInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.utils.error.BaseError;
@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @SuperBuilder
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public final class IfStmtNode extends StmtNode implements ScopedNode, HasExprNode {
+public final class IfStmtNode extends StmtNode implements NodeWithScope, NodeWithExpr {
   private BaseScope thenScope, elseScope;
   private ExprNode condition;
   private final StmtNode thenStmt, elseStmt;
