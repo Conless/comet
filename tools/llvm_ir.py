@@ -4,7 +4,7 @@ import os
 import re
 import subprocess
 
-test_cases_dir = "./tutorial/Compiler-Design-Implementation/testcases/codegen/"
+test_cases_dir = "./testcases/codegen/"
 compile_command = "make"
 execute_command = "./bin/mxc"
 test_dir = "./src/test/mx/"
@@ -33,7 +33,7 @@ def compile2ll():
   if (compile_status != 0):
     print("Compile Error in input.mx: " + compile_output)
     return False
-  builtIn2llvm = "clang-16 -S -c -m32 -emit-llvm -O0 " + builtIn_c + " -o " + test_dir + "builtIn.ll"
+  builtIn2llvm = "clang-16 -S -c -emit-llvm -O0 " + builtIn_c + " -o " + test_dir + "builtIn.ll"
   print("Compiling builtIn.c to LLVM IR: " + builtIn2llvm)
   compile_status, compile_output = subprocess.getstatusoutput(builtIn2llvm)
   if (compile_status != 0):
@@ -46,9 +46,13 @@ def process_io(origin_input):
   input_text = re.findall(r'=== input ===\n([\s\S]*?)\n=== end ===', input_file.read())
   input_file_o = open(test_dir + "test.in", 'w')
   input_file_o.writelines(input_text)
-  output_text = re.findall(r'=== output ===\n([\s\S]*?)\n=== end ===', input_file.read())
+  output_file = open(origin_input, 'r')
+  output_text = re.findall(r'=== output ===\n([\s\S]*?)\n=== end ===', output_file.read())
   output_file_o = open(test_dir + "test.ans", 'w')
   output_file_o.writelines(output_text)
+  result_file = open(origin_input, 'r')
+  result_text = re.findall(r'ExitCode: (\d+)', result_file.read())
+  return int(result_text[0])
 
 def compile2exe():
   llvm2exe = "clang-16 " + test_dir + "output.ll " + test_dir + "builtIn.ll -o " + test_dir + "output"
@@ -59,13 +63,13 @@ def compile2exe():
     return False
   return True
 
-def execute(file_io = False):
+def execute(file_io = False, expected_result = 0):
   execute = test_dir + "output"
   if file_io:
     execute += " <" + (test_dir + "test.in") + " >" + (test_dir + "test.out")
   print("Executing: " + execute)
   execute_status, execute_output = subprocess.getstatusoutput(execute)
-  if (execute_status != 0):
+  if (execute_status != expected_result):
     print("Runtime Error: " + execute_output)
     return False
   if file_io == False:
@@ -79,15 +83,15 @@ def test(test_name):
   subprocess.call("cp " + input + " " + test_dir + "input.mx", shell=True)
   if compile2ll() == False:
     return False
-  process_io(input)
+  result = process_io(input)
   if compile2exe() == False:
     return False
-  if execute(file_io=True) == False:
+  if execute(file_io=True, expected_result=result) == False:
     return False
-  diff = "diff " + test_dir + "test.out " + test_dir + "test.ans"
-  compile_status, compile_output = subprocess.getstatusoutput(diff)
-  if (compile_status != 0):
-    print("Wrong Answer: " + compile_output)
+  diff = "diff -ZB " + test_dir + "test.out " + test_dir + "test.ans"
+  compare_status, compare_output = subprocess.getstatusoutput(diff)
+  if (compare_status != 0):
+    print("Wrong Answer: " + compare_output)
     return False
   return True
 

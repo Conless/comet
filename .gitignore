@@ -4,3 +4,4 @@ tutorial/
 testcases/
 bin/
 .vscode/
+dependency-reduced-pom.xml
