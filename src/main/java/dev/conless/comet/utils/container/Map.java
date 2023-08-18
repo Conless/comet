@@ -1,7 +1,6 @@
 package dev.conless.comet.utils.container;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
-public class Map<A, B> extends HashMap<A, B> {
-  
+public class Map<A, B> extends TreeMap<A, B> { 
 }

@@ -525,7 +525,6 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       instList.setDest(dest);
     } else if (node.getAtomType() == AtomExprNode.Type.NULL) {
       instList.setDest(new IRLiteral(GlobalScope.irPtrType, 0));
-      instList.setDestAddr(new IRLiteral(GlobalScope.irPtrType, 0));
     } else if (node.getAtomType() == AtomExprNode.Type.THIS) {
       var src = new IRVariable(GlobalScope.irPtrType, "%this");
       var dest = new IRVariable(GlobalScope.irPtrType, "%.load." + String.valueOf(++counter.loadCount));
