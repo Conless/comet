@@ -7,21 +7,22 @@ import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 public class IRLoopStmtNode extends IRStmtNode {
   public static int count = 0;
 
-  public static int IncreaseCount() {
+  public static int addCount() {
     return ++count;
   }
 
   public IRLoopStmtNode(int num, IRStmtNode init, IRStmtNode cond, IRStmtNode update, IRStmtNode body) {
     super();
     var condTag = new IRLabelNode("loop." + String.valueOf(num) + ".cond");
+    var updateTag = new IRLabelNode("loop." + String.valueOf(num) + ".update");
     var bodyTag = new IRLabelNode("loop." + String.valueOf(num) + ".body");
     var endTag = new IRLabelNode("loop." + String.valueOf(num) + ".end");
     if (init != null) {
       appendNodes(init);
     }
+    addNode(new IRJumpNode(condTag.getName()));
+    addNode(condTag);
     if (cond != null) {
-      addNode(new IRJumpNode(condTag.getName()));
-      addNode(condTag);
       appendNodes(cond);
       addNode(new IRBranchNode(cond.getDest(), bodyTag.getName(), endTag.getName()));
     } else {
@@ -29,14 +30,12 @@ public class IRLoopStmtNode extends IRStmtNode {
     }
     addNode(bodyTag);
     appendNodes(body);
+    addNode(new IRJumpNode(updateTag.getName()));
+    addNode(updateTag);
     if (update != null) {
       appendNodes(update);
     }
-    if (cond != null) {
-      addNode(new IRJumpNode(condTag.getName()));
-    } else {
-      addNode(new IRJumpNode(bodyTag.getName()));
-    }
+    addNode(new IRJumpNode(condTag.getName()));
     addNode(endTag);
   }
 }

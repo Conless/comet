@@ -326,28 +326,31 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(BinaryExprNode node) throws BaseError {
     enterASTNode(node);
     var instList = new IRStmtNode();
-    var lhsInst = (IRStmtNode) node.getLhs().accept(this);
-    var rhsInst = (IRStmtNode) node.getRhs().accept(this);
-    var lhsDest = lhsInst.getDest();
-    var rhsDest = rhsInst.getDest();
-    var operandType = (TypeInfo) node.getLhs().getInfo().getType();
     var resultType = new IRType((TypeInfo) node.getInfo().getType());
     var dest = new IRVariable(resultType, "%.arith." + String.valueOf(++counter.arithCount));
     if (node.getOp().equals("&&") || node.getOp().equals("||")) { // circuiting
+      var num = IRIfStmtNode.addCount();
+      var lhsInst = (IRStmtNode) node.getLhs().accept(this);
       var destAddr = new IRVariable(GlobalScope.irPtrType, "%.arith." + String.valueOf(++counter.arithCount));
-      instList.addNode(new IRAllocaNode(destAddr, GlobalScope.irBoolType));
+      lhsInst.addNode(new IRAllocaNode(destAddr, GlobalScope.irBoolType));
+      var rhsInst = (IRStmtNode) node.getRhs().accept(this);
       if (node.getOp().equals("&&")) {
         instList.addNode(
-            new IRIfStmtNode(lhsInst, rhsInst, new IRStmtNode(new IRLiteral(GlobalScope.irBoolType, 0)), destAddr));
+            new IRIfStmtNode(num, lhsInst, rhsInst, new IRStmtNode(new IRLiteral(GlobalScope.irBoolType, 0)), destAddr));
       } else {
         instList.addNode(
-            new IRIfStmtNode(lhsInst, new IRStmtNode(new IRLiteral(GlobalScope.irBoolType, 1)), rhsInst, destAddr));
+            new IRIfStmtNode(num, lhsInst, new IRStmtNode(new IRLiteral(GlobalScope.irBoolType, 1)), rhsInst, destAddr));
       }
       instList.addNode(new IRLoadNode(dest, destAddr));
       instList.setDest(dest);
       exitASTNode(node);
       return instList;
     }
+    var lhsInst = (IRStmtNode) node.getLhs().accept(this);
+    var rhsInst = (IRStmtNode) node.getRhs().accept(this);
+    var lhsDest = lhsInst.getDest();
+    var rhsDest = rhsInst.getDest();
+    var operandType = (TypeInfo) node.getLhs().getInfo().getType();
     instList.appendNodes(lhsInst);
     instList.appendNodes(rhsInst);
     instList.setDest(dest);
@@ -425,16 +428,17 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   @Override
   public IRNode visit(ConditionalExprNode node) throws BaseError {
     enterASTNode(node);
+    var num = IRIfStmtNode.addCount();
     var instList = new IRStmtNode();
     var condInst = (IRStmtNode) node.getCondition().accept(this);
     var trueInst = (IRStmtNode) node.getLhs().accept(this);
     var falseInst = (IRStmtNode) node.getRhs().accept(this);
     if (trueInst.getDest() == null) {
-      instList.appendNodes(new IRIfStmtNode(condInst, trueInst, falseInst));
+      instList.appendNodes(new IRIfStmtNode(num, condInst, trueInst, falseInst));
     } else {
       var destAddr = new IRVariable(GlobalScope.irPtrType, "%.arith." + String.valueOf(++counter.arithCount));
       instList.addNode(new IRAllocaNode(destAddr, trueInst.getDest().getType()));
-      instList.appendNodes(new IRIfStmtNode(condInst, trueInst, falseInst, destAddr));
+      instList.appendNodes(new IRIfStmtNode(num, condInst, trueInst, falseInst, destAddr));
       var dest = new IRVariable(trueInst.getDest().getType(), "%.arith." + String.valueOf(++counter.arithCount));
       instList.addNode(new IRLoadNode(dest, destAddr));
       instList.setDest(dest);
@@ -536,6 +540,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   @Override
   public IRNode visit(IfStmtNode node) throws BaseError {
     var instList = new IRStmtNode();
+    var num = IRIfStmtNode.addCount();
     instList.addNode(new IRCommentNode("if " + node.getCondition().toString()));
     var condInst = (IRStmtNode) node.getCondition().accept(this);
     enterASTNode(node, "then");
@@ -544,7 +549,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     enterASTNode(node, "else");
     var falseInst = node.getElseStmt() == null ? null : (IRStmtNode) node.getElseStmt().accept(this);
     exitASTNode(node, "else");
-    instList.appendNodes(new IRIfStmtNode(condInst, trueInst, falseInst));
+    instList.appendNodes(new IRIfStmtNode(num, condInst, trueInst, falseInst));
     return instList;
   }
 
@@ -552,7 +557,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(ForStmtNode node) throws BaseError {
     enterASTNode(node);
     var instList = new IRStmtNode();
-    node.getScope().setLoopCount(IRLoopStmtNode.IncreaseCount());
+    node.getScope().setLoopCount(IRLoopStmtNode.addCount());
     instList.addNode(new IRCommentNode(
         "for ("
             + (node.getInit() == null ? ";" : node.getInit().toString()) + " "
@@ -571,7 +576,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(WhileStmtNode node) throws BaseError {
     enterASTNode(node);
     var instList = new IRStmtNode();
-    node.getScope().setLoopCount(IRLoopStmtNode.IncreaseCount());
+    node.getScope().setLoopCount(IRLoopStmtNode.addCount());
     instList.addNode(new IRCommentNode("while " + node.getCondition().toString()));
     currentScope.getLastLoop().setLoopCount(IRLoopStmtNode.count);
     var condInst = (IRStmtNode) node.getCondition().accept(this);

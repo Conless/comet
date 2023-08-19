@@ -9,12 +9,15 @@ import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 public class IRIfStmtNode extends IRStmtNode {
   public static int count = 0;
 
-  public IRIfStmtNode(IRStmtNode cond, IRStmtNode body, IRStmtNode elseBody) {
+  public static int addCount() {
+    return ++count;
+  }
+
+  public IRIfStmtNode(int num, IRStmtNode cond, IRStmtNode body, IRStmtNode elseBody) {
     super();
-    count++;
-    var bodyTag = new IRLabelNode("if." + String.valueOf(count) + ".body");
-    var elseTag = new IRLabelNode("if." + String.valueOf(count) + ".else");
-    var endTag = new IRLabelNode("if." + String.valueOf(count) + ".end");
+    var bodyTag = new IRLabelNode("if." + String.valueOf(num) + ".body");
+    var elseTag = new IRLabelNode("if." + String.valueOf(num) + ".else");
+    var endTag = new IRLabelNode("if." + String.valueOf(num) + ".end");
     appendNodes(cond);
     addNode(
         new IRBranchNode(cond.getDest(), bodyTag.getName(), elseBody == null ? endTag.getName() : elseTag.getName()));
@@ -29,12 +32,11 @@ public class IRIfStmtNode extends IRStmtNode {
     addNode(endTag);
   }
   
-  public IRIfStmtNode(IRStmtNode cond, IRStmtNode body, IRStmtNode elseBody, IRVariable destAddr) {
+  public IRIfStmtNode(int num, IRStmtNode cond, IRStmtNode body, IRStmtNode elseBody, IRVariable destAddr) {
     super();
-    count++;
-    var bodyTag = new IRLabelNode("if." + String.valueOf(count) + ".body");
-    var elseTag = new IRLabelNode("if." + String.valueOf(count) + ".else");
-    var endTag = new IRLabelNode("if." + String.valueOf(count) + ".end");
+    var bodyTag = new IRLabelNode("if." + String.valueOf(num) + ".body");
+    var elseTag = new IRLabelNode("if." + String.valueOf(num) + ".else");
+    var endTag = new IRLabelNode("if." + String.valueOf(num) + ".end");
     appendNodes(cond);
     addNode(
         new IRBranchNode(cond.getDest(), bodyTag.getName(), elseBody == null ? endTag.getName() : elseTag.getName()));

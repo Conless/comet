@@ -4,7 +4,7 @@ import os
 import re
 import subprocess
 
-test_cases_dir = "./tutorial/Compiler-Design-Implementation/testcases/codegen/"
+test_cases_dir = "./testcases/codegen/"
 compile_command = "make"
 execute_command = "./bin/mxc"
 test_dir = "./src/test/mx/"
@@ -55,7 +55,7 @@ def process_io(origin_input):
   return int(result_text[0])
 
 def compile2exe():
-  llvm2exe = "clang-16 " + test_dir + "output.ll " + test_dir + "builtin.ll -o " + test_dir + "output"
+  llvm2exe = "clang-16 -O2 " + test_dir + "output.ll " + test_dir + "builtin.ll -o " + test_dir + "output"
   print("Compiling to executable: " + llvm2exe)
   compile_status, compile_output = subprocess.getstatusoutput(llvm2exe)
   if (compile_status != 0):
