@@ -1,9 +1,9 @@
 package dev.conless.comet.frontend.ir.node.utils;
 
-import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
+import dev.conless.comet.frontend.ir.node.IRNode;
 
-public class IRCustomNode extends IRInstNode {
-  private String str;
+public final class IRCustomNode extends IRNode {
+  private final String str;
 
   public IRCustomNode(String str) {
     this.str = str;

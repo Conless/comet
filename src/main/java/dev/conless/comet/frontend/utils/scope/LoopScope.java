@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 public class LoopScope extends BaseScope {
-  private Integer loopCount;
+  private int loopCount;
 
   public LoopScope(BaseScope parent, BaseInfo info) {
     super(parent, info);

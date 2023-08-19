@@ -7,7 +7,6 @@ import dev.conless.comet.frontend.ast.node.expr.*;
 import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
 import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
-import dev.conless.comet.frontend.ast.node.type.*;
 import dev.conless.comet.frontend.utils.metadata.*;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.ClassScope;
@@ -98,14 +97,6 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
       currentScope.declare(new VarInfo(node.getName(), v.getType()));
     }
     return msg;
-  }
-
-  public CompileMsg visit(TypeNameNode node) throws BaseError {
-    throw new RuntimeError("SemanticChecker.visit(TypeNameNode) should not be called", node.getPosition());
-  }
-
-  public CompileMsg visit(ExprNode node) throws BaseError {
-    throw new RuntimeError("SemanticChecker.visit(ExprNode) should not be called", node.getPosition());
   }
 
   public CompileMsg visit(NewExprNode node) throws BaseError {
@@ -386,10 +377,6 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
       return new CompileMsg("Unknown atom type", node);
     }
     return new CompileMsg();
-  }
-
-  public CompileMsg visit(StmtNode node) throws BaseError {
-    throw new RuntimeError("SemanticChecker.visit(StmtNode) should not be called", node.getPosition());
   }
 
   public CompileMsg visit(BlockStmtNode node) throws BaseError {

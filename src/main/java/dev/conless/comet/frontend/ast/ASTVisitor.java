@@ -3,9 +3,8 @@ package dev.conless.comet.frontend.ast;
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
-import dev.conless.comet.frontend.ast.node.global.ProgramNode;
+import dev.conless.comet.frontend.ast.node.global.*;
 import dev.conless.comet.frontend.ast.node.stmt.*;
-import dev.conless.comet.frontend.ast.node.type.*;
 import dev.conless.comet.utils.error.BaseError;
 
 public interface ASTVisitor<T> {
@@ -16,9 +15,6 @@ public interface ASTVisitor<T> {
   public T visit(ClassDefNode node) throws BaseError;
   public T visit(VarDefNode node) throws BaseError;
   
-  public T visit(TypeNameNode node) throws BaseError;
-
-  public T visit(ExprNode node) throws BaseError;
   public T visit(NewExprNode node) throws BaseError;
   public T visit(MemberExprNode node) throws BaseError;
   public T visit(CallExprNode node) throws BaseError;
@@ -30,7 +26,6 @@ public interface ASTVisitor<T> {
   public T visit(AssignExprNode node) throws BaseError;
   public T visit(AtomExprNode node) throws BaseError;
 
-  public T visit(StmtNode node) throws BaseError;
   public T visit(BlockStmtNode node) throws BaseError;
   public T visit(IfStmtNode node) throws BaseError;
   public T visit(ForStmtNode node) throws BaseError;

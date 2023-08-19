@@ -1,4 +1,4 @@
-package dev.conless.comet.frontend.ir.node.utils;
+package dev.conless.comet.frontend.ir.node.stmt;
 
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
@@ -10,16 +10,21 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public final class IRExprNode extends IRNode {
+public class IRStmtNode extends IRNode {
   private Array<IRNode> nodes;
   private IREntity dest;
   private IRVariable destAddr;
 
-  public IRExprNode() {
+  public IRStmtNode() {
     nodes = new Array<>();
   }
 
-  public IRExprNode(Array<IRNode> nodes) {
+  public IRStmtNode(IREntity dest) {
+    this.dest = dest;
+    nodes = new Array<>();
+  }
+
+  public IRStmtNode(Array<IRNode> nodes) {
     this.nodes = nodes;
   }
 
@@ -27,7 +32,7 @@ public final class IRExprNode extends IRNode {
     nodes.add(node);
   }
 
-  public void appendNodes(IRExprNode nodes) {
+  public void appendNodes(IRStmtNode nodes) {
     this.nodes.addAll(nodes.getNodes());
   }
 

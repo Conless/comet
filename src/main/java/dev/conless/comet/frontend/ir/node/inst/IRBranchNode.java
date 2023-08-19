@@ -1,12 +1,13 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.entity.IREntity;
+import dev.conless.comet.frontend.ir.node.IRNode;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public final class IRBranchNode extends IRInstNode {
+public final class IRBranchNode extends IRNode {
   private IREntity condition;
   private String trueLabel, falseLabel;
 

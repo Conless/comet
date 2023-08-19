@@ -52,7 +52,7 @@ public final class WhileStmtNode extends StmtNode implements NodeWithScope, Node
   }
 
   @Override
-  public BaseScope getScope() {
+  public LoopScope getScope() {
     return scope;
   }
 

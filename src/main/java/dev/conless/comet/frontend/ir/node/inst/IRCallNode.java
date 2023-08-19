@@ -2,6 +2,7 @@ package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
+import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
@@ -11,7 +12,7 @@ import lombok.Value;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public final class IRCallNode extends IRInstNode {
+public final class IRCallNode extends IRNode {
   private IRVariable dest;
   private IRType type;
   private String funcName;

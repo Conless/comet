@@ -4,11 +4,10 @@ import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.node.inst.IRAllocaNode;
 import dev.conless.comet.frontend.ir.node.inst.IRCallNode;
-import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
 import dev.conless.comet.frontend.ir.node.inst.IRReturnNode;
 import dev.conless.comet.frontend.ir.node.inst.IRStoreNode;
+import dev.conless.comet.frontend.ir.node.stmt.IRStmtNode;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
-import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
 import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
@@ -24,13 +23,13 @@ public class IRFuncDefNode extends IRNode {
   private String name;
   private Array<IRVariable> params;
   private IRType returnType;
-  private IRExprNode nodes;
+  private IRStmtNode nodes;
 
   public IRFuncDefNode(String name, Array<IRVariable> params, IRType returnType) {
     this.name = name;
     this.params = params;
     this.returnType = returnType;
-    this.nodes = new IRExprNode();
+    this.nodes = new IRStmtNode();
 
     addNode(new IRCommentNode("The definition of function " + name));
     addNode(new IRLabelNode("entry"));
@@ -59,7 +58,7 @@ public class IRFuncDefNode extends IRNode {
       nodes.addNode(new IRReturnNode(returnType));
     }
     for (var node : nodes.getNodes()) {
-      if (node instanceof IRInstNode) {
+      if (!(node instanceof IRLabelNode)) {
         str += "  ";
       }
       str += node.toString() + "\n";

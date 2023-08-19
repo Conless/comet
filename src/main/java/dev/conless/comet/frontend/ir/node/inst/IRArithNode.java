@@ -2,7 +2,7 @@ package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.type.IRType;
+import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.error.RuntimeError;
 import lombok.EqualsAndHashCode;
@@ -10,7 +10,7 @@ import lombok.Value;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public final class IRArithNode extends IRInstNode {
+public final class IRArithNode extends IRNode {
   private IRVariable dest;
   private IREntity lhs, rhs;
   private String op;

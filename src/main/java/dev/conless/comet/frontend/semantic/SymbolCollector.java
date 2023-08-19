@@ -6,7 +6,6 @@ import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
 import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
-import dev.conless.comet.frontend.ast.node.type.*;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
@@ -106,14 +105,6 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor<CompileM
     return new CompileMsg();
   }
 
-  public CompileMsg visit(TypeNameNode node) {
-    throw new RuntimeError("SymbolCollector.visit(TypeNameNode) should not be called", node.getPosition());
-  }
-
-  public CompileMsg visit(ExprNode node) {
-    throw new RuntimeError("SymbolCollector.visit(ExprNode) should not be called", node.getPosition());
-  }
-
   public CompileMsg visit(NewExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(NewExprNode) should not be called", node.getPosition());
   }
@@ -152,10 +143,6 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor<CompileM
 
   public CompileMsg visit(AtomExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(AtomExprNode) should not be called", node.getPosition());
-  }
-
-  public CompileMsg visit(StmtNode node) {
-    throw new RuntimeError("SymbolCollector.visit(StmtNode) should not be called", node.getPosition());
   }
 
   public CompileMsg visit(BlockStmtNode node) {

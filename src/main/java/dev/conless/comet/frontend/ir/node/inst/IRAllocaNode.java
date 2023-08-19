@@ -1,13 +1,14 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.entity.IRVariable;
+import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public final class IRAllocaNode extends IRInstNode {
+public final class IRAllocaNode extends IRNode {
   private IRVariable dest;
   private String type;
 

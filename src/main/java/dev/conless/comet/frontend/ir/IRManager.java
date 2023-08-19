@@ -9,9 +9,7 @@ import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.global.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.global.IRProgramNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
-import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
-import dev.conless.comet.frontend.ir.node.utils.IRExprNode;
-import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
+import dev.conless.comet.frontend.ir.node.stmt.IRStmtNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
@@ -98,69 +96,21 @@ public class IRManager {
     counter = new IRCounter();
   }
 
-  protected IRExprNode allocaHelper(TypeInfo typeInfo, Array<IREntity> lengths) {
-    var instList = new IRExprNode();
-    if (typeInfo.getDepth().equals(0)) {
-      var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(++counter.allocaCount));
-      var alloca = new IRCallNode(allocaVar, GlobalScope.irPtrType, "malloc", new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName()))));
-      instList.addNode(alloca);
-      if (!typeInfo.getIsBuiltIn()) {
-        instList.addNode(new IRCallNode(String.format("__class.%s", typeInfo.getName(), typeInfo.getName()), new Array<>(allocaVar))); 
-      }
-      instList.setDest(allocaVar);
-    } else if (lengths.size() > 0) {
-      var length = lengths.get(0);
-      lengths.remove(0);
-      typeInfo.setDepth(typeInfo.getDepth() - 1);
-      var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
-      instList.addNode(new IRCommentNode(String.format("%s = alloca %s%s[%s]", allocaVar.getValue(), typeInfo.getName(),
-          "*".repeat(typeInfo.getDepth()), length.getValue())));
-      instList.addNode(new IRCallNode(allocaVar, GlobalScope.irPtrType, "__array_alloca",
-          new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName())),
-              length)));
-      if (lengths.size() > 0) {
-        counter.loopCount++;
-        var condTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".cond");
-        var updateTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".update");
-        var bodyTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".body");
-        var endTag = new IRLabelNode("loop." + String.valueOf(counter.loopCount) + ".end");
-        // Building a for loop
-        var forVar = new IRVariable(GlobalScope.irPtrType, "%.for." + String.valueOf(counter.loopCount) + ".0");
-        instList.addNode(new IRCommentNode("for " + forVar.getValue() + " in range (0, " + length.getValue() + ")"));
-        instList.addNode(new IRAllocaNode(forVar, GlobalScope.irIntType));
-        instList.addNode(new IRStoreNode(forVar, new IRLiteral(GlobalScope.irIntType, 0)));
-        instList.addNode(new IRJumpNode(condTag.getName()));
-        instList.addNode(condTag);
-        var forVarLoadedCmp = new IRVariable(GlobalScope.irIntType,
-            "%.for." + String.valueOf(counter.loopCount) + ".1");
-        var condVar = new IRVariable(GlobalScope.irBoolType, "%.for." + String.valueOf(counter.loopCount) + ".2");
-        instList.addNode(new IRLoadNode(forVarLoadedCmp, forVar, GlobalScope.irIntType));
-        instList.addNode(new IRArithNode(condVar, forVarLoadedCmp, length, "slt"));
-        instList.addNode(new IRBranchNode(condVar, bodyTag.getName(), endTag.getName()));
-        instList.addNode(updateTag);
-        var forVarLoadedUpd = new IRVariable(GlobalScope.irIntType,
-            "%.for." + String.valueOf(counter.loopCount) + ".3");
-        instList.addNode(new IRLoadNode(forVarLoadedUpd, forVar, GlobalScope.irIntType));
-        var forVarAfterUpd = new IRVariable(GlobalScope.irIntType,
-            "%.for." + String.valueOf(counter.loopCount) + ".4");
-        instList
-            .addNode(new IRArithNode(forVarAfterUpd, forVarLoadedUpd, new IRLiteral(GlobalScope.irIntType, 1), "add"));
-        instList.addNode(new IRStoreNode(forVar, forVarAfterUpd));
-        instList.addNode(new IRJumpNode(condTag.getName()));
-        // Here starts the body of construction
-        instList.addNode(bodyTag);
-        var allocaEle = allocaHelper(typeInfo, lengths);
-        instList.appendNodes(allocaEle);
-        var index = new IRVariable(GlobalScope.irIntType,
-            "%.for." + String.valueOf(counter.loopCount) + ".5");
-        instList.addNode(new IRLoadNode(index, forVar, GlobalScope.irIntType));
-        var addrToFill = new IRVariable(GlobalScope.irPtrType, "%.element." + String.valueOf(++counter.elementCount));
-        instList.addNode(new IRStoreNode(addrToFill, allocaEle.getDest()));
-        instList.addNode(new IRJumpNode(updateTag.getName()));
-        instList.addNode(endTag);
-      }
-      instList.setDest(allocaVar);
+  protected IRStmtNode allocaHelper(TypeInfo typeInfo, Array<IREntity> lengths) {
+    if (typeInfo.getDepth() > 0) {
+      throw new RuntimeError("Array type should be handled by malloc");
     }
+    var instList = new IRStmtNode();
+    var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(++counter.allocaCount));
+    var alloca = new IRCallNode(allocaVar, GlobalScope.irPtrType, "malloc",
+        new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName()))));
+    instList.addNode(alloca);
+    if (!typeInfo.getIsBuiltIn()) {
+      instList.addNode(
+          new IRCallNode(String.format("__class.%s", typeInfo.getName(), typeInfo.getName()), new Array<>(allocaVar)));
+    }
+    instList.setDest(allocaVar);
+
     return instList;
   }
 
