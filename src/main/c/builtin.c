@@ -61,7 +61,7 @@ void *__array_alloca(int size, int depth, int length, ...) {
   return __array_alloca_inside(size, depth, a, length);
 }
 
-int __builtIn_array_size(void *array) { return ((int *)array)[-1]; }
+int __builtin_array_size(void *array) { return ((int *)array)[-1]; }
 
 int __string_length(char *s) {
   int i = 0;

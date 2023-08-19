@@ -194,7 +194,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var object = (IRVariable) objectInst.getDest(); // Object should be a pointer pointed to a class
     var objectType = (TypeInfo) node.getObject().getInfo().getType();
     if (!objectType.getDepth().equals(0)) {
-      instList.setDest(new IRFunc("__builtIn_array_size", object, GlobalScope.irIntType));
+      instList.setDest(new IRFunc("__builtin_array_size", object, GlobalScope.irIntType));
     } else if (objectType.equals(GlobalScope.stringType)) {
       instList.setDest(new IRFunc("__string" + "_" + infoType.getName(), object,
           infoType.getName().equals("substring") ? GlobalScope.irPtrType : GlobalScope.irIntType));

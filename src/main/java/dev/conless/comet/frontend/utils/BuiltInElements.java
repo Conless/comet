@@ -23,7 +23,7 @@ public interface BuiltInElements {
   FuncInfo getStringFunc = new FuncInfo("getString", stringType);
   FuncInfo getIntFunc = new FuncInfo("getInt", intType);
   FuncInfo toStringFunc = new FuncInfo("toString", stringType, intType);
-  FuncInfo[] builtInFuncs = { printFunc, printlnFunc, printIntFunc, printlnIntFunc, getStringFunc, getIntFunc,
+  FuncInfo[] builtinFuncs = { printFunc, printlnFunc, printIntFunc, printlnIntFunc, getStringFunc, getIntFunc,
       toStringFunc };
 
   FuncInfo arraySizeFunc = new FuncInfo("size", intType);
@@ -35,7 +35,7 @@ public interface BuiltInElements {
   ClassInfo intClass = new ClassInfo("int");
   ClassInfo boolClass = new ClassInfo("bool");
   ClassInfo stringClass = new ClassInfo("string", stringLengthFunc, stringSubstringFunc, stringParseintFunc, stringOrdFunc);
-  ClassInfo[] builtInClasses = { intClass, boolClass, stringClass };
+  ClassInfo[] builtinClasses = { intClass, boolClass, stringClass };
 
   // // ------------------ IR Builtin Types ------------------
 
@@ -52,7 +52,7 @@ public interface BuiltInElements {
   IRFuncDeclareNode irGetIntFunc = new IRFuncDeclareNode("getInt", irIntType, new Array<>());
   IRFuncDeclareNode irToStringFunc = new IRFuncDeclareNode("toString", irPtrType, new Array<>(irIntType));
   IRFuncDeclareNode irMallocFunc = new IRFuncDeclareNode("malloc", irPtrType, new Array<>(new IRType("i64"))); // TODO: change to i32
-  IRFuncDeclareNode irArraySizeFunc = new IRFuncDeclareNode("__builtIn_array_size", irIntType, new Array<>(irPtrType));
+  IRFuncDeclareNode irArraySizeFunc = new IRFuncDeclareNode("__builtin_array_size", irIntType, new Array<>(irPtrType));
   IRFuncDeclareNode irStringLengthFunc = new IRFuncDeclareNode("__string_length", irIntType, new Array<>(irPtrType));
   IRFuncDeclareNode irStringSubstringFunc = new IRFuncDeclareNode("__string_substring", irPtrType,
       new Array<>(irPtrType, irIntType, irIntType));

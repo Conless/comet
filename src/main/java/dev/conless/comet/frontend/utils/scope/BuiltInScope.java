@@ -14,10 +14,10 @@ public class BuiltInScope extends BaseScope implements BuiltInElements {
     super(parent, new FlowInfo("built-in"));
     funcs = new Map<String, FuncInfo>();
     classes = new Map<String, ClassInfo>();
-    for (FuncInfo func : builtInFuncs) {
+    for (FuncInfo func : builtinFuncs) {
       funcs.put(func.getName(), func);
     }
-    for (ClassInfo classInfo : builtInClasses) {
+    for (ClassInfo classInfo : builtinClasses) {
       classes.put(classInfo.getName(), classInfo);
     }
   }

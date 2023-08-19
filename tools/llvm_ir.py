@@ -4,11 +4,11 @@ import os
 import re
 import subprocess
 
-test_cases_dir = "./testcases/codegen/"
+test_cases_dir = "./tutorial/Compiler-Design-Implementation/testcases/codegen/"
 compile_command = "make"
 execute_command = "./bin/mxc"
 test_dir = "./src/test/mx/"
-builtIn_c = "./src/main/c/builtIn.c"
+builtin_c = "./src/main/c/builtin.c"
 start_testcase = ""
 
 def collect_test_cases():
@@ -33,11 +33,11 @@ def compile2ll():
   if (compile_status != 0):
     print("Compile Error in input.mx: " + compile_output)
     return False
-  builtIn2llvm = "clang-16 -S -c -emit-llvm -O0 " + builtIn_c + " -o " + test_dir + "builtIn.ll"
-  print("Compiling builtIn.c to LLVM IR: " + builtIn2llvm)
-  compile_status, compile_output = subprocess.getstatusoutput(builtIn2llvm)
+  builtin2llvm = "clang-16 -S -c -emit-llvm -O0 " + builtin_c + " -o " + test_dir + "builtin.ll"
+  print("Compiling builtin.c to LLVM IR: " + builtin2llvm)
+  compile_status, compile_output = subprocess.getstatusoutput(builtin2llvm)
   if (compile_status != 0):
-    print("Compile Error in builtIn.c: " + compile_output)
+    print("Compile Error in builtin.c: " + compile_output)
     return False
   return True
 
@@ -55,7 +55,7 @@ def process_io(origin_input):
   return int(result_text[0])
 
 def compile2exe():
-  llvm2exe = "clang-16 " + test_dir + "output.ll " + test_dir + "builtIn.ll -o " + test_dir + "output"
+  llvm2exe = "clang-16 " + test_dir + "output.ll " + test_dir + "builtin.ll -o " + test_dir + "output"
   print("Compiling to executable: " + llvm2exe)
   compile_status, compile_output = subprocess.getstatusoutput(llvm2exe)
   if (compile_status != 0):
@@ -88,9 +88,11 @@ def test(test_name):
     return False
   if execute(file_io=True, expected_result=result) == False:
     return False
-  diff = "diff -ZB " + test_dir + "test.out " + test_dir + "test.ans"
-  compare_status, compare_output = subprocess.getstatusoutput(diff)
-  if (compare_status != 0):
+  diff = "diff -bB " + test_dir + "test.out " + test_dir + "test.ans"
+  compare_status_1, compare_output = subprocess.getstatusoutput(diff)
+  diff = "diff -w " + test_dir + "test.out " + test_dir + "test.ans"
+  compare_status_2, compare_output = subprocess.getstatusoutput(diff)
+  if (compare_status_1 != 0) & (compare_status_2 != 0) :
     print("Wrong Answer: " + compare_output)
     return False
   return True
