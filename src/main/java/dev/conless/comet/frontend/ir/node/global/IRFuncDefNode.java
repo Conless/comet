@@ -1,17 +1,19 @@
 package dev.conless.comet.frontend.ir.node.global;
 
+import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.node.inst.IRAllocaNode;
 import dev.conless.comet.frontend.ir.node.inst.IRCallNode;
 import dev.conless.comet.frontend.ir.node.inst.IRReturnNode;
 import dev.conless.comet.frontend.ir.node.inst.IRStoreNode;
-import dev.conless.comet.frontend.ir.node.stmt.IRStmtNode;
+import dev.conless.comet.frontend.ir.node.stmt.IRStmtsNode;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
 import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 
 import lombok.Getter;
@@ -23,13 +25,13 @@ public class IRFuncDefNode extends IRNode {
   private String name;
   private Array<IRVariable> params;
   private IRType returnType;
-  private IRStmtNode nodes;
+  private IRStmtsNode nodes;
 
   public IRFuncDefNode(String name, Array<IRVariable> params, IRType returnType) {
     this.name = name;
     this.params = params;
     this.returnType = returnType;
-    this.nodes = new IRStmtNode();
+    this.nodes = new IRStmtsNode();
 
     addNode(new IRCommentNode("The definition of function " + name));
     addNode(new IRLabelNode("entry"));
@@ -65,5 +67,10 @@ public class IRFuncDefNode extends IRNode {
     }
     str += "}";
     return str;
+  }
+
+  @Override
+  public <T> T accept(IRVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 }

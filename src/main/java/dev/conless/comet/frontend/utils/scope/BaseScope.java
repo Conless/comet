@@ -16,7 +16,7 @@ public class BaseScope {
   private BaseScope parent;
   private BaseInfo info;
   private Array<Integer> tags;
-  private Integer count;
+  private int count;
   protected Map<String, VarInfo> vars;
   protected Map<String, VarInfo> regVars;
 

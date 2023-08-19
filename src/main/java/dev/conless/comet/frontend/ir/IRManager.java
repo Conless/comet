@@ -9,7 +9,7 @@ import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.global.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.global.IRProgramNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
-import dev.conless.comet.frontend.ir.node.stmt.IRStmtNode;
+import dev.conless.comet.frontend.ir.node.stmt.IRStmtsNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
@@ -96,11 +96,11 @@ public class IRManager {
     counter = new IRCounter();
   }
 
-  protected IRStmtNode allocaHelper(TypeInfo typeInfo, Array<IREntity> lengths) {
+  protected IRStmtsNode allocaHelper(TypeInfo typeInfo, Array<IREntity> lengths) {
     if (typeInfo.getDepth() > 0) {
       throw new RuntimeError("Array type should be handled by malloc");
     }
-    var instList = new IRStmtNode();
+    var instList = new IRStmtsNode();
     var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(++counter.allocaCount));
     var alloca = new IRCallNode(allocaVar, GlobalScope.irPtrType, "malloc",
         new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName()))));

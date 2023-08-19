@@ -1,9 +1,11 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
+import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -28,5 +30,10 @@ public final class IRStoreNode extends IRNode {
   @Override
   public String toString() {
     return "store " + src.toString() + ", " + dest.toString();
+  }
+
+  @Override
+  public <T> T accept(IRVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 }

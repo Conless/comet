@@ -1,6 +1,8 @@
 package dev.conless.comet.frontend.ir.node.global;
 
+import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
+import dev.conless.comet.utils.error.BaseError;
 
 public class IRStrDefNode extends IRGlobalDefNode {
   private String value;
@@ -33,5 +35,10 @@ public class IRStrDefNode extends IRGlobalDefNode {
   @Override
   public String toString() {
     return getVar().getValue() + " = constant" + String.format(" [%d x i8] c", length) + "\"" + value + "\"";
+  }
+
+  @Override
+  public <T> T accept(IRVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 }

@@ -5,10 +5,10 @@ import lombok.*;
 @Getter
 @Setter
 public class TypeInfo extends BaseInfo {
-  private Integer depth;
+  private int depth;
   private Boolean isBuiltIn;
 
-  public TypeInfo(String typeName, Integer arrayDepth) {
+  public TypeInfo(String typeName, int arrayDepth) {
     super(typeName);
     this.isBuiltIn = typeName.equals("int") || typeName.equals("bool") || typeName.equals("string") || typeName.equals("void") || typeName.equals("null");
     this.depth = arrayDepth;
@@ -26,7 +26,7 @@ public class TypeInfo extends BaseInfo {
     if (other.getName().equals("null")) {
       return this.depth > 0 || !this.isBuiltIn;
     }
-    return this.getName().equals(other.getName()) && this.depth.equals(other.depth);
+    return this.getName().equals(other.getName()) && this.depth == other.depth;
   }
 
   public int hashCode() {

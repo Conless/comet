@@ -1,10 +1,11 @@
 package dev.conless.comet.frontend.ir.node.global;
 
+import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.node.utils.IRCustomNode;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
-
+import dev.conless.comet.utils.error.BaseError;
 import lombok.*;
 
 @Getter
@@ -39,4 +40,8 @@ public class IRProgramNode extends IRNode {
     return str;
   }
   
+  @Override
+  public <T> T accept(IRVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
+  }
 }

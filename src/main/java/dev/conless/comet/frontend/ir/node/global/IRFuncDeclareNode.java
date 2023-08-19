@@ -3,7 +3,6 @@ package dev.conless.comet.frontend.ir.node.global;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.container.Array;
-
 import lombok.Getter;
 import lombok.Setter;
 

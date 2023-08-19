@@ -1,10 +1,12 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
+import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Pair;
+import dev.conless.comet.utils.error.BaseError;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -24,5 +26,10 @@ public final class IRPhiNode extends IRNode {
   @Override
   public String toString() {
     return dest + " = phi " + type.toString() + " " + values.toString();
+  }
+
+  @Override
+  public <T> T accept(IRVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 }

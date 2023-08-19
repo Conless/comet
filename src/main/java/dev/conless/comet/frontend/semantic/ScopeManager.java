@@ -9,7 +9,7 @@ public class ScopeManager {
   protected GlobalScope globalScope;
   protected BaseScope currentScope;
 
-  protected Integer depth;
+  protected int depth;
   protected Array<Integer> counter;
 
   public void enterScope(BaseScope scope) {

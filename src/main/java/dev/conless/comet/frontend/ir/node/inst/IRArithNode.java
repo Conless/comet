@@ -1,9 +1,11 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
+import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
+import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -44,8 +46,14 @@ public final class IRArithNode extends IRNode {
   @Override
   public String toString() {
     if (isComparison) {
-      return dest.getValue() + " = icmp " + op + " " + lhs.getType().toString() + " " + lhs.getValue() + ", " + rhs.getValue();
+      return dest.getValue() + " = icmp " + op + " " + lhs.getType().toString() + " " + lhs.getValue() + ", "
+          + rhs.getValue();
     }
     return dest.getValue() + " = " + op + " " + lhs.getType().toString() + " " + lhs.getValue() + ", " + rhs.getValue();
+  }
+  
+  @Override
+  public <T> T accept(IRVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 }

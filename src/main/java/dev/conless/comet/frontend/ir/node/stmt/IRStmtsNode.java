@@ -4,27 +4,27 @@ import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.utils.container.Array;
-
+import dev.conless.comet.utils.error.RuntimeError;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class IRStmtNode extends IRNode {
+public class IRStmtsNode extends IRNode {
   private Array<IRNode> nodes;
   private IREntity dest;
   private IRVariable destAddr;
 
-  public IRStmtNode() {
+  public IRStmtsNode() {
     nodes = new Array<>();
   }
 
-  public IRStmtNode(IREntity dest) {
+  public IRStmtsNode(IREntity dest) {
     this.dest = dest;
     nodes = new Array<>();
   }
 
-  public IRStmtNode(Array<IRNode> nodes) {
+  public IRStmtsNode(Array<IRNode> nodes) {
     this.nodes = nodes;
   }
 
@@ -32,12 +32,12 @@ public class IRStmtNode extends IRNode {
     nodes.add(node);
   }
 
-  public void appendNodes(IRStmtNode nodes) {
+  public void appendNodes(IRStmtsNode nodes) {
     this.nodes.addAll(nodes.getNodes());
   }
 
   @Override
   public String toString() {
-    return nodes.toString(" ", "\n");
+    throw new RuntimeError("IRStmtsNode.toString() is not implemented");
   }
 }

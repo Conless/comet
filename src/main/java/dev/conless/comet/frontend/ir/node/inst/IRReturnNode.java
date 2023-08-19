@@ -1,10 +1,12 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
+import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRLiteral;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
+import dev.conless.comet.utils.error.BaseError;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -40,5 +42,10 @@ public final class IRReturnNode extends IRNode {
   @Override
   public String toString() {
     return "ret " + type.toString() + (this.value != null ? (" " + value.getValue()) : "");
+  }
+
+  @Override
+  public <T> T accept(IRVisitor<T> visitor) throws BaseError {
+    return visitor.visit(this);
   }
 }
