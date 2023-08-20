@@ -3,11 +3,9 @@ package dev.conless.comet.frontend.ir.node.global;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.container.Array;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@lombok.Getter
+@lombok.Setter
 public class IRFuncDeclareNode extends IRNode {
   private String name;
   private IRType returnType;

@@ -5,17 +5,13 @@ import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
 import dev.conless.comet.utils.error.*;
 import dev.conless.comet.utils.container.Array;
 
-import lombok.experimental.SuperBuilder;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * The `CallExprNode` class represents a function call expression in an abstract syntax tree (AST) and
  * provides methods for manipulating and visiting the node.
  */
-@SuperBuilder
-@Getter
-@Setter
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.Setter
 public final class CallExprNode extends ExprNode implements NodeWithExpr {
   private ExprNode func;
   private Array<ExprNode> args;

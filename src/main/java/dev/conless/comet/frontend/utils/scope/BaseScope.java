@@ -7,11 +7,9 @@ import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.error.RuntimeError;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@lombok.Getter
+@lombok.Setter
 public class BaseScope {
   private BaseScope parent;
   private BaseInfo info;

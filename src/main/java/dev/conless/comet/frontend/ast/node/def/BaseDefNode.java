@@ -4,11 +4,9 @@ import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.utils.metadata.BaseInfo;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.experimental.SuperBuilder;
-import lombok.Getter;
 
-@SuperBuilder
-@Getter
+@lombok.experimental.SuperBuilder
+@lombok.Getter
 /**
  * The class BaseDefNode is an abstract class that extends ASTNode and has a private field info of type
  * BaseInfo, and it provides a method getName() that returns the name of the info object.

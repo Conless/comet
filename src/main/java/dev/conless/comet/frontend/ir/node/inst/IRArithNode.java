@@ -7,11 +7,9 @@ import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class IRArithNode extends IRNode {
   private IRVariable dest;
   private IREntity lhs, rhs;

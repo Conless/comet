@@ -5,11 +5,9 @@ import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.RuntimeError;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@lombok.Getter
+@lombok.Setter
 public class IRStmtsNode extends IRNode {
   private Array<IRNode> nodes;
   private IREntity dest;

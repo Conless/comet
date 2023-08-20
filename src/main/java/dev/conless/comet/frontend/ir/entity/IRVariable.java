@@ -4,11 +4,9 @@ import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class IRVariable extends IREntity {
   public IRVariable(IRType type, String value) {
     super(type, value);

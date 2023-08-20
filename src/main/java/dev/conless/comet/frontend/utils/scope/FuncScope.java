@@ -1,10 +1,9 @@
 package dev.conless.comet.frontend.utils.scope;
 
 import dev.conless.comet.frontend.utils.metadata.BaseInfo;
-import lombok.*;
 
-@Getter
-@Setter
+@lombok.Getter
+@lombok.Setter
 public class FuncScope extends BaseScope {
   private Boolean isExited;
 

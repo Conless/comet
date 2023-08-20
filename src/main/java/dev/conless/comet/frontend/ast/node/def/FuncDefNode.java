@@ -10,17 +10,14 @@ import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.FuncScope;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.experimental.SuperBuilder;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * The `FuncDefNode` class represents a function definition node in an abstract syntax tree, with
  * properties such as scope, parameters, and a blocked body.
  */
-@SuperBuilder
-@Getter
-@Setter
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.Setter
 public final class FuncDefNode extends BaseDefNode implements NodeWithScope {
   private FuncScope scope;
   private final Array<VarDefNode> params;

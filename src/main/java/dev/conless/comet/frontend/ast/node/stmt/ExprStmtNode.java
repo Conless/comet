@@ -6,17 +6,13 @@ import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
 import dev.conless.comet.utils.error.*;
 import dev.conless.comet.utils.container.Array;
 
-import lombok.experimental.SuperBuilder;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * The `ExprStmtNode` class represents a statement node in an abstract syntax tree (AST) that contains
  * an array of expression nodes.
  */
-@SuperBuilder
-@Getter
-@Setter
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.Setter
 public final class ExprStmtNode extends StmtNode implements NodeWithExpr {
   private Array<ExprNode> exprs;
 

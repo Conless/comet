@@ -1,9 +1,7 @@
 package dev.conless.comet.frontend.utils.metadata;
 
-import lombok.*;
-
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class ExprInfo extends BaseInfo {
   private BaseInfo type;
   private boolean isLValue;

@@ -1,11 +1,9 @@
 package dev.conless.comet.frontend.ir.entity;
 
 import dev.conless.comet.frontend.ir.type.IRType;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@lombok.Getter
+@lombok.Setter
 public class IRFunc extends IREntity {
   private IRVariable caller;
   private IRType returnType;

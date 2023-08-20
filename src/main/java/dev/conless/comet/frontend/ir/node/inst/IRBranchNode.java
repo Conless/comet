@@ -4,11 +4,9 @@ import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class IRBranchNode extends IRNode {
   private IREntity condition;
   private String trueLabel, falseLabel;

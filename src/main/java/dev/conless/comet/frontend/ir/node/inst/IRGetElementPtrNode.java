@@ -7,11 +7,9 @@ import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class IRGetElementPtrNode extends IRNode {
   private IRVariable dest, src;
   private String type;

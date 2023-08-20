@@ -7,11 +7,9 @@ import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class IRPhiNode extends IRNode {
   private String dest;
   private IRType type;

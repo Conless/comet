@@ -6,17 +6,14 @@ import dev.conless.comet.frontend.utils.metadata.FlowInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.experimental.SuperBuilder;
-import lombok.Getter;
-import lombok.EqualsAndHashCode;
 
 /**
  * The `BlockStmtNode` class represents a block statement node in an abstract syntax tree (AST) and
  * implements the `ScopedNode` interface.
  */
-@SuperBuilder
-@Getter
-@EqualsAndHashCode(callSuper = true)
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class BlockStmtNode extends StmtNode implements NodeWithScope {
   private BaseScope scope;
   private final Array<StmtNode> stmts;

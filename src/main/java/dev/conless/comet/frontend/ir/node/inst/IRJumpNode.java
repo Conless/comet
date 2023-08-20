@@ -3,11 +3,9 @@ package dev.conless.comet.frontend.ir.node.inst;
 import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class IRJumpNode extends IRNode {
   private String label;
 

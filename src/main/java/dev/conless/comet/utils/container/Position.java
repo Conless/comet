@@ -2,9 +2,7 @@ package dev.conless.comet.utils.container;
 
 import org.antlr.v4.runtime.Token;
 
-import lombok.Value;
-
-@Value
+@lombok.Value
 public class Position {
   private int row, column;
 

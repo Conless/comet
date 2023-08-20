@@ -8,17 +8,14 @@ import dev.conless.comet.frontend.utils.metadata.FlowInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
-import lombok.experimental.SuperBuilder;
-import lombok.Getter;
-import lombok.EqualsAndHashCode;
 
 /**
  * The `IfStmtNode` class represents an if statement in a programming language and includes fields for
  * the condition, then statement, else statement, and scopes.
  */
-@SuperBuilder
-@Getter
-@EqualsAndHashCode(callSuper = true)
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class IfStmtNode extends StmtNode implements NodeWithScope, NodeWithExpr {
   private BaseScope thenScope, elseScope;
   private ExprNode condition;

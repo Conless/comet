@@ -3,9 +3,8 @@ package dev.conless.comet.frontend.ir.type;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.error.RuntimeError;
-import lombok.*;
 
-@Getter
+@lombok.Getter
 public class IRType {
   private String typeName;
   public IRType(String typeName) {

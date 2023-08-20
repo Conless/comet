@@ -6,17 +6,14 @@ import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
 import dev.conless.comet.utils.error.*;
-import lombok.experimental.SuperBuilder;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * The VarDefNode class represents a variable definition node in an abstract syntax tree (AST) and
  * includes an initializer expression.
  */
-@SuperBuilder
-@Getter
-@Setter
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.Setter
 public final class VarDefNode extends BaseDefNode implements NodeWithExpr {
   private ExprNode init;
 

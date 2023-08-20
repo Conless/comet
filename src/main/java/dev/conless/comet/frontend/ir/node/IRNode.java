@@ -2,11 +2,9 @@ package dev.conless.comet.frontend.ir.node;
 
 import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@lombok.Getter
+@lombok.Setter
 public abstract class IRNode {
   public abstract String toString();
   

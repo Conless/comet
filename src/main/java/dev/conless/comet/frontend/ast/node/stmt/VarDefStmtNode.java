@@ -5,16 +5,12 @@ import dev.conless.comet.frontend.ast.node.def.VarDefNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 
-import lombok.experimental.SuperBuilder;
-import lombok.Value;
-import lombok.EqualsAndHashCode;
-
 /**
  * The VarDefStmtNode class represents a statement node that defines multiple variables.
  */
-@SuperBuilder
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.experimental.SuperBuilder
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class VarDefStmtNode extends StmtNode {
   private Array<VarDefNode> defs;
 

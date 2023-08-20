@@ -1,9 +1,8 @@
 package dev.conless.comet.frontend.ir.type;
 
 import dev.conless.comet.utils.container.Array;
-import lombok.*;
 
-@Getter
+@lombok.Getter
 public class IRStructType extends IRType {
   private Array<IRType> members;
 

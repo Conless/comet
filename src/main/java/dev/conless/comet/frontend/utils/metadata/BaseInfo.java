@@ -1,9 +1,7 @@
 package dev.conless.comet.frontend.utils.metadata;
 
-import lombok.*;
-
-@Getter
-@Setter
+@lombok.Getter
+@lombok.Setter
 public abstract class BaseInfo {
   private String name;
 

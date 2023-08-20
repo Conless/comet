@@ -16,11 +16,8 @@ import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
+@lombok.Getter
+@lombok.Setter
 public class IRFuncDefNode extends IRNode {
   private String name;
   private Array<IRVariable> params;

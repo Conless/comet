@@ -2,11 +2,9 @@ package dev.conless.comet.backend.asm.node.inst;
 
 import dev.conless.comet.backend.asm.entity.ASMRegister;
 import dev.conless.comet.backend.asm.node.ASMNode;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public class ASMArithNode extends ASMNode {
   private String op;
   private ASMRegister lhs, rhs;

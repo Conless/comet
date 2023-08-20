@@ -3,9 +3,8 @@ package dev.conless.comet.frontend.ir.entity;
 import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.Getter;
 
-@Getter
+@lombok.Getter
 public abstract class IREntity {
   private IRType type;
   private String value;

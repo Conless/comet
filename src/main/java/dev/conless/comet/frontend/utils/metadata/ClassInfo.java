@@ -5,10 +5,8 @@ import dev.conless.comet.frontend.ast.node.def.VarDefNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
 
-import lombok.*;
-
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class ClassInfo extends BaseInfo {
   public Map<String, VarInfo> vars;
   public Map<String, FuncInfo> funcs;

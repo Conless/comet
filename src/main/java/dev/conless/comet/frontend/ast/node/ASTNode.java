@@ -4,13 +4,9 @@ import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.utils.container.Position;
 import dev.conless.comet.utils.error.BaseError;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-
-@SuperBuilder
-@Getter
-@Setter
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.Setter
 public class ASTNode {
   protected ASTNode parent;
   protected Position position;

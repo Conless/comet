@@ -3,10 +3,8 @@ package dev.conless.comet.frontend.utils.metadata;
 import dev.conless.comet.frontend.ast.node.def.VarDefNode;
 import dev.conless.comet.utils.container.Array;
 
-import lombok.*;
-
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public class FuncInfo extends BaseInfo {
   public TypeInfo type;
   public Array<TypeInfo> params;

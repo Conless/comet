@@ -6,10 +6,9 @@ import dev.conless.comet.frontend.ir.node.utils.IRCustomNode;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.*;
 
-@Getter
-@Setter
+@lombok.Getter
+@lombok.Setter
 public class IRProgramNode extends IRNode {
   private Array<IRGlobalDefNode> defs;
   private Array<IRFuncDefNode> funcs;

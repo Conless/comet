@@ -4,6 +4,7 @@ import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.utils.error.BaseError;
 
+@lombok.Getter
 public class IRStrDefNode extends IRGlobalDefNode {
   private String value;
   private int length;

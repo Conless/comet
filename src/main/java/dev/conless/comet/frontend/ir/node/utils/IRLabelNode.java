@@ -3,9 +3,8 @@ package dev.conless.comet.frontend.ir.node.utils;
 import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.Getter;
 
-@Getter
+@lombok.Getter
 public final class IRLabelNode extends IRNode {
   private final String name;
 

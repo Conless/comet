@@ -5,17 +5,13 @@ import dev.conless.comet.frontend.ast.node.expr.ExprNode;
 import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
 import dev.conless.comet.utils.error.*;
 
-import lombok.experimental.SuperBuilder;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * The `ReturnStmtNode` class represents a return statement in a Java program and extends the
  * `StmtNode` class.
  */
-@SuperBuilder
-@Getter
-@Setter
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.Setter
 public final class ReturnStmtNode extends StmtNode implements NodeWithExpr {
   private ExprNode expr;
 

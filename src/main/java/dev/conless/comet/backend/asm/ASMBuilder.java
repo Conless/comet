@@ -123,14 +123,12 @@ public class ASMBuilder extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IREntity node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    throw new RuntimeError("ASMBuilder.visit(IREntity) should not be called");
   }
 
   @Override
   public ASMNode visit(IRVariable node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    
   }
 
   @Override

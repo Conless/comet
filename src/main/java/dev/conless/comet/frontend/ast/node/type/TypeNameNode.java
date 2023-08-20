@@ -5,17 +5,13 @@ import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.utils.error.BaseError;
 
-import lombok.experimental.SuperBuilder;
-import lombok.Value;
-import lombok.EqualsAndHashCode;
-
 /**
  * The TypeNameNode class represents a node in an abstract syntax tree (AST) that contains information
  * about a type name.
  */
-@SuperBuilder
-@Value
-@EqualsAndHashCode(callSuper = true)
+@lombok.experimental.SuperBuilder
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class TypeNameNode extends ASTNode {
   private TypeInfo info;
 

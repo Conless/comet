@@ -9,18 +9,15 @@ import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.LoopScope;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
-import lombok.experimental.SuperBuilder;
-import lombok.Getter;
-import lombok.EqualsAndHashCode;
 
 /**
  * The `WhileStmtNode` class represents a while loop statement in a Java program and includes fields
  * for the loop condition and body, as well as methods for generating a string representation of the
  * node and accepting an AST visitor.
  */
-@SuperBuilder
-@Getter
-@EqualsAndHashCode(callSuper = true)
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class WhileStmtNode extends StmtNode implements NodeWithScope, NodeWithExpr {
   private LoopScope scope;
   private ExprNode condition;

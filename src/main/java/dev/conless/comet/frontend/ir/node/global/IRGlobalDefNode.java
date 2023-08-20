@@ -7,9 +7,8 @@ import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.type.IRStructType;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.Getter;
 
-@Getter
+@lombok.Getter
 public class IRGlobalDefNode extends IRNode {
   private IRVariable var;
 

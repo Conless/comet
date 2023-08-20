@@ -8,17 +8,14 @@ import dev.conless.comet.frontend.utils.metadata.FlowInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.LoopScope;
 import dev.conless.comet.utils.error.*;
-import lombok.experimental.SuperBuilder;
-import lombok.Getter;
-import lombok.EqualsAndHashCode;
 
 /**
  * The `ForStmtNode` class represents a for loop statement in a programming language and includes
  * fields for the loop initialization, condition, update, and body.
  */
-@SuperBuilder
-@Getter
-@EqualsAndHashCode(callSuper = true)
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.EqualsAndHashCode(callSuper = true)
 public final class ForStmtNode extends StmtNode implements NodeWithScope, NodeWithExpr {
   private LoopScope scope;
   private final StmtNode init;

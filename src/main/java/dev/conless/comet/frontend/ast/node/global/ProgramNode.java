@@ -7,12 +7,10 @@ import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
 
-@SuperBuilder
-@Getter
-@Setter
+@lombok.experimental.SuperBuilder
+@lombok.Getter
+@lombok.Setter
 public final class ProgramNode extends ASTNode implements NodeWithScope {
   public GlobalScope globalScope;
   public final Array<BaseDefNode> defs;

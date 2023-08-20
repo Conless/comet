@@ -4,9 +4,8 @@ import dev.conless.comet.backend.asm.entity.ASMRegister;
 import dev.conless.comet.backend.asm.node.ASMNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.RuntimeError;
-import lombok.Getter;
 
-@Getter
+@lombok.Getter
 public class ASMStmtsNode extends ASMNode {
   private Array<ASMNode> nodes;
   private ASMRegister dest;
