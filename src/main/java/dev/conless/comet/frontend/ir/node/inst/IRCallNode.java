@@ -33,10 +33,14 @@ public final class IRCallNode extends IRNode {
 
   @Override
   public String toString() {
-    return (dest == null ? "" : dest.getValue() + " = ") + "call " + type.toString() + " @" + funcName + "("
-        + args.toString(", ") + ")";
+    String str = (dest == null ? "" : dest.getValue() + " = ") + "call " + type.toString();
+    if (funcName.equals("__array_alloca")) {
+      str += " (i32, i32, i32, ...)";
+    }
+    str += " @" + funcName + "(" + args.toString(", ") + ")";
+    return str;
   }
-  
+
   @Override
   public <T> T accept(IRVisitor<T> visitor) throws BaseError {
     return visitor.visit(this);

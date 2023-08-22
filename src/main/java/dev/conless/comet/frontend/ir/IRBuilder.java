@@ -15,7 +15,6 @@ import dev.conless.comet.frontend.ir.node.global.*;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.stmt.*;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
-import dev.conless.comet.frontend.ir.node.utils.IRCustomNode;
 import dev.conless.comet.frontend.ir.type.*;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.*;
@@ -84,8 +83,10 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     }
     var funcNode = new IRFuncDefNode(node.getName(), paramNodes, new IRType(node.getReturnType()));
     for (var stmt : node.getBlockedBody().getStmts()) {
-      funcNode.getNodes().appendNodes((IRStmtsNode) stmt.accept(this));
+      funcNode.getBody().appendNodes((IRStmtsNode) stmt.accept(this));
     }
+    funcNode.setVarCount(counter.allocaCount + counter.arithCount + counter.callCount + counter.elementCount
+        + counter.loadCount + counter.varCount);
     exitASTNode(node);
     return funcNode;
   }
@@ -118,6 +119,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     if (currentScope instanceof GlobalScope) {
       instList.addNode(new IRGlobalDefNode(var));
     } else {
+      counter.varCount++;
       instList.addNode(new IRAllocaNode(var, new IRType(node.getType())));
     }
     if (node.getInit() != null) {
@@ -132,7 +134,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
           .build();
       var initInst = (IRStmtsNode) initExpr.accept(this);
       if (currentScope instanceof GlobalScope) {
-        initNode.getNodes().appendNodes(initInst);
+        initNode.getBody().appendNodes(initInst);
       } else {
         instList.appendNodes(initInst);
       }
@@ -161,11 +163,11 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       instList.addNode(new IRCommentNode(String.format("%s = malloc %s%s", dest.getValue(), type.getName(),
           "*".repeat(type.getDepth()))));
       var eleType = new TypeInfo(type.getName(), 0);
-      instList
-          .addNode(new IRCustomNode(String.format("%s = call ptr (i32, i32, i32, ...) @__array_alloca(%s, %s, %s, %s)",
-              dest.getValue(), new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(eleType).getTypeName())),
+      var args = new Array<IREntity>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(eleType).getTypeName())),
               new IRLiteral(GlobalScope.irIntType, type.getDepth()),
-              new IRLiteral(GlobalScope.irIntType, sizes.size()), sizes.toString(", "))));
+              new IRLiteral(GlobalScope.irIntType, sizes.size()));
+      args.addAll(sizes);
+      instList.addNode(new IRCallNode(dest, GlobalScope.irPtrType, "__array_alloca", args));
       instList.setDest(dest);
     }
     exitASTNode(node);
@@ -335,11 +337,13 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       lhsInst.addNode(new IRAllocaNode(destAddr, GlobalScope.irBoolType));
       var rhsInst = (IRStmtsNode) node.getRhs().accept(this);
       if (node.getOp().equals("&&")) {
-        instList.addNode(
-            new IRIfStmtNode(num, lhsInst, rhsInst, new IRStmtsNode(new IRLiteral(GlobalScope.irBoolType, 0)), destAddr));
+        instList.appendNodes(
+            new IRIfStmtNode(num, lhsInst, rhsInst, new IRStmtsNode(new IRLiteral(GlobalScope.irBoolType, 0)),
+                destAddr));
       } else {
-        instList.addNode(
-            new IRIfStmtNode(num, lhsInst, new IRStmtsNode(new IRLiteral(GlobalScope.irBoolType, 1)), rhsInst, destAddr));
+        instList.appendNodes(
+            new IRIfStmtNode(num, lhsInst, new IRStmtsNode(new IRLiteral(GlobalScope.irBoolType, 1)), rhsInst,
+                destAddr));
       }
       instList.addNode(new IRLoadNode(dest, destAddr));
       instList.setDest(dest);
@@ -362,63 +366,42 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
         var cmpResult = new IRVariable(GlobalScope.irIntType, "%.arith." + String.valueOf(++counter.arithCount));
         instList.addNode(new IRCallNode(cmpResult, GlobalScope.irIntType, "__string_compare",
             new Array<>(lhsDest, rhsDest)));
-        if (node.getOp().equals("==")) {
-          instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0),
-              "eq"));
-        } else if (node.getOp().equals("!=")) {
-          instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0),
-              "ne"));
-        } else if (node.getOp().equals("<")) {
-          instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0),
-              "slt"));
-        } else if (node.getOp().equals("<=")) {
-          instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0),
-              "sle"));
-        } else if (node.getOp().equals(">")) {
-          instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0),
-              "sgt"));
-        } else if (node.getOp().equals(">=")) {
-          instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0),
+        switch (node.getOp()) {
+          case "==" ->
+            instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0), "eq"));
+          case "!=" ->
+            instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0), "ne"));
+          case "<" ->
+            instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0), "slt"));
+          case "<=" ->
+            instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0), "sle"));
+          case ">" ->
+            instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0), "sgt"));
+          case ">=" -> instList.addNode(new IRArithNode(dest, cmpResult, new IRLiteral(GlobalScope.irIntType, 0),
               "sge"));
-        } else {
-          throw new RuntimeError("IRBuilder.visit(BinaryExprNode) unknown op");
+          default ->
+            throw new RuntimeError("IRBuilder.visit(BinaryExprNode) unknown op");
         }
       }
     } else {
-      if (node.getOp().equals("+")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "add"));
-      } else if (node.getOp().equals("-")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "sub"));
-      } else if (node.getOp().equals("*")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "mul"));
-      } else if (node.getOp().equals("/")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "sdiv"));
-      } else if (node.getOp().equals("%")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "srem"));
-      } else if (node.getOp().equals("<<")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "shl"));
-      } else if (node.getOp().equals(">>")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "ashr"));
-      } else if (node.getOp().equals("&")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "and"));
-      } else if (node.getOp().equals("|")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "or"));
-      } else if (node.getOp().equals("^")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "xor"));
-      } else if (node.getOp().equals("<")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "slt"));
-      } else if (node.getOp().equals(">")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "sgt"));
-      } else if (node.getOp().equals("<=")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "sle"));
-      } else if (node.getOp().equals(">=")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "sge"));
-      } else if (node.getOp().equals("==")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "eq"));
-      } else if (node.getOp().equals("!=")) {
-        instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "ne"));
-      } else {
-        throw new RuntimeError("IRBuilder.visit(BinaryExprNode) unknown op");
+      switch (node.getOp()) {
+        case "+" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "add"));
+        case "-" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "sub"));
+        case "*" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "mul"));
+        case "/" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "sdiv"));
+        case "%" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "srem"));
+        case "<<" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "shl"));
+        case ">>" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "ashr"));
+        case "&" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "and"));
+        case "|" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "or"));
+        case "^" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "xor"));
+        case "==" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "eq"));
+        case "!=" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "ne"));
+        case "<" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "slt"));
+        case "<=" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "sle"));
+        case ">" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "sgt"));
+        case ">=" -> instList.addNode(new IRArithNode(dest, lhsDest, rhsDest, "sge"));
+        default -> throw new RuntimeError("IRBuilder.visit(BinaryExprNode) unknown op");
       }
     }
     exitASTNode(node);

@@ -15,6 +15,10 @@ public final class IRVariable extends IREntity {
     }
   }
 
+  public boolean isGlobal() {
+    return getValue().startsWith("@");
+  }
+
   @Override
   public String toString() {
     return getType().toString() + " " + getValue();

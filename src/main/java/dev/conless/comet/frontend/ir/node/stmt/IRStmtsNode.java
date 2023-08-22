@@ -27,6 +27,9 @@ public class IRStmtsNode extends IRNode {
   }
 
   public void addNode(IRNode node) {
+    if (node instanceof IRStmtsNode) {
+      throw new RuntimeError("Cannot add IRStmtsNode in function");
+    }
     nodes.add(node);
   }
 

@@ -20,8 +20,7 @@ public final class IRArithNode extends IRNode {
     if (!lhs.getType().equals(rhs.getType())) {
       throw new RuntimeError("Cannot perform arithmetic on two different types");
     }
-    if (op.equals("eq") || op.equals("ne") || op.equals("ugt") || op.equals("uge") || op.equals("ult")
-        || op.equals("ule") || op.equals("sgt") || op.equals("sge") || op.equals("slt") || op.equals("sle")) {
+    if (op.equals("eq") || op.equals("ne") || op.equals("sgt") || op.equals("sge") || op.equals("slt") || op.equals("sle")) {
       if (!dest.getType().equals(GlobalScope.irBoolType)) {
         throw new RuntimeError("Cannot perform comparison on non-boolean type");
       }

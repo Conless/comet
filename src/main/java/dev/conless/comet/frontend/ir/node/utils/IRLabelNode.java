@@ -4,7 +4,8 @@ import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.utils.error.BaseError;
 
-@lombok.Getter
+@lombok.Value
+@lombok.EqualsAndHashCode(callSuper = false)
 public final class IRLabelNode extends IRNode {
   private final String name;
 

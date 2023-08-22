@@ -22,13 +22,14 @@ public class IRFuncDefNode extends IRNode {
   private String name;
   private Array<IRVariable> params;
   private IRType returnType;
-  private IRStmtsNode nodes;
+  private IRStmtsNode body;
+  private int varCount = 0; // For codegen
 
   public IRFuncDefNode(String name, Array<IRVariable> params, IRType returnType) {
     this.name = name;
     this.params = params;
     this.returnType = returnType;
-    this.nodes = new IRStmtsNode();
+    this.body = new IRStmtsNode();
 
     addNode(new IRCommentNode("The definition of function " + name));
     addNode(new IRLabelNode("entry"));
@@ -46,17 +47,17 @@ public class IRFuncDefNode extends IRNode {
   }
 
   public void addNode(IRNode node) {
-    nodes.addNode(node);
+    body.addNode(node);
   }
   @Override
   public String toString() {
     String str = "define " + returnType.toString() + " @" + name + "(";
     str += params.toString(", ") + ") {\n";
-    var endNode = nodes.getNodes().get(nodes.getNodes().size() - 1);
+    var endNode = body.getNodes().get(body.getNodes().size() - 1);
     if (!(endNode instanceof IRReturnNode)) {
-      nodes.addNode(new IRReturnNode(returnType));
+      body.addNode(new IRReturnNode(returnType));
     }
-    for (var node : nodes.getNodes()) {
+    for (var node : body.getNodes()) {
       if (!(node instanceof IRLabelNode)) {
         str += "  ";
       }
