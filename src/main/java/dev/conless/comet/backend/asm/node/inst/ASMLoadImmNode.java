@@ -1,22 +1,21 @@
 package dev.conless.comet.backend.asm.node.inst;
 
-import dev.conless.comet.backend.asm.entity.ASMAddress;
 import dev.conless.comet.backend.asm.entity.ASMRegister;
 import dev.conless.comet.backend.asm.node.ASMNode;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public class ASMLoadNode extends ASMNode {
-  public ASMRegister dest;
-  public ASMAddress src;
+public class ASMLoadImmNode extends ASMNode {
+  private ASMRegister dest;
+  private int value;
 
-  public ASMLoadNode(ASMRegister dest, ASMAddress src) {
+  public ASMLoadImmNode(ASMRegister dest, int value) {
     this.dest = dest;
-    this.src = src;
+    this.value = value;
   }
 
   @Override
   public String toString() {
-    return String.format("%-6s", "lw") + dest + ", " + src;
+    return String.format("%-6s", "li") + dest + ", " + value;
   }
 }
