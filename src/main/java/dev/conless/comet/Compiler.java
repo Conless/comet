@@ -6,7 +6,6 @@ import org.antlr.v4.runtime.*;
 
 import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.*;
-import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.grammar.*;
 import dev.conless.comet.frontend.ir.*;
 import dev.conless.comet.frontend.ir.node.*;
@@ -27,10 +26,10 @@ public class Compiler {
     parser.removeErrorListeners();
     parser.addErrorListener(new CometErrorListener());
     ASTNode astProgram = new ASTBuilder().visit(parser.program());
-    new SemanticChecker().visit((ProgramNode) astProgram);
+    new SemanticChecker().visit((ASTRoot) astProgram);
     output.write(astProgram.toString().getBytes());
     output.close();
-    IRNode irProgram = new IRBuilder().visit((ProgramNode) astProgram);
+    IRNode irProgram = new IRBuilder().visit((ASTRoot) astProgram);
     System.out.print(irProgram.toString());
     // var output = new FileOutputStream("./src/test/mx/output.ll");
     // output.write(irProgram.toString().getBytes());

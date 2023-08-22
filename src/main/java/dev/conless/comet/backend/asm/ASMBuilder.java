@@ -11,7 +11,7 @@ import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRLiteral;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.*;
-import dev.conless.comet.frontend.ir.node.global.*;
+import dev.conless.comet.frontend.ir.node.def.*;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.*;
 import dev.conless.comet.utils.error.*;
@@ -24,7 +24,7 @@ public class ASMBuilder extends ASMManager implements IRVisitor<ASMNode> {
   }
 
   @Override
-  public ASMNode visit(IRProgramNode node) throws BaseError {
+  public ASMNode visit(IRRoot node) throws BaseError {
     return null;
   }
 

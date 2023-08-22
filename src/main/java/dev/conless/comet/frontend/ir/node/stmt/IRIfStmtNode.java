@@ -6,14 +6,14 @@ import dev.conless.comet.frontend.ir.node.inst.IRJumpNode;
 import dev.conless.comet.frontend.ir.node.inst.IRStoreNode;
 import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 
-public class IRIfStmtNode extends IRStmtsNode {
+public class IRIfStmtNode extends IRStmtNode {
   public static int count = 0;
 
   public static int addCount() {
     return ++count;
   }
 
-  public IRIfStmtNode(int num, IRStmtsNode cond, IRStmtsNode body, IRStmtsNode elseBody) {
+  public IRIfStmtNode(int num, IRStmtNode cond, IRStmtNode body, IRStmtNode elseBody) {
     super();
     var bodyTag = new IRLabelNode("if." + String.valueOf(num) + ".body");
     var elseTag = new IRLabelNode("if." + String.valueOf(num) + ".else");
@@ -32,7 +32,7 @@ public class IRIfStmtNode extends IRStmtsNode {
     addNode(endTag);
   }
   
-  public IRIfStmtNode(int num, IRStmtsNode cond, IRStmtsNode body, IRStmtsNode elseBody, IRVariable destAddr) {
+  public IRIfStmtNode(int num, IRStmtNode cond, IRStmtNode body, IRStmtNode elseBody, IRVariable destAddr) {
     super();
     var bodyTag = new IRLabelNode("if." + String.valueOf(num) + ".body");
     var elseTag = new IRLabelNode("if." + String.valueOf(num) + ".else");

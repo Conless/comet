@@ -12,27 +12,27 @@ import dev.conless.comet.utils.error.CompileError;
 import java.util.Comparator;
 
 import dev.conless.comet.frontend.ast.node.ASTNode;
+import dev.conless.comet.frontend.ast.node.ASTRoot;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
-import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
 import dev.conless.comet.frontend.ast.node.type.*;
 
 public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   @Override
   public ASTNode visitProgram(Comet.ProgramContext ctx) {
-    var defs = new Array<BaseDefNode>();
+    var defs = new Array<ASTDefNode>();
     for (var def : ctx.children) {
       if ((def instanceof Comet.FuncDefContext) || (def instanceof Comet.ClassDefContext)) {
-        defs.add((BaseDefNode) visit(def));
+        defs.add((ASTDefNode) visit(def));
       } else if (def instanceof Comet.VarDefContext) {
-        var varDef = (VarDefStmtNode) visit(def);
+        var varDef = (ASTVarDefStmtNode) visit(def);
         for (var var : varDef.getDefs()) {
           defs.add(var);
         }
       }
     }
-    return ProgramNode.builder()
+    return ASTRoot.builder()
         .parent(null)
         .position(new Position(ctx.start))
         .defs(defs)
@@ -41,20 +41,20 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitVarDef(Comet.VarDefContext ctx) {
-    var typeName = (TypeNameNode) visit(ctx.typeName());
-    var vars = new Array<VarDefNode>();
+    var typeName = (ASTTypeNode) visit(ctx.typeName());
+    var vars = new Array<ASTVarDefNode>();
     for (var v : ctx.varConstructor()) {
-      var varDef = VarDefNode.builder()
+      var varDef = ASTVarDefNode.builder()
           .position(new Position(ctx.start))
           .info(new VarInfo(v.name.getText(), typeName.getInfo()))
-          .init(v.expr() != null ? (ExprNode) visit(v.expr()) : null)
+          .init(v.expr() != null ? (ASTExprNode) visit(v.expr()) : null)
           .build();
       if (varDef.getInit() != null) {
         varDef.getInit().setParent(varDef);
       }
       vars.add(varDef);
     }
-    var varDefStmt = VarDefStmtNode.builder()
+    var varDefStmt = ASTVarDefStmtNode.builder()
         .position(new Position(ctx.start))
         .defs(vars)
         .build();
@@ -66,56 +66,56 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitClassDef(Comet.ClassDefContext ctx) {
-    FuncDefNode constructor = null;
+    ASTFuncDefNode constructor = null;
     if (ctx.classConstructor().size() == 0) {
-      constructor = FuncDefNode.builder()
+      constructor = ASTFuncDefNode.builder()
           .position(new Position(ctx.start))
           .info(new FuncInfo(ctx.name.getText(), new TypeInfo("void", 0), new Array<>()))
           .params(new Array<>())
-          .blockedBody(BlockStmtNode.builder().position(new Position(ctx.start)).stmts(new Array<>()).build())
+          .blockedBody(ASTBlockStmtNode.builder().position(new Position(ctx.start)).stmts(new Array<>()).build())
           .build();
     } else if (ctx.classConstructor().size() == 1) {
       var ctor = ctx.classConstructor(0);
       if (!ctor.name.getText().equals(ctx.name.getText())) {
         throw new CompileError("Class constructor has a different name to class " + ctx.name.getText(), new Position(ctx.start));
       }
-      constructor = FuncDefNode.builder()
+      constructor = ASTFuncDefNode.builder()
           .position(new Position(ctor.start))
           .info(new FuncInfo(ctor.name.getText(), new TypeInfo("void", 0), new Array<>()))
           .params(new Array<>())
-          .blockedBody((BlockStmtNode) visit(ctor.blockStmt()))
+          .blockedBody((ASTBlockStmtNode) visit(ctor.blockStmt()))
           .build();
     } else {
       throw new CompileError("More than one class constructor is not allowed in class " + ctx.name.getText(), new Position(ctx.start));
     }
-    var vars = new Array<VarDefNode>();
+    var vars = new Array<ASTVarDefNode>();
     for (var def : ctx.varDef()) {
-      var varDef = (VarDefStmtNode) visit(def);
+      var varDef = (ASTVarDefStmtNode) visit(def);
       for (var v : varDef.getDefs()) {
         vars.add(v);
       }
     }
-    vars.sort(new Comparator<VarDefNode>() {
+    vars.sort(new Comparator<ASTVarDefNode>() {
       @Override
-      public int compare(VarDefNode o1, VarDefNode o2) {
+      public int compare(ASTVarDefNode o1, ASTVarDefNode o2) {
         return o1.getInfo().getName().compareTo(o2.getInfo().getName());
       }
     });
-    var funcs = new Array<FuncDefNode>();
+    var funcs = new Array<ASTFuncDefNode>();
     for (var def : ctx.funcDef()) {
       if (def.name.getText() == ctx.name.getText()) {
         throw new CompileError("Functions cannot have the same name as class " + ctx.name.getText(),
             new Position(def.start));
       }
-      funcs.add((FuncDefNode) visit(def));
+      funcs.add((ASTFuncDefNode) visit(def));
     }
-    funcs.sort(new Comparator<FuncDefNode>() {
+    funcs.sort(new Comparator<ASTFuncDefNode>() {
       @Override
-      public int compare(FuncDefNode o1, FuncDefNode o2) {
+      public int compare(ASTFuncDefNode o1, ASTFuncDefNode o2) {
         return o1.getInfo().getName().compareTo(o2.getInfo().getName());
       }
     });
-    var classDef = ClassDefNode.builder()
+    var classDef = ASTClassDefNode.builder()
         .info(new ClassInfo(ctx.name.getText(), vars, funcs))
         .constructor(constructor)
         .varDefs(vars)
@@ -134,22 +134,22 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   @Override
   public ASTNode visitFuncDef(Comet.FuncDefContext ctx) {
     var paramList = ctx.funcParamList();
-    var params = new Array<VarDefNode>();
+    var params = new Array<ASTVarDefNode>();
     if (paramList != null) {
       for (var param : paramList.funcParam()) {
         var constructor = param.varConstructor();
-        params.add(VarDefNode.builder()
+        params.add(ASTVarDefNode.builder()
             .position(new Position(param.start))
-            .info(new VarInfo(constructor.name.getText(), ((TypeNameNode) visit(param.typeName())).getInfo()))
-            .init(constructor.expr() != null ? (ExprNode) visit(constructor.expr()) : null)
+            .info(new VarInfo(constructor.name.getText(), ((ASTTypeNode) visit(param.typeName())).getInfo()))
+            .init(constructor.expr() != null ? (ASTExprNode) visit(constructor.expr()) : null)
             .build());
       }
     }
-    var funcDef = FuncDefNode.builder()
+    var funcDef = ASTFuncDefNode.builder()
         .position(new Position(ctx.start))
-        .info(new FuncInfo(ctx.name.getText(), ((TypeNameNode) visit(ctx.typeName())).getInfo(), params))
+        .info(new FuncInfo(ctx.name.getText(), ((ASTTypeNode) visit(ctx.typeName())).getInfo(), params))
         .params(params)
-        .blockedBody((BlockStmtNode) visit(ctx.blockStmt()))
+        .blockedBody((ASTBlockStmtNode) visit(ctx.blockStmt()))
         .build();
     for (var p : params) {
       p.setParent(funcDef);
@@ -168,7 +168,7 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
         throw new CompileError("The definition of array shouldn't contain length", new Position(ctx.start));
       }
     }
-    return TypeNameNode.builder()
+    return ASTTypeNode.builder()
         .position(new Position(ctx.start))
         .info(new TypeInfo(ctx.type().getText(), ctx.arrayUnit().size()))
         .build();
@@ -177,7 +177,7 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   @Override
   public ASTNode visitNewExpr(Comet.NewExprContext ctx) {
     boolean initFinished = false;
-    var lengths = new Array<ExprNode>();
+    var lengths = new Array<ASTExprNode>();
     for (var unit : ctx.arrayUnit()) {
       if (unit.expr() == null) {
         initFinished = true;
@@ -185,10 +185,10 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
         if (initFinished) {
           throw new CompileError("The shape of multidimensional array must be specified from left to right", new Position(ctx.start));
         }
-        lengths.add((ExprNode) visit(unit.expr()));
+        lengths.add((ASTExprNode) visit(unit.expr()));
       }
     }
-    return NewExprNode.builder()
+    return ASTNewExprNode.builder()
         .position(new Position(ctx.start))
         .type(new TypeInfo(ctx.type().getText(), ctx.arrayUnit().size()))
         .lengths(lengths)
@@ -202,9 +202,9 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitMemberExpr(Comet.MemberExprContext ctx) {
-    var memberExpr = MemberExprNode.builder()
+    var memberExpr = ASTMemberExprNode.builder()
         .position(new Position(ctx.start))
-        .object((ExprNode) visit(ctx.expr()))
+        .object((ASTExprNode) visit(ctx.expr()))
         .member(ctx.member.getText())
         .build();
     memberExpr.getObject().setParent(memberExpr);
@@ -213,15 +213,15 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitCallExpr(Comet.CallExprContext ctx) {
-    var args = new Array<ExprNode>();
+    var args = new Array<ASTExprNode>();
     if (ctx.funcArgList() != null) {
       for (var expr : ctx.funcArgList().expr()) {
-        args.add((ExprNode) visit(expr));
+        args.add((ASTExprNode) visit(expr));
       }
     }
-    var callExpr = CallExprNode.builder()
+    var callExpr = ASTCallExprNode.builder()
         .position(new Position(ctx.start))
-        .func((ExprNode) visit(ctx.expr()))
+        .func((ASTExprNode) visit(ctx.expr()))
         .args(args)
         .build();
     callExpr.getFunc().setParent(callExpr);
@@ -236,10 +236,10 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
     if (ctx.arrayUnit().expr() == null) {
       throw new CompileError("Cannot access an array without index", new Position(ctx.start));
     }
-    var arrayExpr = ArrayExprNode.builder()
+    var arrayExpr = ASTArrayExprNode.builder()
         .position(new Position(ctx.start))
-        .array((ExprNode) visit(ctx.expr()))
-        .subscript((ExprNode) visit(ctx.arrayUnit().expr()))
+        .array((ASTExprNode) visit(ctx.expr()))
+        .subscript((ASTExprNode) visit(ctx.arrayUnit().expr()))
         .build();
     arrayExpr.getArray().setParent(arrayExpr);
     arrayExpr.getSubscript().setParent(arrayExpr);
@@ -248,9 +248,9 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitPostUnaryExpr(Comet.PostUnaryExprContext ctx) {
-    var postUnaryExpr = PostUnaryExprNode.builder()
+    var postUnaryExpr = ASTPostUnaryExprNode.builder()
         .position(new Position(ctx.start))
-        .expr((ExprNode) visit(ctx.expr()))
+        .expr((ASTExprNode) visit(ctx.expr()))
         .op(ctx.op.getText())
         .build();
     postUnaryExpr.getExpr().setParent(postUnaryExpr);
@@ -259,9 +259,9 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitPreUnaryExpr(Comet.PreUnaryExprContext ctx) {
-    var preUnaryExpr = PreUnaryExprNode.builder()
+    var preUnaryExpr = ASTPreUnaryExprNode.builder()
         .position(new Position(ctx.start))
-        .expr((ExprNode) visit(ctx.expr()))
+        .expr((ASTExprNode) visit(ctx.expr()))
         .op(ctx.op.getText())
         .build();
     preUnaryExpr.getExpr().setParent(preUnaryExpr);
@@ -270,10 +270,10 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitBinaryExpr(Comet.BinaryExprContext ctx) {
-    var binaryExpr = BinaryExprNode.builder()
+    var binaryExpr = ASTBinaryExprNode.builder()
         .position(new Position(ctx.start))
-        .lhs((ExprNode) visit(ctx.expr(0)))
-        .rhs((ExprNode) visit(ctx.expr(1)))
+        .lhs((ASTExprNode) visit(ctx.expr(0)))
+        .rhs((ASTExprNode) visit(ctx.expr(1)))
         .op(ctx.op.getText())
         .build();
     binaryExpr.getLhs().setParent(binaryExpr);
@@ -283,11 +283,11 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitConditionalExpr(Comet.ConditionalExprContext ctx) {
-    var conditionalExpr = ConditionalExprNode.builder()
+    var conditionalExpr = ASTConditionalExprNode.builder()
         .position(new Position(ctx.start))
-        .condition((ExprNode) visit(ctx.expr(0)))
-        .lhs((ExprNode) visit(ctx.expr(1)))
-        .rhs((ExprNode) visit(ctx.expr(2)))
+        .condition((ASTExprNode) visit(ctx.expr(0)))
+        .lhs((ASTExprNode) visit(ctx.expr(1)))
+        .rhs((ASTExprNode) visit(ctx.expr(2)))
         .build();
     conditionalExpr.getCondition().setParent(conditionalExpr);
     conditionalExpr.getLhs().setParent(conditionalExpr);
@@ -297,10 +297,10 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitAssignExpr(Comet.AssignExprContext ctx) {
-    var assignExpr = AssignExprNode.builder()
+    var assignExpr = ASTAssignExprNode.builder()
         .position(new Position(ctx.start))
-        .lhs((ExprNode) visit(ctx.expr(0)))
-        .rhs((ExprNode) visit(ctx.expr(1)))
+        .lhs((ASTExprNode) visit(ctx.expr(0)))
+        .rhs((ASTExprNode) visit(ctx.expr(1)))
         .op(ctx.op.getText())
         .build();
     assignExpr.getLhs().setParent(assignExpr);
@@ -310,21 +310,21 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitAtomExpr(Comet.AtomExprContext ctx) {
-    AtomExprNode.Type atomType;
+    ASTAtomExprNode.Type atomType;
     if (ctx.atom().IntegerLiteral() != null) {
-      atomType = AtomExprNode.Type.INT;
+      atomType = ASTAtomExprNode.Type.INT;
     } else if (ctx.atom().StringLiteral() != null) {
-      atomType = AtomExprNode.Type.STRING;
+      atomType = ASTAtomExprNode.Type.STRING;
     } else if (ctx.atom().True() != null || ctx.atom().False() != null) {
-      atomType = AtomExprNode.Type.BOOL;
+      atomType = ASTAtomExprNode.Type.BOOL;
     } else if (ctx.atom().Null() != null) {
-      atomType = AtomExprNode.Type.NULL;
+      atomType = ASTAtomExprNode.Type.NULL;
     } else if (ctx.atom().This() != null) {
-      atomType = AtomExprNode.Type.THIS;
+      atomType = ASTAtomExprNode.Type.THIS;
     } else {
-      atomType = AtomExprNode.Type.CUSTOM;
+      atomType = ASTAtomExprNode.Type.CUSTOM;
     }
-    return AtomExprNode.builder()
+    return ASTAtomExprNode.builder()
         .position(new Position(ctx.start))
         .atomType(atomType)
         .value(ctx.atom().getText())
@@ -338,11 +338,11 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitBlockStmt(Comet.BlockStmtContext ctx) {
-    var stmts = new Array<StmtNode>();
+    var stmts = new Array<ASTStmtNode>();
     for (var stmt : ctx.stmt()) {
-      stmts.add((StmtNode) visit(stmt));
+      stmts.add((ASTStmtNode) visit(stmt));
     }
-    var blockStmt = BlockStmtNode.builder()
+    var blockStmt = ASTBlockStmtNode.builder()
         .position(new Position(ctx.start))
         .stmts(stmts)
         .build();
@@ -354,11 +354,11 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitIfStmt(Comet.IfStmtContext ctx) {
-    var ifStmt = IfStmtNode.builder()
+    var ifStmt = ASTIfStmtNode.builder()
         .position(new Position(ctx.start))
-        .condition((ExprNode) visit(ctx.expr()))
-        .thenStmt((StmtNode) visit(ctx.stmt(0)))
-        .elseStmt(ctx.stmt().size() == 2 ? (StmtNode) visit(ctx.stmt(1)) : null)
+        .condition((ASTExprNode) visit(ctx.expr()))
+        .thenStmt((ASTStmtNode) visit(ctx.stmt(0)))
+        .elseStmt(ctx.stmt().size() == 2 ? (ASTStmtNode) visit(ctx.stmt(1)) : null)
         .build();
     ifStmt.getCondition().setParent(ifStmt);
     ifStmt.getThenStmt().setParent(ifStmt);
@@ -370,12 +370,12 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitForStmt(Comet.ForStmtContext ctx) {
-    var forStmt = ForStmtNode.builder()
+    var forStmt = ASTForStmtNode.builder()
         .position(new Position(ctx.start))
-        .init((StmtNode) visit(ctx.init))
-        .condition(ctx.condition == null ? null : (ExprNode) visit(ctx.condition))
-        .update(ctx.update == null ? null : (ExprNode) visit(ctx.update))
-        .body((StmtNode) visit(ctx.body))
+        .init((ASTStmtNode) visit(ctx.init))
+        .condition(ctx.condition == null ? null : (ASTExprNode) visit(ctx.condition))
+        .update(ctx.update == null ? null : (ASTExprNode) visit(ctx.update))
+        .body((ASTStmtNode) visit(ctx.body))
         .build();
     forStmt.getInit().setParent(forStmt);
     if (forStmt.getCondition() != null) {
@@ -390,10 +390,10 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitWhileStmt(Comet.WhileStmtContext ctx) {
-    var whileStmt = WhileStmtNode.builder()
+    var whileStmt = ASTWhileStmtNode.builder()
         .position(new Position(ctx.start))
-        .condition((ExprNode) visit(ctx.expr()))
-        .body((StmtNode) visit(ctx.stmt()))
+        .condition((ASTExprNode) visit(ctx.expr()))
+        .body((ASTStmtNode) visit(ctx.stmt()))
         .build();
     whileStmt.getCondition().setParent(whileStmt);
     whileStmt.getBody().setParent(whileStmt);
@@ -402,23 +402,23 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitContinueStmt(Comet.ContinueStmtContext ctx) {
-    return ContinueStmtNode.builder()
+    return ASTContinueStmtNode.builder()
         .position(new Position(ctx.start))
         .build();
   }
 
   @Override
   public ASTNode visitBreakStmt(Comet.BreakStmtContext ctx) {
-    return BreakStmtNode.builder()
+    return ASTBreakStmtNode.builder()
         .position(new Position(ctx.start))
         .build();
   }
 
   @Override
   public ASTNode visitReturnStmt(Comet.ReturnStmtContext ctx) {
-    var returnStmt = ReturnStmtNode.builder()
+    var returnStmt = ASTReturnStmtNode.builder()
         .position(new Position(ctx.start))
-        .expr(ctx.expr() == null ? null : (ExprNode) visit(ctx.expr()))
+        .expr(ctx.expr() == null ? null : (ASTExprNode) visit(ctx.expr()))
         .build();
     if (returnStmt.getExpr() != null) {
       returnStmt.getExpr().setParent(returnStmt);
@@ -428,11 +428,11 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitExprStmt(Comet.ExprStmtContext ctx) {
-    var exprs = new Array<ExprNode>();
+    var exprs = new Array<ASTExprNode>();
     for (var expr : ctx.expr()) {
-      exprs.add((ExprNode) visit(expr));
+      exprs.add((ASTExprNode) visit(expr));
     }
-    var exprStmt = ExprStmtNode.builder()
+    var exprStmt = ASTExprStmtNode.builder()
         .position(new Position(ctx.start))
         .exprs(exprs)
         .build();
@@ -444,7 +444,7 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
 
   @Override
   public ASTNode visitEmptyStmt(Comet.EmptyStmtContext ctx) {
-    return EmptyStmtNode.builder()
+    return ASTEmptyStmtNode.builder()
         .position(new Position(ctx.start))
         .build();
   }

@@ -2,9 +2,9 @@ package dev.conless.comet.frontend.semantic;
 
 import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.ASTNode;
+import dev.conless.comet.frontend.ast.node.ASTRoot;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
-import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.metadata.VarInfo;
@@ -17,12 +17,12 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor<CompileM
     throw new RuntimeError("SymbolCollector.visit(ASTNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(ProgramNode node) throws BaseError {
+  public CompileMsg visit(ASTRoot node) throws BaseError {
     node.addScope(null);
     enterScope(node.getScope());
     var msg = new CompileMsg();
     for (var def : node.getDefs()) {
-      if (def instanceof ClassDefNode || def instanceof FuncDefNode) {
+      if (def instanceof ASTClassDefNode || def instanceof ASTFuncDefNode) {
         if (currentScope.get(def.getName()) != null) {
           return new CompileMsg("Type " + def.getName() + " is redefined", def.getPosition());
         } else {
@@ -31,7 +31,7 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor<CompileM
       }
     }
     for (var def : node.getDefs()) {
-      if (def instanceof ClassDefNode || def instanceof FuncDefNode) {
+      if (def instanceof ASTClassDefNode || def instanceof ASTFuncDefNode) {
         msg.append(def.accept(this));
       }
     }
@@ -42,7 +42,7 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(FuncDefNode node) throws BaseError {
+  public CompileMsg visit(ASTFuncDefNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
     if (node.getName().equals("main")) {
@@ -72,7 +72,7 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor<CompileM
     return new CompileMsg();
   }
 
-  public CompileMsg visit(ClassDefNode node) throws BaseError {
+  public CompileMsg visit(ASTClassDefNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
     var msg = new CompileMsg();
@@ -91,7 +91,7 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(VarDefNode node) {
+  public CompileMsg visit(ASTVarDefNode node) {
     TypeInfo type = ((VarInfo) node.getInfo()).getType();
     if (!checkTypeValid(type)) {
       return new CompileMsg("Type " + type.getName() + " is not defined", node);
@@ -105,83 +105,83 @@ public class SymbolCollector extends ScopeManager implements ASTVisitor<CompileM
     return new CompileMsg();
   }
 
-  public CompileMsg visit(NewExprNode node) {
+  public CompileMsg visit(ASTNewExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(NewExprNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(MemberExprNode node) {
+  public CompileMsg visit(ASTMemberExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(MemberExprNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(CallExprNode node) {
+  public CompileMsg visit(ASTCallExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(CallExprNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(ArrayExprNode node) {
+  public CompileMsg visit(ASTArrayExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(IndexExprNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(PostUnaryExprNode node) {
+  public CompileMsg visit(ASTPostUnaryExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(PostUnaryExprNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(PreUnaryExprNode node) {
+  public CompileMsg visit(ASTPreUnaryExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(PreUnaryExprNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(BinaryExprNode node) {
+  public CompileMsg visit(ASTBinaryExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(BinaryExprNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(ConditionalExprNode node) {
+  public CompileMsg visit(ASTConditionalExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(ConditionalExprNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(AssignExprNode node) {
+  public CompileMsg visit(ASTAssignExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(AssignExprNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(AtomExprNode node) {
+  public CompileMsg visit(ASTAtomExprNode node) {
     throw new RuntimeError("SymbolCollector.visit(AtomExprNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(BlockStmtNode node) {
+  public CompileMsg visit(ASTBlockStmtNode node) {
     throw new RuntimeError("SymbolCollector.visit(BlockStmtNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(IfStmtNode node) {
+  public CompileMsg visit(ASTIfStmtNode node) {
     throw new RuntimeError("SymbolCollector.visit(IfStmtNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(ForStmtNode node) {
+  public CompileMsg visit(ASTForStmtNode node) {
     throw new RuntimeError("SymbolCollector.visit(ForStmtNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(WhileStmtNode node) {
+  public CompileMsg visit(ASTWhileStmtNode node) {
     throw new RuntimeError("SymbolCollector.visit(WhileStmtNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(ContinueStmtNode node) {
+  public CompileMsg visit(ASTContinueStmtNode node) {
     throw new RuntimeError("SymbolCollector.visit(ContinueStmtNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(BreakStmtNode node) {
+  public CompileMsg visit(ASTBreakStmtNode node) {
     throw new RuntimeError("SymbolCollector.visit(BreakStmtNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(ReturnStmtNode node) {
+  public CompileMsg visit(ASTReturnStmtNode node) {
     throw new RuntimeError("SymbolCollector.visit(ReturnStmtNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(ExprStmtNode node) {
+  public CompileMsg visit(ASTExprStmtNode node) {
     throw new RuntimeError("SymbolCollector.visit(ExprStmtNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(VarDefStmtNode node) {
+  public CompileMsg visit(ASTVarDefStmtNode node) {
     throw new RuntimeError("SymbolCollector.visit(VarDefStmtNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(EmptyStmtNode node) {
+  public CompileMsg visit(ASTEmptyStmtNode node) {
     throw new RuntimeError("SymbolCollector.visit(EmptyStmtNode) should not be called", node.getPosition());
   }
 }

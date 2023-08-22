@@ -1,6 +1,6 @@
 package dev.conless.comet.frontend.utils.metadata;
 
-import dev.conless.comet.frontend.ast.node.def.VarDefNode;
+import dev.conless.comet.frontend.ast.node.def.ASTVarDefNode;
 import dev.conless.comet.utils.container.Array;
 
 @lombok.Value
@@ -18,7 +18,7 @@ public class FuncInfo extends BaseInfo {
     }
   }
 
-  public FuncInfo(String name, TypeInfo type, Array<VarDefNode> params) {
+  public FuncInfo(String name, TypeInfo type, Array<ASTVarDefNode> params) {
     super(name);
     this.type = type;
     this.params = new Array<TypeInfo>();

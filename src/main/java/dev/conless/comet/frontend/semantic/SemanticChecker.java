@@ -2,11 +2,11 @@ package dev.conless.comet.frontend.semantic;
 
 import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.ASTNode;
+import dev.conless.comet.frontend.ast.node.ASTRoot;
 import dev.conless.comet.frontend.ast.node.def.*;
 import dev.conless.comet.frontend.ast.node.expr.*;
-import dev.conless.comet.frontend.ast.node.global.NodeWithExpr;
-import dev.conless.comet.frontend.ast.node.global.ProgramNode;
 import dev.conless.comet.frontend.ast.node.stmt.*;
+import dev.conless.comet.frontend.ast.node.utils.ASTNodeWithExpr;
 import dev.conless.comet.frontend.utils.metadata.*;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
 import dev.conless.comet.frontend.utils.scope.ClassScope;
@@ -20,7 +20,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     throw new RuntimeError("SemanticChecker.visit(ASTNode) should not be called", node.getPosition());
   }
 
-  public CompileMsg visit(ProgramNode node) throws BaseError {
+  public CompileMsg visit(ASTRoot node) throws BaseError {
     var msg = new SymbolCollector().visit(node);
     if (!msg.isEmpty()) {
       throw new CompileError(msg.toString());
@@ -37,7 +37,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return new CompileMsg();
   }
 
-  public CompileMsg visit(FuncDefNode node) throws BaseError {
+  public CompileMsg visit(ASTFuncDefNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
     var msg = new CompileMsg();
@@ -59,7 +59,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return new CompileMsg();
   }
 
-  public CompileMsg visit(ClassDefNode node) throws BaseError {
+  public CompileMsg visit(ASTClassDefNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
     var msg = new CompileMsg();
@@ -74,7 +74,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(VarDefNode node) throws BaseError {
+  public CompileMsg visit(ASTVarDefNode node) throws BaseError {
     var v = (VarInfo) node.getInfo();
     var msg = new CompileMsg();
     if (!checkTypeValid(v.getType())) {
@@ -99,7 +99,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(NewExprNode node) throws BaseError {
+  public CompileMsg visit(ASTNewExprNode node) throws BaseError {
     TypeInfo type = node.getType();
     var msg = new CompileMsg();
     if (!checkTypeValid(type) || (type.getIsBuiltIn() && type.getDepth() == 0)) {
@@ -120,7 +120,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(MemberExprNode node) throws BaseError {
+  public CompileMsg visit(ASTMemberExprNode node) throws BaseError {
     var msg = node.getObject().accept(this);
     var objectType = node.getObject().getInfo().getType();
     if (!(objectType instanceof TypeInfo)) {
@@ -152,7 +152,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(CallExprNode node) throws BaseError {
+  public CompileMsg visit(ASTCallExprNode node) throws BaseError {
     var msg = new CompileMsg();
     msg.append(node.getFunc().accept(this));
     for (var arg : node.getArgs()) {
@@ -184,7 +184,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(ArrayExprNode node) throws BaseError {
+  public CompileMsg visit(ASTArrayExprNode node) throws BaseError {
     var msg = new CompileMsg();
     msg.append(node.getArray().accept(this));
     if (!msg.isEmpty()) {
@@ -207,7 +207,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(PostUnaryExprNode node) throws BaseError {
+  public CompileMsg visit(ASTPostUnaryExprNode node) throws BaseError {
     var msg = node.getExpr().accept(this);
     BaseInfo exprType = node.getExpr().getInfo().getType();
     if (!(exprType instanceof TypeInfo) || !exprType.equals(GlobalScope.intType)) {
@@ -220,7 +220,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(PreUnaryExprNode node) throws BaseError {
+  public CompileMsg visit(ASTPreUnaryExprNode node) throws BaseError {
     var msg = node.getExpr().accept(this);
     BaseInfo exprType = node.getExpr().getInfo().getType();
     if (!(exprType instanceof TypeInfo)) {
@@ -247,7 +247,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(BinaryExprNode node) throws BaseError {
+  public CompileMsg visit(ASTBinaryExprNode node) throws BaseError {
     var msg = new CompileMsg();
     msg.append(node.getLhs().accept(this));
     msg.append(node.getRhs().accept(this));
@@ -294,7 +294,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(ConditionalExprNode node) throws BaseError {
+  public CompileMsg visit(ASTConditionalExprNode node) throws BaseError {
     var msg = new CompileMsg();
     msg.append(node.getCondition().accept(this));
     msg.append(node.getLhs().accept(this));
@@ -315,7 +315,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(AssignExprNode node) throws BaseError {
+  public CompileMsg visit(ASTAssignExprNode node) throws BaseError {
     var msg = new CompileMsg();
     msg.append(node.getLhs().accept(this));
     msg.append(node.getRhs().accept(this));
@@ -335,8 +335,8 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(AtomExprNode node) throws BaseError {
-    if (node.getAtomType() == AtomExprNode.Type.CUSTOM) {
+  public CompileMsg visit(ASTAtomExprNode node) throws BaseError {
+    if (node.getAtomType() == ASTAtomExprNode.Type.CUSTOM) {
       var info = currentScope.getRecurWithScope(node.getValue());
       if (info == null) {
         return new CompileMsg("Use of undefined identifier " + node.toString(), node);
@@ -350,24 +350,24 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
       }
       if (info.b instanceof ClassScope) {
         var parent = node.getParent();
-        var replaceNode = MemberExprNode.builder()
+        var replaceNode = ASTMemberExprNode.builder()
             .position(node.getPosition())
             .parent(parent)
-            .object(AtomExprNode.builder().atomType(AtomExprNode.Type.THIS).value("this").build())
+            .object(ASTAtomExprNode.builder().atomType(ASTAtomExprNode.Type.THIS).value("this").build())
             .member(node.getValue())
             .build();
         replaceNode.accept(this);
-        ((NodeWithExpr) parent).replaceExpr(node, replaceNode);
+        ((ASTNodeWithExpr) parent).replaceExpr(node, replaceNode);
       }
-    } else if (node.getAtomType() == AtomExprNode.Type.INT) {
+    } else if (node.getAtomType() == ASTAtomExprNode.Type.INT) {
       node.setInfo(new ExprInfo("atomExpr", GlobalScope.intType, false));
-    } else if (node.getAtomType() == AtomExprNode.Type.STRING) {
+    } else if (node.getAtomType() == ASTAtomExprNode.Type.STRING) {
       node.setInfo(new ExprInfo("atomExpr", GlobalScope.stringType, false));
-    } else if (node.getAtomType() == AtomExprNode.Type.BOOL) {
+    } else if (node.getAtomType() == ASTAtomExprNode.Type.BOOL) {
       node.setInfo(new ExprInfo("atomExpr", GlobalScope.boolType, false));
-    } else if (node.getAtomType() == AtomExprNode.Type.NULL) {
+    } else if (node.getAtomType() == ASTAtomExprNode.Type.NULL) {
       node.setInfo(new ExprInfo("atomExpr", GlobalScope.nullType, false));
-    } else if (node.getAtomType() == AtomExprNode.Type.THIS) {
+    } else if (node.getAtomType() == ASTAtomExprNode.Type.THIS) {
       BaseScope lastClass = currentScope.getLastClass();
       if (lastClass == null) {
         return new CompileMsg("Keyword this should be used in a class", node);
@@ -379,11 +379,11 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return new CompileMsg();
   }
 
-  public CompileMsg visit(BlockStmtNode node) throws BaseError {
+  public CompileMsg visit(ASTBlockStmtNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
     var msg = new CompileMsg();
-    for (StmtNode stmt : node.getStmts()) {
+    for (ASTStmtNode stmt : node.getStmts()) {
       msg.append(stmt.accept(this));
     }
     if (!msg.isEmpty()) {
@@ -393,7 +393,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return new CompileMsg();
   }
 
-  public CompileMsg visit(IfStmtNode node) throws BaseError {
+  public CompileMsg visit(ASTIfStmtNode node) throws BaseError {
     var msg = new CompileMsg();
     msg.append(node.getCondition().accept(this));
     if (!msg.isEmpty()) {
@@ -405,8 +405,8 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     }
     node.addScope(currentScope);
     enterScope(node.getScope("then"));
-    if (node.getThenStmt() instanceof BlockStmtNode) {
-      for (StmtNode stmt : ((BlockStmtNode) node.getThenStmt()).getStmts()) {
+    if (node.getThenStmt() instanceof ASTBlockStmtNode) {
+      for (ASTStmtNode stmt : ((ASTBlockStmtNode) node.getThenStmt()).getStmts()) {
         msg.append(stmt.accept(this));
       }
     } else {
@@ -418,8 +418,8 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     exitScope();
     if (node.getElseStmt() != null) {
       enterScope(node.getScope("else"));
-      if (node.getElseStmt() instanceof BlockStmtNode) {
-        for (StmtNode stmt : ((BlockStmtNode) node.getElseStmt()).getStmts()) {
+      if (node.getElseStmt() instanceof ASTBlockStmtNode) {
+        for (ASTStmtNode stmt : ((ASTBlockStmtNode) node.getElseStmt()).getStmts()) {
           msg.append(stmt.accept(this));
         }
       } else {
@@ -433,7 +433,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(ForStmtNode node) throws BaseError {
+  public CompileMsg visit(ASTForStmtNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
     var msg = new CompileMsg();
@@ -459,8 +459,8 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     if (!msg.isEmpty()) {
       return msg;
     }
-    if (node.getBody() instanceof BlockStmtNode) {
-      for (StmtNode stmt : ((BlockStmtNode) node.getBody()).getStmts()) {
+    if (node.getBody() instanceof ASTBlockStmtNode) {
+      for (ASTStmtNode stmt : ((ASTBlockStmtNode) node.getBody()).getStmts()) {
         msg.append(stmt.accept(this));
       }
     } else {
@@ -473,7 +473,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return new CompileMsg();
   }
 
-  public CompileMsg visit(WhileStmtNode node) throws BaseError {
+  public CompileMsg visit(ASTWhileStmtNode node) throws BaseError {
     node.addScope(currentScope);
     enterScope(node.getScope());
     var msg = new CompileMsg();
@@ -485,8 +485,8 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     if (!(conditionType instanceof TypeInfo) || !conditionType.equals(GlobalScope.boolType)) {
       return new CompileMsg("Condition should be of type bool", node);
     }
-    if (node.getBody() instanceof BlockStmtNode) {
-      for (StmtNode stmt : ((BlockStmtNode) node.getBody()).getStmts()) {
+    if (node.getBody() instanceof ASTBlockStmtNode) {
+      for (ASTStmtNode stmt : ((ASTBlockStmtNode) node.getBody()).getStmts()) {
         msg.append(stmt.accept(this));
       }
     } else {
@@ -499,21 +499,21 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return new CompileMsg();
   }
 
-  public CompileMsg visit(ContinueStmtNode node) throws BaseError {
+  public CompileMsg visit(ASTContinueStmtNode node) throws BaseError {
     if (currentScope.getLastLoop() == null) {
       return new CompileMsg("Keyword continue should be used in a loop", node);
     }
     return new CompileMsg();
   }
 
-  public CompileMsg visit(BreakStmtNode node) throws BaseError {
+  public CompileMsg visit(ASTBreakStmtNode node) throws BaseError {
     if (currentScope.getLastLoop() == null) {
       return new CompileMsg("Keyword continue should be used in a loop", node);
     }
     return new CompileMsg();
   }
 
-  public CompileMsg visit(ReturnStmtNode node) throws BaseError {
+  public CompileMsg visit(ASTReturnStmtNode node) throws BaseError {
     var scope = currentScope.getLastFunc();
     var msg = new CompileMsg();
     if (scope == null) {
@@ -539,9 +539,9 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(ExprStmtNode node) throws BaseError {
+  public CompileMsg visit(ASTExprStmtNode node) throws BaseError {
     var msg = new CompileMsg();
-    for (ExprNode expr : node.getExprs()) {
+    for (ASTExprNode expr : node.getExprs()) {
       msg.append(expr.accept(this));
       if (!msg.isEmpty()) {
         return msg;
@@ -554,15 +554,15 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
     return msg;
   }
 
-  public CompileMsg visit(VarDefStmtNode node) throws BaseError {
+  public CompileMsg visit(ASTVarDefStmtNode node) throws BaseError {
     var msg = new CompileMsg();
-    for (VarDefNode varDef : node.getDefs()) {
+    for (ASTVarDefNode varDef : node.getDefs()) {
       msg.append(varDef.accept(this));
     }
     return msg;
   }
 
-  public CompileMsg visit(EmptyStmtNode node) throws BaseError {
+  public CompileMsg visit(ASTEmptyStmtNode node) throws BaseError {
     return new CompileMsg();
   }
 }

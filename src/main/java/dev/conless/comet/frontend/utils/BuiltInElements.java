@@ -1,6 +1,6 @@
 package dev.conless.comet.frontend.utils;
 
-import dev.conless.comet.frontend.ir.node.global.IRFuncDeclareNode;
+import dev.conless.comet.frontend.ir.node.def.IRFuncDeclareNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.metadata.ClassInfo;
 import dev.conless.comet.frontend.utils.metadata.FuncInfo;

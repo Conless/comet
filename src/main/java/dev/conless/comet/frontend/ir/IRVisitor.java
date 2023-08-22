@@ -4,14 +4,15 @@ import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRLiteral;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
-import dev.conless.comet.frontend.ir.node.global.*;
+import dev.conless.comet.frontend.ir.node.IRRoot;
+import dev.conless.comet.frontend.ir.node.def.*;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.*;
 import dev.conless.comet.utils.error.*;
 
 public interface IRVisitor<T> {
   public T visit(IRNode node) throws BaseError;
-  public T visit(IRProgramNode node) throws BaseError;
+  public T visit(IRRoot node) throws BaseError;
   
   public T visit(IRFuncDefNode node) throws BaseError;
   public T visit(IRGlobalDefNode node) throws BaseError;

@@ -1,7 +1,7 @@
 package dev.conless.comet.frontend.utils.metadata;
 
-import dev.conless.comet.frontend.ast.node.def.FuncDefNode;
-import dev.conless.comet.frontend.ast.node.def.VarDefNode;
+import dev.conless.comet.frontend.ast.node.def.ASTFuncDefNode;
+import dev.conless.comet.frontend.ast.node.def.ASTVarDefNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
 
@@ -11,7 +11,7 @@ public final class ClassInfo extends BaseInfo {
   public Map<String, VarInfo> vars;
   public Map<String, FuncInfo> funcs;
 
-  public ClassInfo(String name, Array<VarDefNode> vars, Array<FuncDefNode> funcs) {
+  public ClassInfo(String name, Array<ASTVarDefNode> vars, Array<ASTFuncDefNode> funcs) {
     super(name);
     this.vars = new Map<String, VarInfo>();
     this.funcs = new Map<String, FuncInfo>();

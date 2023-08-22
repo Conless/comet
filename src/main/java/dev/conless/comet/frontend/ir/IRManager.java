@@ -1,15 +1,15 @@
 package dev.conless.comet.frontend.ir;
 
 import dev.conless.comet.frontend.ast.node.ASTNode;
-import dev.conless.comet.frontend.ast.node.global.NodeWithScope;
-import dev.conless.comet.frontend.ast.node.stmt.IfStmtNode;
+import dev.conless.comet.frontend.ast.node.stmt.ASTIfStmtNode;
+import dev.conless.comet.frontend.ast.node.utils.ASTNodeWithScope;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRLiteral;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.global.IRFuncDefNode;
-import dev.conless.comet.frontend.ir.node.global.IRProgramNode;
+import dev.conless.comet.frontend.ir.node.IRRoot;
+import dev.conless.comet.frontend.ir.node.def.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
-import dev.conless.comet.frontend.ir.node.stmt.IRStmtsNode;
+import dev.conless.comet.frontend.ir.node.stmt.IRStmtNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
@@ -24,7 +24,7 @@ public class IRManager {
 
   protected Map<String, Integer> name2Size;
 
-  protected IRProgramNode programNode;
+  protected IRRoot programNode;
   protected IRFuncDefNode initNode;
 
   protected IRCounter counter;
@@ -38,8 +38,8 @@ public class IRManager {
   }
 
   protected void enterASTNode(ASTNode node) {
-    if (node instanceof NodeWithScope) {
-      var scope = ((NodeWithScope) node).getScope();
+    if (node instanceof ASTNodeWithScope) {
+      var scope = ((ASTNodeWithScope) node).getScope();
       if (scope == null) {
         return;
       }
@@ -53,7 +53,7 @@ public class IRManager {
     }
   }
 
-  protected void enterASTNode(IfStmtNode node, String name) {
+  protected void enterASTNode(ASTIfStmtNode node, String name) {
     if (name.equals("then")) {
       currentScope = node.getThenScope();
     } else if (name.equals("else")) {
@@ -64,15 +64,15 @@ public class IRManager {
   }
 
   protected void exitASTNode(ASTNode node) {
-    if (node instanceof NodeWithScope) {
-      var scope = ((NodeWithScope) node).getScope();
+    if (node instanceof ASTNodeWithScope) {
+      var scope = ((ASTNodeWithScope) node).getScope();
       if (scope != null) {
         currentScope = scope.getParent();
       }
     }
   }
 
-  protected void exitASTNode(IfStmtNode node, String name) {
+  protected void exitASTNode(ASTIfStmtNode node, String name) {
     if (name.equals("then")) {
       currentScope = node.getThenScope().getParent();
     } else if (name.equals("else")) {
@@ -96,11 +96,11 @@ public class IRManager {
     counter = new IRCounter();
   }
 
-  protected IRStmtsNode allocaHelper(TypeInfo typeInfo, Array<IREntity> lengths) {
+  protected IRStmtNode allocaHelper(TypeInfo typeInfo, Array<IREntity> lengths) {
     if (typeInfo.getDepth() > 0) {
       throw new RuntimeError("Array type should be handled by malloc");
     }
-    var instList = new IRStmtsNode();
+    var instList = new IRStmtNode();
     var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(++counter.allocaCount));
     var alloca = new IRCallNode(allocaVar, GlobalScope.irPtrType, "malloc",
         new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName()))));
