@@ -101,7 +101,7 @@ public class IRManager {
       throw new RuntimeError("Array type should be handled by malloc");
     }
     var instList = new IRStmtNode();
-    var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(++counter.allocaCount));
+    var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
     var alloca = new IRCallNode(allocaVar, GlobalScope.irPtrType, "malloc",
         new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName()))));
     instList.addNode(alloca);

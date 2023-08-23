@@ -23,7 +23,6 @@ public class IRFuncDefNode extends IRNode {
   private Array<IRVariable> params;
   private IRType returnType;
   private IRStmtNode body;
-  private int varCount = 0; // For codegen
 
   public IRFuncDefNode(String name, Array<IRVariable> params, IRType returnType) {
     this.name = name;
