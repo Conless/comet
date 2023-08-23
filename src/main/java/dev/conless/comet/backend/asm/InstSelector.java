@@ -1,6 +1,7 @@
 package dev.conless.comet.backend.asm;
 
 import dev.conless.comet.backend.asm.entity.ASMAddress;
+import dev.conless.comet.backend.asm.entity.ASMVirtualReg;
 import dev.conless.comet.backend.asm.node.*;
 import dev.conless.comet.backend.asm.node.inst.*;
 import dev.conless.comet.backend.asm.node.stmt.*;
@@ -16,7 +17,7 @@ import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.*;
 import dev.conless.comet.utils.error.*;
 
-public class ASMBuilder extends ASMManager implements IRVisitor<ASMNode> {
+public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   @Override
   public ASMNode visit(IRNode node) throws BaseError {
     // TODO Auto-generated method stub
@@ -54,69 +55,53 @@ public class ASMBuilder extends ASMManager implements IRVisitor<ASMNode> {
   @Override
   public ASMNode visit(IRArithNode node) throws BaseError {
     var instList = new ASMStmtsNode();
-    var lhsInst = (ASMStmtsNode) node.getLhs().accept(this); // regAddr can be freed immediately, reg can be freed after
-                                                             // operation
+    var lhsInst = (ASMStmtsNode) node.getLhs().accept(this);
     instList.addNode(lhsInst);
     var lhsReg = lhsInst.getDest();
-    if (lhsInst.getDestAddr() != null) {
-      regs.evictReg(lhsInst.getDestAddr().getBase());
-    }
-    var rhsInst = (ASMStmtsNode) node.getRhs().accept(this); // regAddr can be freed immediately, reg can be freed after
-                                                             // operation
+    var rhsInst = (ASMStmtsNode) node.getRhs().accept(this);
     instList.addNode(rhsInst);
     var rhsReg = rhsInst.getDest();
-    if (rhsInst.getDestAddr() != null) {
-      regs.evictReg(rhsInst.getDestAddr().getBase());
-    }
-    var destInst = (ASMStmtsNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
-                                                               // after operation
+    var destInst = (ASMStmtsNode) node.getDest().accept(this);
     instList.addNode(destInst);
-    var destRegAddr = destInst.getDestAddr();
-    if (destInst.getDest() != null) {
-      regs.evictReg(destInst.getDest());
-    }
-    var value = regs.getTempReg(); // freed after store
+    var destReg = (ASMVirtualReg) destInst.getDest();
     var op = node.getOp();
     if (!node.isComparison()) {
       switch (op) {
-        case "add" -> instList.addNode(new ASMBinaryNode("add", value, lhsReg, rhsReg));
-        case "sub" -> instList.addNode(new ASMBinaryNode("sub", value, lhsReg, rhsReg));
-        case "mul" -> instList.addNode(new ASMBinaryNode("mul", value, lhsReg, rhsReg));
-        case "sdiv" -> instList.addNode(new ASMBinaryNode("div", value, lhsReg, rhsReg));
-        case "srem" -> instList.addNode(new ASMBinaryNode("rem", value, lhsReg, rhsReg));
-        case "shl" -> instList.addNode(new ASMBinaryNode("sll", value, lhsReg, rhsReg));
-        case "ashr" -> instList.addNode(new ASMBinaryNode("sra", value, lhsReg, rhsReg));
-        case "and" -> instList.addNode(new ASMBinaryNode("and", value, lhsReg, rhsReg));
-        case "or" -> instList.addNode(new ASMBinaryNode("or", value, lhsReg, rhsReg));
-        case "xor" -> instList.addNode(new ASMBinaryNode("xor", value, lhsReg, rhsReg));
+        case "add" -> instList.addNode(new ASMBinaryNode("add", destReg, lhsReg, rhsReg));
+        case "sub" -> instList.addNode(new ASMBinaryNode("sub", destReg, lhsReg, rhsReg));
+        case "mul" -> instList.addNode(new ASMBinaryNode("mul", destReg, lhsReg, rhsReg));
+        case "sdiv" -> instList.addNode(new ASMBinaryNode("div", destReg, lhsReg, rhsReg));
+        case "srem" -> instList.addNode(new ASMBinaryNode("rem", destReg, lhsReg, rhsReg));
+        case "shl" -> instList.addNode(new ASMBinaryNode("sll", destReg, lhsReg, rhsReg));
+        case "ashr" -> instList.addNode(new ASMBinaryNode("sra", destReg, lhsReg, rhsReg));
+        case "and" -> instList.addNode(new ASMBinaryNode("and", destReg, lhsReg, rhsReg));
+        case "or" -> instList.addNode(new ASMBinaryNode("or", destReg, lhsReg, rhsReg));
+        case "xor" -> instList.addNode(new ASMBinaryNode("xor", destReg, lhsReg, rhsReg));
         default -> throw new RuntimeError("Unknown arithmetic operation '" + op + "'");
       }
     } else {
       switch (op) {
         case "eq" -> {
-          instList.addNode(new ASMBinaryNode("xor", value, lhsReg, rhsReg));
-          instList.addNode(new ASMUnaryNode("seqz", value, value));
+          instList.addNode(new ASMBinaryNode("xor", destReg, lhsReg, rhsReg));
+          instList.addNode(new ASMUnaryNode("seqz", destReg, destReg));
         }
         case "ne" -> {
-          instList.addNode(new ASMBinaryNode("xor", value, lhsReg, rhsReg));
-          instList.addNode(new ASMUnaryNode("snez", value, value));
+          instList.addNode(new ASMBinaryNode("xor", destReg, lhsReg, rhsReg));
+          instList.addNode(new ASMUnaryNode("snez", destReg, destReg));
         }
-        case "slt" -> instList.addNode(new ASMBinaryNode("slt", value, lhsReg, rhsReg));
+        case "slt" -> instList.addNode(new ASMBinaryNode("slt", destReg, lhsReg, rhsReg));
         case "sle" -> {
-          instList.addNode(new ASMBinaryNode("slt", value, lhsReg, rhsReg));
-          instList.addNode(new ASMUnaryNode("seqz", value, value));
+          instList.addNode(new ASMBinaryNode("slt", destReg, lhsReg, rhsReg));
+          instList.addNode(new ASMUnaryNode("seqz", destReg, destReg));
         }
         case "sgt" -> {
-          instList.addNode(new ASMBinaryNode("slt", value, lhsReg, rhsReg));
-          instList.addNode(new ASMUnaryNode("seqz", value, value));
+          instList.addNode(new ASMBinaryNode("slt", destReg, lhsReg, rhsReg));
+          instList.addNode(new ASMUnaryNode("seqz", destReg, destReg));
         }
-        case "sge" -> instList.addNode(new ASMBinaryNode("slt", value, lhsReg, rhsReg));
+        case "sge" -> instList.addNode(new ASMBinaryNode("slt", destReg, lhsReg, rhsReg));
         default -> throw new RuntimeError("Unknown comparison operation '" + op + "'");
       }
     }
-    regs.evictReg(lhsReg, rhsReg);
-    instList.addNode(new ASMStoreNode(value, destRegAddr));
-    regs.evictReg(value, destRegAddr.getBase());
     return instList;
   }
 
@@ -128,11 +113,7 @@ public class ASMBuilder extends ASMManager implements IRVisitor<ASMNode> {
                                                                     // freed after branch
     instList.addNode(condInst);
     var condReg = condInst.getDest();
-    if (condInst.getDestAddr() != null) {
-      regs.evictReg(condInst.getDestAddr().getBase());
-    }
     instList.addNode(new ASMBeqzNode(condReg, getLabelName(node.getFalseLabel())));
-    regs.evictReg(condReg);
     return instList;
   }
 
@@ -141,25 +122,20 @@ public class ASMBuilder extends ASMManager implements IRVisitor<ASMNode> {
     var instList = new ASMStmtsNode();
     var funcName = node.getFuncName();
     var args = node.getArgs();
+    var argCount = 0;
     var stackOffset = 0;
     for (var arg : args) {
       var argInst = (ASMStmtsNode) arg.accept(this); // regAddr can be freed immediately, reg can be freed after call
       instList.addNode(argInst);
       var argReg = argInst.getDest();
-      if (argInst.getDestAddr() != null) {
-        regs.evictReg(argInst.getDestAddr().getBase());
-      }
-      try {
-        var reg = regs.getArgReg();
-        instList.addNode(new ASMMoveNode(reg, argReg));
-      } catch (RuntimeError e) {
+      if (argCount < 6) {
+        instList.addNode(new ASMMoveNode(argReg, regs.getArgRegs().get(argCount++)));
+      } else {
         instList.addNode(new ASMStoreNode(argReg, new ASMAddress(regs.getSp(), -4 * (++stackOffset))));
-        regs.evictReg(argReg);
       }
     }
     instList.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), -4 * stackOffset));
     instList.addNode(new ASMCallNode(funcName));
-    regs.resetArgRegs();
     if (stackOffset > 0) {
       var sp = regs.getSp();
       instList.addNode(new ASMUnaryNode("addi", sp, sp, stackOffset * 4));
@@ -168,13 +144,9 @@ public class ASMBuilder extends ASMManager implements IRVisitor<ASMNode> {
       var destInst = (ASMStmtsNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
                                                                  // after call
       instList.addNode(destInst);
-      var destRegAddr = destInst.getDestAddr();
-      if (destInst.getDest() != null) {
-        regs.evictReg(destInst.getDest());
-      }
-      var rv = regs.getRv();
-      instList.addNode(new ASMStoreNode(rv, destRegAddr));
-      regs.evictReg(rv);
+      var destReg = destInst.getDest();
+      var rv = regs.getA0();
+      instList.addNode(new ASMMoveNode(rv, destReg));
     }
     return instList;
   }
@@ -199,21 +171,11 @@ public class ASMBuilder extends ASMManager implements IRVisitor<ASMNode> {
                                                              // loading
     instList.addNode(srcInst);
     var srcReg = srcInst.getDest();
-    if (srcInst.getDestAddr() != null) {
-      regs.evictReg(srcInst.getDestAddr().getBase());
-    }
     var destInst = (ASMStmtsNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
                                                                // after storing
     instList.addNode(destInst);
-    var destAddr = destInst.getDestAddr();
-    if (destInst.getDest() != null) {
-      regs.evictReg(destInst.getDest());
-    }
-    var valueReg = regs.getTempReg(); // intermidiate reg, freed after storing
-    instList.addNode(new ASMLoadNode(valueReg, new ASMAddress(srcReg, 0)));
-    regs.evictReg(srcReg);
-    instList.addNode(new ASMStoreNode(valueReg, destAddr));
-    regs.evictReg(valueReg, destAddr.getBase());
+    var destReg = destInst.getDest();
+    instList.addNode(new ASMLoadNode(destReg, new ASMAddress(srcReg, 0)));
     return instList;
   }
 
@@ -229,36 +191,24 @@ public class ASMBuilder extends ASMManager implements IRVisitor<ASMNode> {
     var valueInst = (ASMStmtsNode) node.getValue().accept(this);
     instList.addNode(valueInst);
     var valueReg = valueInst.getDest();
-    if (valueInst.getDestAddr() != null) {
-      regs.evictReg(valueInst.getDestAddr().getBase());
-    }
-    instList.addNode(new ASMMoveNode(valueReg, regs.getRv()));
-    regs.evictReg(valueReg);
+    instList.addNode(new ASMMoveNode(valueReg, regs.getA0()));
     instList.addNode(new ASMReturnNode());
     return instList;
   }
 
   @Override
-  public ASMNode visit(IRStoreNode node) throws BaseError { // store %src, %dest -> sw %src, 0(%dest)
+  public ASMNode visit(IRStoreNode node) throws BaseError { // store "%"src, %dest -> sw %src, 0(%dest)
     var instList = new ASMStmtsNode();
     var srcInst = (ASMStmtsNode) node.getSrc().accept(this); // regAddr can be freed immediately, reg can be freed after
                                                              // storing
     instList.addNode(srcInst);
     var srcReg = srcInst.getDest();
-    if (srcInst.getDestAddr() != null) {
-      regs.evictReg(srcInst.getDestAddr().getBase());
-    }
     var destInst = (ASMStmtsNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
                                                                // after storing
     instList.addNode(destInst);
-    var destAddr = destInst.getDestAddr();
-    if (destInst.getDest() != null) {
-      regs.evictReg(destInst.getDest());
-    }
-    instList.addNode(new ASMStoreNode(srcReg, destAddr));
-    regs.evictReg(srcReg, destAddr.getBase());
+    var dest = destInst.getDest();
+    instList.addNode(new ASMStoreNode(srcReg, new ASMAddress(dest, 0)));
     return instList;
-
   }
 
   @Override
@@ -287,39 +237,35 @@ public class ASMBuilder extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRVariable node) throws BaseError {
-    var addrReg = regs.getTempReg();
-    var destReg = regs.getTempReg();
     var instList = new ASMStmtsNode();
+    if (node.getValue().endsWith(".param") && !(counter.param2Addr.get(node.getValue()).getBase()).equals(regs.getSp())) {
+      var addr = counter.param2Addr.get(node.getValue());
+      instList.setDest(addr.getBase());
+      return instList;
+    }
     if (node.isGlobal()) {
-      instList.addNode(new ASMLoadAddrNode(addrReg, node.getValue().substring(1)));
-      instList.addNode(new ASMLoadNode(destReg, new ASMAddress(addrReg, 0)));
+      var destReg = new ASMVirtualReg();
+      instList.addNode(new ASMLoadAddrNode(destReg, node.getValue().substring(1)));
+      instList.addNode(new ASMLoadNode(destReg, new ASMAddress(destReg, 0)));
       instList.setDest(destReg);
-      instList.setDestAddr(new ASMAddress(addrReg, 0));
-    } else if (node.getValue().endsWith(".param")) {
-      var addr = counter.offsetMap.get(node.getValue());
-      if (!(addr.getBase()).equals(regs.getSp())) {
-        instList.addNode(new ASMMoveNode(addrReg, addr.getBase()));
-        instList.addNode(new ASMLoadNode(destReg, new ASMAddress(addrReg, addr.getOffset())));
-        instList.setDest(destReg);
-        instList.setDestAddr(new ASMAddress(addrReg, addr.getOffset()));
-      } else {
-        instList.addNode(new ASMLoadNode(destReg, addr));
-        instList.setDest(destReg);
-        instList.setDestAddr(addr);
-      }
     } else {
-      var addr = counter.offsetMap.get(node.getValue());
+      var existReg = counter.name2reg.get(node.getValue());
+      if (existReg != null) {
+        instList.setDest(existReg);
+        return instList;
+      }
+      var addr = new ASMAddress(regs.getSp(), 4 * (--counter.stackCount));
+      var destReg = new ASMVirtualReg();
       instList.addNode(new ASMLoadNode(destReg, addr));
       instList.setDest(destReg);
-      instList.setDestAddr(addr);
     }
     return instList;
   }
 
   @Override
   public ASMNode visit(IRLiteral node) throws BaseError {
-    var destReg = regs.getTempReg();
     var instList = new ASMStmtsNode();
+    var destReg = new ASMVirtualReg();
     instList.addNode(new ASMLoadImmNode(destReg, Integer.valueOf(node.getValue())));
     instList.setDest(destReg);
     return instList;

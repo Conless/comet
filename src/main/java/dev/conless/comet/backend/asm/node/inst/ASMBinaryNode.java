@@ -1,15 +1,15 @@
 package dev.conless.comet.backend.asm.node.inst;
 
-import dev.conless.comet.backend.asm.entity.ASMRegister;
+import dev.conless.comet.backend.asm.entity.ASMReg;
 import dev.conless.comet.backend.asm.node.ASMNode;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
 public class ASMBinaryNode extends ASMNode {
   private String op;
-  private ASMRegister dest, lhs, rhs;
+  private ASMReg dest, lhs, rhs;
 
-  public ASMBinaryNode(String op, ASMRegister dest, ASMRegister lhs, ASMRegister rhs) {
+  public ASMBinaryNode(String op, ASMReg dest, ASMReg lhs, ASMReg rhs) {
     this.op = op;
     this.dest = dest;
     this.lhs = lhs;

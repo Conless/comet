@@ -2,10 +2,10 @@ package dev.conless.comet.backend.asm.entity;
 
 @lombok.Value
 public class ASMAddress {
-  private ASMRegister base;
+  private ASMReg base;
   private int offset;
 
-  public ASMAddress(ASMRegister base, int offset) {
+  public ASMAddress(ASMReg base, int offset) {
     this.base = base;
     this.offset = offset;
   }

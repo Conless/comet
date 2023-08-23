@@ -1,14 +1,14 @@
 package dev.conless.comet.backend.asm.node.inst;
 
-import dev.conless.comet.backend.asm.entity.ASMRegister;
+import dev.conless.comet.backend.asm.entity.ASMReg;
 import dev.conless.comet.backend.asm.node.ASMNode;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
 public class ASMMoveNode extends ASMNode {
-  private ASMRegister src, dest;
+  private ASMReg src, dest;
 
-  public ASMMoveNode(ASMRegister src, ASMRegister dest) {
+  public ASMMoveNode(ASMReg src, ASMReg dest) {
     this.src = src;
     this.dest = dest;
   }

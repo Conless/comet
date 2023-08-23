@@ -1,16 +1,16 @@
 package dev.conless.comet.backend.asm.node.inst;
 
 import dev.conless.comet.backend.asm.entity.ASMAddress;
-import dev.conless.comet.backend.asm.entity.ASMRegister;
+import dev.conless.comet.backend.asm.entity.ASMReg;
 import dev.conless.comet.backend.asm.node.ASMNode;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
 public class ASMLoadNode extends ASMNode {
-  public ASMRegister dest;
+  public ASMReg dest;
   public ASMAddress src;
 
-  public ASMLoadNode(ASMRegister dest, ASMAddress src) {
+  public ASMLoadNode(ASMReg dest, ASMAddress src) {
     this.dest = dest;
     this.src = src;
   }

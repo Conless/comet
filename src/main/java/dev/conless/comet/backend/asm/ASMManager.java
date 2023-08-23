@@ -1,14 +1,14 @@
 package dev.conless.comet.backend.asm;
 
-import dev.conless.comet.backend.asm.utils.RegisterManager;
+import dev.conless.comet.backend.asm.utils.BuiltInRegs;
 
 public class ASMManager {
   protected ASMCounter counter;
-  protected RegisterManager regs;
+  protected BuiltInRegs regs;
 
   protected ASMManager() {
-    this.counter = new ASMCounter();
-    
+    this.counter = new ASMCounter(0);
+    this.regs = new BuiltInRegs();
   }
 
   protected String getLabelName(String str) {

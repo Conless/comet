@@ -1,7 +1,6 @@
 package dev.conless.comet.backend.asm.node.stmt;
 
-import dev.conless.comet.backend.asm.entity.ASMAddress;
-import dev.conless.comet.backend.asm.entity.ASMRegister;
+import dev.conless.comet.backend.asm.entity.ASMReg;
 import dev.conless.comet.backend.asm.node.ASMNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.RuntimeError;
@@ -10,8 +9,7 @@ import dev.conless.comet.utils.error.RuntimeError;
 @lombok.Setter
 public class ASMStmtsNode extends ASMNode {
   private Array<ASMNode> nodes;
-  private ASMRegister dest;
-  private ASMAddress destAddr;
+  private ASMReg dest;
 
   public void addNode(ASMNode node) {
     nodes.add(node);
