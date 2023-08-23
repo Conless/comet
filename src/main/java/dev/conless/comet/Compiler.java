@@ -32,16 +32,15 @@ public class Compiler {
     output.write(astProgram.toString().getBytes());
     output.close();
     IRNode irProgram = new IRBuilder().visit((ASTRoot) astProgram);
-    // System.out.print(irProgram.toString());
-    output = new FileOutputStream("./src/test/mx/output.ll");
-    output.write(irProgram.toString().getBytes());
-    output.close();
-    ASMNode asmProgram = new InstSelector().visit((IRRoot) irProgram);
-    
-    output = new FileOutputStream("./src/test/mx/output.s");
-    output.write(asmProgram.toString().getBytes());
-    output.close();
-    output.close();
+    System.out.print(irProgram.toString());
+    // output = new FileOutputStream("./src/test/mx/output.ll");
+    // output.write(irProgram.toString().getBytes());
+    // output.close();
+    // ASMNode asmProgram = new InstSelector().visit((IRRoot) irProgram);
+
+    // output = new FileOutputStream("./src/test/mx/output.s");
+    // output.write(asmProgram.toString().getBytes());
+    // output.close();
   // } catch (BaseError e) {
   //   System.err.println(e.getMessage());
   //   System.exit(1);

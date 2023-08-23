@@ -5,7 +5,7 @@ import dev.conless.comet.backend.asm.node.ASMNode;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public class ASMVarDefNode extends ASMNode {
+public final class ASMVarDefNode extends ASMNode {
   private String name;
   private int value;
 

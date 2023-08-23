@@ -5,7 +5,11 @@ public class ASMVirtualReg extends ASMReg {
   private static int count = 0;
 
   public ASMVirtualReg() {
-    super(String.valueOf(++count));
+    super(String.valueOf(count++));
+  }
+
+  public static int getCount() {
+    return count;
   }
 
   public static void resetCount() {

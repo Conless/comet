@@ -8,7 +8,7 @@ import dev.conless.comet.utils.error.RuntimeError;
 
 @lombok.Getter
 @lombok.Setter
-public class ASMStmtsNode extends ASMNode {
+public final class ASMStmtsNode extends ASMNode {
   private Array<ASMInstNode> nodes;
   private ASMReg dest;
 

@@ -20,6 +20,7 @@ import dev.conless.comet.frontend.ir.node.*;
 import dev.conless.comet.frontend.ir.node.def.*;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.*;
+import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.error.*;
 
 public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
@@ -48,25 +49,22 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   @Override
   public ASMNode visit(IRFuncDefNode node) throws BaseError {
     var func = new ASMFuncDefNode(node.getName());
-    var stackOffset = node.getVarCount() + 10;
-    counter = new ASMCounter(stackOffset);
-    func.getBegin().addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), -4 * stackOffset));
-    func.getBegin().addNode(new ASMStoreNode(regs.getRa(), new ASMAddress(regs.getSp(), 4 * (stackOffset - 1))));
-    counter.stackCount--;
+    counter = new ASMCounter();
     var paramCount = 0;
+    var paramSum = node.getParams().size();
     for (var param : node.getParams()) {
-      if (paramCount < 6) {
+      if (paramCount < 8) {
         counter.param2Addr.put(param.getValue(), new ASMAddress(regs.getArgRegs().get(paramCount), 0));
       } else {
-        counter.param2Addr.put(param.getValue(), new ASMAddress(regs.getSp(), 4 * (--counter.stackCount)));
+        counter.param2Addr.put(param.getValue(), new ASMAddress(regs.getS0(), 4 * (paramSum - paramCount + 1)));
       }
     }
+    ASMVirtualReg.resetCount();
     for (var inst : node.getBody().getNodes()) {
       var instList = (ASMStmtsNode) inst.accept(this);
       func.getBody().appendNodes(instList);
     }
-    func.getEnd().addNode(new ASMLoadNode(regs.getRa(), new ASMAddress(regs.getSp(), 4 * (stackOffset - 1))));
-    func.getEnd().addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), 4 * stackOffset));
+    func.setMemUsed(new Pair<>(counter.allocaCount, ASMVirtualReg.getCount()));
     return func;
   }
 
@@ -86,7 +84,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     var instList = new ASMStmtsNode();
     instList.addNode(new ASMCommentNode(node.toString()));
     var destInst = (ASMStmtsNode) node.getDest().accept(this);
-    instList.addNode(new ASMUnaryNode("addi", destInst.getDest(), regs.getSp(), 4 * (--counter.stackCount)));
+    instList.addNode(new ASMUnaryNode("addi", destInst.getDest(), regs.getSp(), 4 * (counter.allocaCount++)));
     return instList;
   }
 
@@ -154,6 +152,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     instList.appendNodes(condInst);
     var condReg = condInst.getDest();
     instList.addNode(new ASMBeqzNode(condReg, getLabelName(node.getFalseLabel())));
+    instList.addNode(new ASMJumpNode(getLabelName(node.getTrueLabel())));
     return instList;
   }
 
@@ -161,10 +160,10 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   public ASMNode visit(IRCallNode node) throws BaseError {
     var instList = new ASMStmtsNode();
     instList.addNode(new ASMCommentNode(node.toString()));
-    var funcName = node.getFuncName();
+    instList.addNode(new ASMStoreNode(regs.getRa(), new ASMAddress(regs.getSp(), -4)));
     var args = node.getArgs();
     var argCount = 0;
-    var stackOffset = 0;
+    var stackOffset = 1;
     for (var arg : args) {
       var argInst = (ASMStmtsNode) arg.accept(this); // regAddr can be freed immediately, reg can be freed after call
       instList.appendNodes(argInst);
@@ -175,14 +174,9 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
         instList.addNode(new ASMStoreNode(argReg, new ASMAddress(regs.getSp(), -4 * (++stackOffset))));
       }
     }
-    if (stackOffset > 0) {
-      instList.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), -4 * stackOffset));
-    }
-    instList.addNode(new ASMCallNode(funcName));
-    if (stackOffset > 0) {
-      var sp = regs.getSp();
-      instList.addNode(new ASMUnaryNode("addi", sp, sp, stackOffset * 4));
-    }
+    instList.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), -4 * stackOffset));
+    instList.addNode(new ASMCallNode(node.getFuncName()));
+    instList.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), stackOffset * 4));
     if (node.getDest() != null) {
       var destInst = (ASMStmtsNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
                                                                  // after call

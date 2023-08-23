@@ -6,35 +6,31 @@ import dev.conless.comet.backend.asm.node.inst.ASMReturnNode;
 import dev.conless.comet.backend.asm.node.stmt.ASMStmtsNode;
 import dev.conless.comet.backend.asm.node.utils.ASMCommentNode;
 import dev.conless.comet.backend.asm.node.utils.ASMLabelNode;
+import dev.conless.comet.utils.container.Pair;
 
 @lombok.Getter
 @lombok.Setter
-public class ASMFuncDefNode extends ASMNode {
+public final class ASMFuncDefNode extends ASMNode {
   private String name;
   private ASMStmtsNode body;
-  private ASMStmtsNode begin, end;
+  private Pair<Integer, Integer> memUsed;
+  private ASMStmtsNode ldRegs, stRegs;
 
   public ASMFuncDefNode(String name) {
     this.name = name;
+    this.memUsed = null;
     this.body = new ASMStmtsNode();
-    this.begin = new ASMStmtsNode();
-    this.end = new ASMStmtsNode();
+    this.ldRegs = new ASMStmtsNode();
+    this.stRegs = new ASMStmtsNode();
   }
 
   @Override
   public String toString() {
     var str = "";
     str += name + ":\n";
-    var beginStr = "";
-    for (var node : begin.getNodes()) {
-      beginStr += "  " + node.toString() + "\n";
-    }
+    var beginStr = stRegs.getNodes().toString("  ", "\n", "\n");
+    var endStr = ldRegs.getNodes().toString("  ", "\n", "\n");
     str += beginStr;
-    var endStr = "";
-    for (var node : end.getNodes()) {
-      endStr += "  " + node.toString() + "\n";
-    }
-    str += endStr;
     for (var node : body.getNodes()) {
       if (node instanceof ASMReturnNode) {
         str += endStr;

@@ -3,8 +3,8 @@ package dev.conless.comet.backend.asm.node.inst;
 import dev.conless.comet.backend.asm.ASMVisitor;
 import dev.conless.comet.backend.asm.entity.ASMReg;
 
-@lombok.Value
-@lombok.EqualsAndHashCode(callSuper = true)
+@lombok.Getter
+@lombok.Setter
 public final class ASMBeqzNode extends ASMInstNode {
   private ASMReg entity;
   private String label;

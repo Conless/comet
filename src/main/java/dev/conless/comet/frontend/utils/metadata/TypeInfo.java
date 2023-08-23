@@ -4,7 +4,7 @@ package dev.conless.comet.frontend.utils.metadata;
 @lombok.Setter
 public class TypeInfo extends BaseInfo {
   private int depth;
-  private Boolean isBuiltIn;
+  private boolean isBuiltIn;
 
   public TypeInfo(String typeName, int arrayDepth) {
     super(typeName);

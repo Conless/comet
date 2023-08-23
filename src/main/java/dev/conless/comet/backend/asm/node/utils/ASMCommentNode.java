@@ -3,7 +3,7 @@ package dev.conless.comet.backend.asm.node.utils;
 import dev.conless.comet.backend.asm.ASMVisitor;
 import dev.conless.comet.backend.asm.node.inst.ASMInstNode;
 
-public class ASMCommentNode extends ASMInstNode {
+public final class ASMCommentNode extends ASMInstNode {
   private String comment;
 
   public ASMCommentNode(String comment) {

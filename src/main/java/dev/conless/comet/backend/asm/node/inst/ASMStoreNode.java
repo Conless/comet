@@ -4,9 +4,9 @@ import dev.conless.comet.backend.asm.ASMVisitor;
 import dev.conless.comet.backend.asm.entity.ASMAddress;
 import dev.conless.comet.backend.asm.entity.ASMReg;
 
-@lombok.Value
-@lombok.EqualsAndHashCode(callSuper = true)
-public class ASMStoreNode extends ASMInstNode {
+@lombok.Getter
+@lombok.Setter
+public final class ASMStoreNode extends ASMInstNode {
   private ASMReg src;
   private ASMAddress dest;
 

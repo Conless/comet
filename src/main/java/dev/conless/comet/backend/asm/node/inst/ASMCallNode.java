@@ -4,7 +4,7 @@ import dev.conless.comet.backend.asm.ASMVisitor;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public class ASMCallNode extends ASMInstNode {
+public final class ASMCallNode extends ASMInstNode {
   private String label;
 
   public ASMCallNode(String label) {

@@ -48,7 +48,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
       return msg;
     }
     if (!node.getReturnType().equals(GlobalScope.voidType) && !node.getInfo().getName().equals("main")) {
-      if (!((FuncScope) currentScope).getIsExited()) {
+      if (!((FuncScope) currentScope).isExited()) {
         msg.append(new CompileMsg("Function " + node.getName() + " doesn't have a return statement", node));
       }
     }
@@ -102,7 +102,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
   public CompileMsg visit(ASTNewExprNode node) throws BaseError {
     TypeInfo type = node.getType();
     var msg = new CompileMsg();
-    if (!checkTypeValid(type) || (type.getIsBuiltIn() && type.getDepth() == 0)) {
+    if (!checkTypeValid(type) || (type.isBuiltIn() && type.getDepth() == 0)) {
       return new CompileMsg(
           "Cannot initialize type " + type.getName(), node);
     }
@@ -534,7 +534,7 @@ public class SemanticChecker extends ScopeManager implements ASTVisitor<CompileM
         return new CompileMsg("Function should return a value of type " + returnType.getName() + ", but got "
             + exprType.getName() + " instead", node);
       }
-      ((FuncScope) scope).setIsExited(true);
+      ((FuncScope) scope).setExited(true);
     }
     return msg;
   }

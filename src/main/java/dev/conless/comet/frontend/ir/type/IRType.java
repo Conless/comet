@@ -35,7 +35,7 @@ public class IRType {
       this.typeName = "i1";
     } else if (type.equals(GlobalScope.voidType)) {
       this.typeName = "void";
-    } else if (!type.getIsBuiltIn()) {
+    } else if (!type.isBuiltIn()) {
       this.typeName = "%class." + type.getName();
     } else {
       throw new RuntimeError("IRType constructor called with invalid type");

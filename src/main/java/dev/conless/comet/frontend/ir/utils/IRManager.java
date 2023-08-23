@@ -105,7 +105,7 @@ public class IRManager {
     var alloca = new IRCallNode(allocaVar, GlobalScope.irPtrType, "malloc",
         new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName()))));
     instList.addNode(alloca);
-    if (!typeInfo.getIsBuiltIn()) {
+    if (!typeInfo.isBuiltIn()) {
       instList.addNode(
           new IRCallNode(String.format("__class.%s", typeInfo.getName(), typeInfo.getName()), new Array<>(allocaVar)));
     }

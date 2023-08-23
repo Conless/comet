@@ -6,7 +6,7 @@ import dev.conless.comet.utils.container.Array;
 
 @lombok.Getter
 @lombok.Setter
-public class ASMRoot extends ASMNode {
+public final class ASMRoot extends ASMNode {
   private Array<ASMVarDefNode> vars;
   private Array<ASMStrDefNode> strs;
   private Array<ASMFuncDefNode> funcs;
