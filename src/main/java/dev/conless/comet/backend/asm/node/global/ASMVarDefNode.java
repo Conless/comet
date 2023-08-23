@@ -1,5 +1,6 @@
 package dev.conless.comet.backend.asm.node.global;
 
+import dev.conless.comet.backend.asm.ASMVisitor;
 import dev.conless.comet.backend.asm.node.ASMNode;
 
 @lombok.Value
@@ -16,5 +17,10 @@ public class ASMVarDefNode extends ASMNode {
   @Override
   public String toString() {
     return String.format("%s:\n  .word %d", name, value);
+  }
+
+  @Override
+  public <T> T accept(ASMVisitor<T> visitor) {
+    return visitor.visit(this);
   }
 }

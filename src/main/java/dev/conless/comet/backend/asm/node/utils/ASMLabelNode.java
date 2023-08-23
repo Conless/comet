@@ -1,5 +1,6 @@
 package dev.conless.comet.backend.asm.node.utils;
 
+import dev.conless.comet.backend.asm.ASMVisitor;
 import dev.conless.comet.backend.asm.node.inst.ASMInstNode;
 
 @lombok.Value
@@ -14,5 +15,10 @@ public class ASMLabelNode extends ASMInstNode {
   @Override
   public String toString() {
     return label + ":";
+  }
+
+  @Override
+  public <T> T accept(ASMVisitor<T> visitor) {
+    return visitor.visit(this);
   }
 }

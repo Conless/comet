@@ -1,5 +1,6 @@
 package dev.conless.comet.backend.asm.node.inst;
 
+import dev.conless.comet.backend.asm.ASMVisitor;
 import dev.conless.comet.backend.asm.entity.ASMReg;
 
 @lombok.Value
@@ -26,5 +27,10 @@ public class ASMUnaryNode extends ASMInstNode {
   @Override
   public String toString() {
     return String.format("%-6s", op) + dest + ", " + operand + (imm == null ? "" : ", " + imm);
+  }
+
+  @Override
+  public <T> T accept(ASMVisitor<T> visitor) {
+    return visitor.visit(this);
   }
 }

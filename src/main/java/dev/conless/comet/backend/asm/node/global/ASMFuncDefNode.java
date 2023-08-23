@@ -1,5 +1,6 @@
 package dev.conless.comet.backend.asm.node.global;
 
+import dev.conless.comet.backend.asm.ASMVisitor;
 import dev.conless.comet.backend.asm.node.ASMNode;
 import dev.conless.comet.backend.asm.node.inst.ASMReturnNode;
 import dev.conless.comet.backend.asm.node.stmt.ASMStmtsNode;
@@ -45,5 +46,10 @@ public class ASMFuncDefNode extends ASMNode {
       }
     }
     return str;
+  }
+
+  @Override
+  public <T> T accept(ASMVisitor<T> visitor) {
+    return visitor.visit(this);
   }
 }

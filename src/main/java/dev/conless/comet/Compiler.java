@@ -37,6 +37,7 @@ public class Compiler {
     output.write(irProgram.toString().getBytes());
     output.close();
     ASMNode asmProgram = new InstSelector().visit((IRRoot) irProgram);
+    
     output = new FileOutputStream("./src/test/mx/output.s");
     output.write(asmProgram.toString().getBytes());
     output.close();

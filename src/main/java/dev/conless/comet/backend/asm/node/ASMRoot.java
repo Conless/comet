@@ -1,9 +1,11 @@
 package dev.conless.comet.backend.asm.node;
 
+import dev.conless.comet.backend.asm.ASMVisitor;
 import dev.conless.comet.backend.asm.node.global.*;
 import dev.conless.comet.utils.container.Array;
 
 @lombok.Getter
+@lombok.Setter
 public class ASMRoot extends ASMNode {
   private Array<ASMVarDefNode> vars;
   private Array<ASMStrDefNode> strs;
@@ -22,5 +24,10 @@ public class ASMRoot extends ASMNode {
     str += ".rodata\n" + strs.toString("\n") + "\n\n";
     str += ".text\n" + funcs.toString("\n\n");
     return str;
+  }
+
+  @Override
+  public <T> T accept(ASMVisitor<T> visitor) {
+    return visitor.visit(this);
   }
 }

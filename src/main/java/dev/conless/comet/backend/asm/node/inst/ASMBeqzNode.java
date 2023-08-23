@@ -1,5 +1,6 @@
 package dev.conless.comet.backend.asm.node.inst;
 
+import dev.conless.comet.backend.asm.ASMVisitor;
 import dev.conless.comet.backend.asm.entity.ASMReg;
 
 @lombok.Value
@@ -16,5 +17,10 @@ public final class ASMBeqzNode extends ASMInstNode {
   @Override
   public String toString() {
     return String.format("%-6s", "bnez") + entity.getName() + ", " + label;
+  }
+
+  @Override
+  public <T> T accept(ASMVisitor<T> visitor) {
+    return visitor.visit(this);
   }
 }
