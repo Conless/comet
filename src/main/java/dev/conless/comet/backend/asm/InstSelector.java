@@ -7,6 +7,7 @@ import dev.conless.comet.backend.asm.node.inst.*;
 import dev.conless.comet.backend.asm.node.stmt.*;
 import dev.conless.comet.backend.asm.node.utils.ASMCommentNode;
 import dev.conless.comet.backend.asm.node.utils.ASMLabelNode;
+import dev.conless.comet.backend.asm.utils.ASMManager;
 import dev.conless.comet.frontend.ir.*;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRLiteral;

@@ -1,4 +1,4 @@
-package dev.conless.comet.frontend.ir;
+package dev.conless.comet.frontend.ir.utils;
 
 public class IRCounter {
   public int allocaCount = 0;

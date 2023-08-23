@@ -1,4 +1,4 @@
-package dev.conless.comet.frontend.ir;
+package dev.conless.comet.frontend.ir.utils;
 
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.ast.node.stmt.ASTIfStmtNode;
@@ -114,7 +114,7 @@ public class IRManager {
     return instList;
   }
 
-  void initSize(String name, Array<IRType> types) {
+  protected void initSize(String name, Array<IRType> types) {
     var totalSize = 0;
     for (var type : types) {
       totalSize += name2Size.get(type.getTypeName());

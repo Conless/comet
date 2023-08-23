@@ -15,6 +15,8 @@ import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.stmt.*;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
 import dev.conless.comet.frontend.ir.type.*;
+import dev.conless.comet.frontend.ir.utils.IRCounter;
+import dev.conless.comet.frontend.ir.utils.IRManager;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.*;
 

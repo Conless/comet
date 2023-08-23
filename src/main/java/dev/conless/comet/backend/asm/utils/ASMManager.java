@@ -1,6 +1,4 @@
-package dev.conless.comet.backend.asm;
-
-import dev.conless.comet.backend.asm.utils.BuiltInRegs;
+package dev.conless.comet.backend.asm.utils;
 
 public class ASMManager {
   protected ASMCounter counter;
