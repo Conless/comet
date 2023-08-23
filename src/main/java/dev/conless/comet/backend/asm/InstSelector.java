@@ -20,6 +20,7 @@ import dev.conless.comet.frontend.ir.node.*;
 import dev.conless.comet.frontend.ir.node.def.*;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.utils.*;
+import dev.conless.comet.frontend.ir.type.IRStructType;
 import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.error.*;
 
@@ -37,7 +38,10 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
       if (def instanceof IRStrDefNode) {
         root.getStrs().add((ASMStrDefNode) def.accept(this));
       } else {
-        root.getVars().add((ASMVarDefNode) def.accept(this));
+        var varDef = (ASMVarDefNode) def.accept(this);
+        if (varDef != null) {
+          root.getVars().add(varDef);
+        }
       }
     }
     for (var func : node.getFuncs()) {
@@ -70,8 +74,10 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRGlobalDefNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    if (node.getVar().getType() instanceof IRStructType) {
+      return null;
+    }
+    return new ASMVarDefNode(node.getVar().getValue().substring(1), 0);
   }
 
   @Override
@@ -190,8 +196,23 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRGetElementPtrNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    var instList = new ASMStmtsNode();
+    instList.addNode(new ASMCommentNode(node.toString()));
+    var srcInst = (ASMStmtsNode) node.getSrc().accept(this);
+    instList.appendNodes(srcInst);
+    var srcReg = srcInst.getDest();
+    for (var index : node.getIndices()) {
+      var indexInst = (ASMStmtsNode) index.accept(this);
+      instList.appendNodes(indexInst);
+      var indexReg = indexInst.getDest();
+      instList.addNode(new ASMBinaryNode("add", srcReg, srcReg, indexReg));
+      instList.addNode(new ASMLoadNode(srcReg, new ASMAddress(srcReg, 0)));
+    }
+    var destInst = (ASMStmtsNode) node.getDest().accept(this);
+    instList.appendNodes(destInst);
+    var destReg = destInst.getDest();
+    instList.addNode(new ASMMoveNode(destReg, srcReg));
+    return instList;
   }
 
   @Override
@@ -220,8 +241,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRPhiNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    throw new RuntimeError("ASMBuilder.visit(IRPhiNode) should not be called");
   }
 
   @Override

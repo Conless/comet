@@ -13,21 +13,21 @@ import dev.conless.comet.utils.error.RuntimeError;
 public final class IRGetElementPtrNode extends IRNode {
   private IRVariable dest, src;
   private String type;
-  private Array<IREntity> idxs;
+  private Array<IREntity> indices;
 
-  public IRGetElementPtrNode(IRVariable dest, IRVariable src, String type, Array<IREntity> idxs) {
+  public IRGetElementPtrNode(IRVariable dest, IRVariable src, String type, Array<IREntity> indices) {
     if (src == null) {
       throw new RuntimeError("src cannot be null");
     }
     this.type = type;
     this.dest = dest;
     this.src = src;
-    this.idxs = idxs;
+    this.indices = indices;
   }
 
   @Override
   public String toString() {
-    return dest.getValue() + " = getelementptr " + type.toString() + ", " + src.toString() + ", " + idxs.toString(", ");
+    return dest.getValue() + " = getelementptr " + type.toString() + ", " + src.toString() + ", " + indices.toString(", ");
   }
 
   @Override
