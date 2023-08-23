@@ -10,6 +10,13 @@ public class ASMCounter {
   public Map<String, ASMAddress> param2Addr;
   public Map<String, ASMReg> name2reg;
 
+  public ASMCounter() {
+    funcCount = 0;
+    this.stackCount = 0;
+    this.param2Addr = new Map<>();
+    this.name2reg = new Map<>();
+  }
+
   public ASMCounter(int stackCount) {
     funcCount++;
     this.stackCount = stackCount;

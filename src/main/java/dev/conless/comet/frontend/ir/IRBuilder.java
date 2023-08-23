@@ -151,7 +151,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var type = (TypeInfo) node.getInfo().getType();
     if (type.getDepth() == 0) {
       var allocaInst = allocaHelper(type, new Array<>());
-      instList.addNode(allocaInst);
+      instList.appendNodes(allocaInst);
       instList.setDest(allocaInst.getDest());
     } else {
       var dest = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(++counter.allocaCount));

@@ -1,8 +1,8 @@
 package dev.conless.comet.backend.asm.node.utils;
 
-import dev.conless.comet.backend.asm.node.ASMNode;
+import dev.conless.comet.backend.asm.node.inst.ASMInstNode;
 
-public class ASMCommentNode extends ASMNode {
+public class ASMCommentNode extends ASMInstNode {
   private String comment;
 
   public ASMCommentNode(String comment) {

@@ -110,7 +110,6 @@ public class IRManager {
           new IRCallNode(String.format("__class.%s", typeInfo.getName(), typeInfo.getName()), new Array<>(allocaVar)));
     }
     instList.setDest(allocaVar);
-
     return instList;
   }
 

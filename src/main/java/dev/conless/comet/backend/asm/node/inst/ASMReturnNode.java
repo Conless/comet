@@ -1,8 +1,6 @@
 package dev.conless.comet.backend.asm.node.inst;
 
-import dev.conless.comet.backend.asm.node.ASMNode;
-
-public class ASMReturnNode extends ASMNode {
+public class ASMReturnNode extends ASMInstNode {
   @Override
   public String toString() {
     return "ret";

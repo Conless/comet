@@ -15,4 +15,9 @@ public class ASMVirtualReg extends ASMReg {
   public int getID() {
     return Integer.parseInt(this.getName());
   }
+
+  @Override
+  public String toString() {
+    return "%" + getName();
+  }
 }

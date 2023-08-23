@@ -19,6 +19,10 @@ public final class IRVariable extends IREntity {
     return getValue().startsWith("@");
   }
 
+  public boolean isTemp() {
+    return getValue().startsWith("%.");
+  }
+
   @Override
   public String toString() {
     return getType().toString() + " " + getValue();

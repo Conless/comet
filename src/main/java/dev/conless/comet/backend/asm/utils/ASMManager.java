@@ -5,7 +5,7 @@ public class ASMManager {
   protected BuiltInRegs regs;
 
   protected ASMManager() {
-    this.counter = new ASMCounter(0);
+    this.counter = new ASMCounter();
     this.regs = new BuiltInRegs();
   }
 
