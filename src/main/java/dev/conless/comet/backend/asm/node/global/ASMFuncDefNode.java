@@ -26,7 +26,7 @@ public final class ASMFuncDefNode extends ASMNode {
 
   @Override
   public String toString() {
-    var str = "";
+    var str = "  .globl " + name + "\n";
     str += name + ":\n";
     var beginStr = stRegs.getNodes().toString("  ", "\n", "\n");
     var endStr = ldRegs.getNodes().toString("  ", "\n", "\n");

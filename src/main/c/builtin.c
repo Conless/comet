@@ -1,6 +1,12 @@
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+int printf(const char *format, ...);
+int scanf(const char *format, ...);
+int sprintf(char *str, const char *format, ...);
+void *malloc(unsigned int size); // NOLINT
+
+typedef __builtin_va_list va_list;
+#define va_start(ap, param) __builtin_va_start(ap, param)
+#define va_end(ap)          __builtin_va_end(ap)
+#define va_arg(ap, type)    __builtin_va_arg(ap, type)
 
 void print(char *s) { printf("%s", s); }
 

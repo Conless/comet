@@ -3,6 +3,7 @@ package dev.conless.comet.backend.asm.utils;
 import dev.conless.comet.backend.asm.RegAllocator;
 import dev.conless.comet.backend.asm.entity.ASMAddress;
 import dev.conless.comet.backend.asm.entity.ASMPhysicalReg;
+import dev.conless.comet.backend.asm.entity.ASMReg;
 import dev.conless.comet.backend.asm.entity.ASMVirtualReg;
 import dev.conless.comet.backend.asm.node.*;
 import dev.conless.comet.backend.asm.node.global.*;
@@ -10,7 +11,6 @@ import dev.conless.comet.backend.asm.node.inst.*;
 import dev.conless.comet.backend.asm.node.stmt.ASMStmtsNode;
 import dev.conless.comet.backend.asm.node.utils.*;
 import dev.conless.comet.utils.container.Array;
-import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.container.Set;
 import dev.conless.comet.utils.error.*;
 
@@ -52,16 +52,20 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
         body.addNode((ASMInstNode) newStmt);
       }
     }
+    allocatedMem += node.getMemUsed().b;
     var begin = new ASMStmtsNode();
     var end = new ASMStmtsNode();
-    var totalMem = node.getMemUsed().a + node.getMemUsed().b + usedRegs.size();
-    begin.addNode(new ASMMoveNode(regs.getSp(), regs.getS0()));
-    begin.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), -4 * totalMem));
-    end.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), 4 * totalMem));
-    var regsCount = 0;
-    for (var reg : usedRegs) {
-      begin.addNode(new ASMStoreNode(reg, new ASMAddress(reg, -4 * (totalMem + regsCount++))));
-      end.addNode(new ASMLoadNode(reg, new ASMAddress(reg, -4 * (totalMem + regsCount++))));
+    var totalMem = allocatedMem + usedRegs.size();
+    if (totalMem != 0) {
+      begin.addNode(new ASMMoveNode(regs.getSp(), regs.getS0()));
+      begin.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), -4 * totalMem));
+      var regsCount = 0;
+      for (var reg : usedRegs) {
+        begin.addNode(new ASMStoreNode(reg, new ASMAddress(regs.getSp(), 4 * (allocatedMem + regsCount))));
+        end.addNode(new ASMLoadNode(reg, new ASMAddress(regs.getSp(), 4 * (allocatedMem + regsCount))));
+        regsCount++;
+      }
+      end.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), 4 * totalMem));
     }
     node.setBody(body);
     node.setStRegs(begin);
@@ -82,7 +86,7 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   @Override
   public ASMNode visit(ASMBeqzNode node) {
     var instList = new ASMStmtsNode();
-    var reg = getRValueReg((ASMVirtualReg) node.getEntity(), instList);
+    var reg = getRValueReg(node.getEntity(), instList);
     node.setEntity(reg);
     evictReg(instList, reg);
     instList.addNode(node);
@@ -92,9 +96,9 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   @Override
   public ASMNode visit(ASMBinaryNode node) {
     var instList = new ASMStmtsNode();
-    var lhs = getRValueReg((ASMVirtualReg) node.getLhs(), instList);
-    var rhs = getRValueReg((ASMVirtualReg) node.getRhs(), instList);
-    var dest = getLValueReg((ASMVirtualReg) node.getDest());
+    var lhs = getRValueReg(node.getLhs(), instList);
+    var rhs = getRValueReg(node.getRhs(), instList);
+    var dest = getLValueReg(node.getDest());
     node.setLhs(lhs);
     node.setRhs(rhs);
     node.setDest(dest);
@@ -116,7 +120,7 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   @Override
   public ASMNode visit(ASMLoadAddrNode node) {
     var instList = new ASMStmtsNode();
-    var dest = getLValueReg((ASMVirtualReg) node.getDest());
+    var dest = getLValueReg(node.getDest());
     node.setDest(dest);
     evictReg(instList, dest);
     return node;
@@ -125,7 +129,7 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   @Override
   public ASMNode visit(ASMLoadImmNode node) {
     var instList = new ASMStmtsNode();
-    var dest = getLValueReg((ASMVirtualReg) node.getDest());
+    var dest = getLValueReg(node.getDest());
     node.setDest(dest);
     evictReg(instList, dest);
     return node;
@@ -134,8 +138,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   @Override
   public ASMNode visit(ASMLoadNode node) {
     var instList = new ASMStmtsNode();
-    var dest = getLValueReg((ASMVirtualReg) node.getDest());
-    var addr = getRValueReg((ASMVirtualReg) node.getSrc().getBase(), instList);
+    var dest = getLValueReg(node.getDest());
+    var addr = getRValueReg(node.getSrc().getBase(), instList);
     node.setDest(dest);
     node.setSrc(new ASMAddress(addr, node.getSrc().getOffset()));
     evictReg(instList, dest, addr);
@@ -146,8 +150,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   @Override
   public ASMNode visit(ASMMoveNode node) {
     var instList = new ASMStmtsNode();
-    var src = getRValueReg((ASMVirtualReg) node.getSrc(), instList);
-    var dest = getLValueReg((ASMVirtualReg) node.getDest());
+    var src = getRValueReg(node.getSrc(), instList);
+    var dest = getLValueReg(node.getDest());
     node.setSrc(src);
     node.setDest(dest);
     evictReg(instList, src, dest);
@@ -163,8 +167,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   @Override
   public ASMNode visit(ASMStoreNode node) {
     var instList = new ASMStmtsNode();
-    var src = getRValueReg((ASMVirtualReg) node.getSrc(), instList);
-    var dest = getRValueReg((ASMVirtualReg) node.getDest().getBase(), instList);
+    var src = getRValueReg(node.getSrc(), instList);
+    var dest = getRValueReg(node.getDest().getBase(), instList);
     node.setSrc(src);
     node.setDest(new ASMAddress(dest, node.getDest().getOffset()));
     evictReg(instList, src, dest);
@@ -175,8 +179,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   @Override
   public ASMNode visit(ASMUnaryNode node) {
     var instList = new ASMStmtsNode();
-    var src = getRValueReg((ASMVirtualReg) node.getOperand(), instList);
-    var dest = getLValueReg((ASMVirtualReg) node.getDest());
+    var src = getRValueReg(node.getOperand(), instList);
+    var dest = getLValueReg(node.getDest());
     node.setOperand(src);
     node.setDest(dest);
     evictReg(instList, src, dest);
@@ -195,24 +199,30 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   }
 
   @Override
-  public ASMPhysicalReg getRValueReg(ASMVirtualReg reg, ASMStmtsNode nodes) {
+  public ASMPhysicalReg getRValueReg(ASMReg reg, ASMStmtsNode nodes) {
+    if (reg instanceof ASMPhysicalReg) {
+      return (ASMPhysicalReg) reg;
+    }
     var newReg = cleanRegs.pollFirst();
     if (newReg == null) {
       throw new RuntimeError("No more clean registers");
     }
     usedRegs.add(newReg);
-    nodes.addNode(new ASMLoadNode(newReg, new ASMAddress(regs.getSp(), 4 * (allocatedMem + reg.getID()))));
+    nodes.addNode(new ASMLoadNode(newReg, new ASMAddress(regs.getSp(), 4 * (allocatedMem + ((ASMVirtualReg) reg).getID()))));
     return newReg;
   }
 
   @Override
-  public ASMPhysicalReg getLValueReg(ASMVirtualReg reg) {
+  public ASMPhysicalReg getLValueReg(ASMReg reg) {
+    if (reg instanceof ASMPhysicalReg) {
+      return (ASMPhysicalReg) reg;
+    }
     var newReg = cleanRegs.pollFirst();
     if (newReg == null) {
       throw new RuntimeError("No more clean registers");
     }
     newReg.setDirty(true);
-    newReg.setVirtualID(reg.getID());
+    newReg.setVirtualID(((ASMVirtualReg) reg).getID());
     usedRegs.add(newReg);
     return newReg;
   }
@@ -220,6 +230,9 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   @Override
   public void evictReg(ASMStmtsNode nodes, ASMPhysicalReg... dirtyRegs) {
     for (var reg : dirtyRegs) {
+      if (!reg.getName().startsWith("t")) {
+        continue;
+      }
       if (reg.isDirty()) {
         nodes.addNode(new ASMStoreNode(reg, new ASMAddress(regs.getSp(), 4 * (allocatedMem + reg.getVirtualID()))));
         reg.setDirty(false);

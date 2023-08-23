@@ -2,7 +2,7 @@ package dev.conless.comet.backend.asm.entity;
 
 @lombok.Getter
 @lombok.Setter
-public class ASMPhysicalReg extends ASMReg {
+public class ASMPhysicalReg extends ASMReg implements java.lang.Comparable<ASMPhysicalReg> {
   private boolean isDirty;
   private int virtualID;
 
@@ -15,5 +15,10 @@ public class ASMPhysicalReg extends ASMReg {
   @Override
   public String toString() {
     return getName();
+  }
+
+  @Override
+  public int compareTo(ASMPhysicalReg o) {
+    return this.getName().compareTo(o.getName());
   }
 }

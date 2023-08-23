@@ -82,7 +82,13 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRStrDefNode node) throws BaseError {
-    return new ASMStrDefNode(node.getVar().getValue().substring(1), node.getValue());
+    var str = node.getOrgValue()
+      .replace("\\", "\\\\")
+      .replace("\n", "\\n")
+      .replace("\0", "")
+      .replace("\t", "\\t")
+      .replace("\"", "\\\"");
+    return new ASMStrDefNode(node.getVar().getValue().substring(1), str);
   }
 
   @Override
@@ -191,6 +197,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
       var rv = regs.getA0();
       instList.addNode(new ASMMoveNode(rv, destReg));
     }
+    instList.addNode(new ASMLoadNode(regs.getRa(), new ASMAddress(regs.getSp(), -4)));
     return instList;
   }
 
@@ -205,6 +212,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
       var indexInst = (ASMStmtsNode) index.accept(this);
       instList.appendNodes(indexInst);
       var indexReg = indexInst.getDest();
+      instList.addNode(new ASMUnaryNode("slli", indexReg, indexReg, 2));
       instList.addNode(new ASMBinaryNode("add", srcReg, srcReg, indexReg));
       instList.addNode(new ASMLoadNode(srcReg, new ASMAddress(srcReg, 0)));
     }

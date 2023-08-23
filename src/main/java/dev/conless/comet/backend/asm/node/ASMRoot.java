@@ -20,9 +20,9 @@ public final class ASMRoot extends ASMNode {
   @Override
   public String toString() {
     var str = "";
-    str += ".data\n" + vars.toString("\n") + "\n\n";
-    str += ".rodata\n" + strs.toString("\n") + "\n\n";
-    str += ".text\n" + funcs.toString("\n\n");
+    str += "  .data\n" + vars.toString("\n") + "\n\n";
+    str += "  .rodata\n" + strs.toString("\n") + "\n\n";
+    str += funcs.toString("  .text\n", "\n\n");
     return str;
   }
 

@@ -7,10 +7,12 @@ import dev.conless.comet.utils.error.BaseError;
 @lombok.Getter
 public class IRStrDefNode extends IRGlobalDefNode {
   private String value;
+  private String orgValue;
   private int length;
 
   public IRStrDefNode(IRVariable var, String value) {
     super(var);
+    this.orgValue = value;
     String ret = "";
     for (int i = 0; i < value.length(); ++i) {
       char c = value.charAt(i);
