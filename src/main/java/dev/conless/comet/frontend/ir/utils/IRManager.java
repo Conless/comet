@@ -34,7 +34,7 @@ public class IRManager {
     name2Size = new Map<>();
     strDefs = new Array<>();
     name2Size.put("i32", 4);
-    name2Size.put("ptr", 4); // TODO: 32-bit
+    name2Size.put("ptr", 4);
     name2Size.put("i1", 4);
   }
 

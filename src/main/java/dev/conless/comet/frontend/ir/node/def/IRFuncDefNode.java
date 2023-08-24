@@ -48,14 +48,18 @@ public class IRFuncDefNode extends IRNode {
   public void addNode(IRNode node) {
     body.addNode(node);
   }
+
+  public void addReturn() {
+    var endNode = body.getNodes().getLast();
+    if (!(endNode instanceof IRReturnNode)) {
+      body.addNode(new IRReturnNode(returnType));
+    }
+  }
+  
   @Override
   public String toString() {
     String str = "define " + returnType.toString() + " @" + name + "(";
     str += params.toString(", ") + ") {\n";
-    var endNode = body.getNodes().get(body.getNodes().size() - 1);
-    if (!(endNode instanceof IRReturnNode)) {
-      body.addNode(new IRReturnNode(returnType));
-    }
     for (var node : body.getNodes()) {
       if (!(node instanceof IRLabelNode)) {
         str += "  ";
