@@ -62,6 +62,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
       } else {
         counter.param2Addr.put(param.getValue(), new ASMAddress(regs.getS0(), 4 * (paramSum - paramCount + 1)));
       }
+      paramCount++;
     }
     ASMVirtualReg.resetCount();
     for (var inst : node.getBody().getNodes()) {
@@ -155,7 +156,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
           instList.addNode(new ASMBinaryNode("slt", gtReg, gtReg, regs.getZero()));
           instList.addNode(new ASMBinaryNode("or", destReg, gtReg, eqReg));
         }
-        case "sgt" -> instList.addNode(new ASMBinaryNode("slt", destReg, lhsReg, rhsReg));
+        case "sgt" -> instList.addNode(new ASMBinaryNode("slt", destReg, rhsReg, lhsReg));
         default -> throw new RuntimeError("Unknown comparison operation '" + op + "'");
       }
     }

@@ -88,8 +88,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
     var instList = new ASMStmtsNode();
     var reg = getRValueReg(node.getEntity(), instList);
     node.setEntity(reg);
-    evictReg(instList, reg);
     instList.addNode(node);
+    evictReg(instList, reg);
     return instList;
   }
 
@@ -102,8 +102,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
     node.setLhs(lhs);
     node.setRhs(rhs);
     node.setDest(dest);
-    evictReg(instList, lhs, rhs, dest);
     instList.addNode(node);
+    evictReg(instList, lhs, rhs, dest);
     return instList;
   }
 
@@ -122,8 +122,9 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
     var instList = new ASMStmtsNode();
     var dest = getLValueReg(node.getDest());
     node.setDest(dest);
+    instList.addNode(node);
     evictReg(instList, dest);
-    return node;
+    return instList;
   }
 
   @Override
@@ -131,8 +132,9 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
     var instList = new ASMStmtsNode();
     var dest = getLValueReg(node.getDest());
     node.setDest(dest);
+    instList.addNode(node);
     evictReg(instList, dest);
-    return node;
+    return instList;
   }
 
   @Override
@@ -142,8 +144,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
     var addr = getRValueReg(node.getSrc().getBase(), instList);
     node.setDest(dest);
     node.setSrc(new ASMAddress(addr, node.getSrc().getOffset()));
-    evictReg(instList, dest, addr);
     instList.addNode(node);
+    evictReg(instList, dest, addr);
     return instList;
   }
 
@@ -154,8 +156,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
     var dest = getLValueReg(node.getDest());
     node.setSrc(src);
     node.setDest(dest);
-    evictReg(instList, src, dest);
     instList.addNode(node);
+    evictReg(instList, src, dest);
     return instList;
   }
 
@@ -171,8 +173,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
     var dest = getRValueReg(node.getDest().getBase(), instList);
     node.setSrc(src);
     node.setDest(new ASMAddress(dest, node.getDest().getOffset()));
-    evictReg(instList, src, dest);
     instList.addNode(node);
+    evictReg(instList, src, dest);
     return instList;
   }
 
@@ -183,8 +185,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
     var dest = getLValueReg(node.getDest());
     node.setOperand(src);
     node.setDest(dest);
-    evictReg(instList, src, dest);
     instList.addNode(node);
+    evictReg(instList, src, dest);
     return instList;
   }
 
