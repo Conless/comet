@@ -19,8 +19,8 @@ import dev.conless.comet.utils.error.*;
 public class Compiler {
   public static void main(String[] args) throws Exception {
     try {
-      // var input = CharStreams.fromStream(System.in);
-      var input = CharStreams.fromStream(new FileInputStream("src/test/mx/input.mx"));
+      var input = CharStreams.fromStream(System.in);
+      // var input = CharStreams.fromStream(new FileInputStream("src/test/mx/input.mx"));
       Meteor lexer = new Meteor(input);
       lexer.removeErrorListeners();
       lexer.addErrorListener(new CometErrorListener());
@@ -31,17 +31,17 @@ public class Compiler {
       ASTNode astProgram = new ASTBuilder().visit(parser.program());
       new SemanticChecker().visit((ASTRoot) astProgram);
       IRNode irProgram = new IRBuilder().visit((ASTRoot) astProgram);
-      var output = new PrintStream(new FileOutputStream("src/test/mx/output.ll"));
-      output.println(irProgram);
-      output.close();
+      // var output = new PrintStream(new FileOutputStream("src/test/mx/output.ll"));
+      // output.println(irProgram);
+      // output.close();
       ASMNode asmProgram = new InstSelector().visit((IRRoot) irProgram);
-      output = new PrintStream(new FileOutputStream("src/test/mx/output.raw.s"));
-      output.println(asmProgram);
-      output.close();
+      // output = new PrintStream(new FileOutputStream("src/test/mx/output.raw.s"));
+      // output.println(asmProgram);
+      // output.close();
       new BasicAllocator().visit((ASMRoot) asmProgram);
-      output = new PrintStream(new FileOutputStream("src/test/mx/output.s"));
-      output.println(asmProgram);
-      output.close();
+      // output = new PrintStream(new FileOutputStream("src/test/mx/output.s"));
+      // output.println(asmProgram);
+      // output.close();
       System.out.println(asmProgram);
     } catch (BaseError e) {
       System.err.println(e.getMessage());

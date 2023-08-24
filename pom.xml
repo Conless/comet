@@ -7,7 +7,7 @@
 
   <groupId>dev.conless.compiler</groupId>
   <artifactId>comet</artifactId>
-  <version>0.1.0-alpha</version>
+  <version>1.0.0</version>
 
   <name>comet</name>
   <!-- FIXME change it to the project's website -->
