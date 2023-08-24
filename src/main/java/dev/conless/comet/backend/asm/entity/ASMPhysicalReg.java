@@ -8,7 +8,7 @@ public class ASMPhysicalReg extends ASMReg implements java.lang.Comparable<ASMPh
 
   public ASMPhysicalReg(String name) {
     super(name);
-    isDirty = true;
+    isDirty = false;
     virtualID = -1;
   }
 

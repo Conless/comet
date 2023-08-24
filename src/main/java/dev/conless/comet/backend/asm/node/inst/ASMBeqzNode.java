@@ -16,7 +16,7 @@ public final class ASMBeqzNode extends ASMInstNode {
 
   @Override
   public String toString() {
-    return String.format("%-6s", "bnez") + entity.getName() + ", " + label;
+    return String.format("%-6s", "beqz") + entity + ", " + label;
   }
 
   @Override
