@@ -9,7 +9,7 @@ compile_command = "make"
 execute_command = "./bin/mxc"
 ravel_command = "./bin/ravel"
 test_dir = "./src/test/mx/"
-builtin_c = "./src/main/c/builtin.c"
+builtin_s = "./src/test/mx/builtin.s"
 start_testcase = ""
 
 def collect_test_cases():
@@ -20,11 +20,13 @@ def collect_test_cases():
         test_cases.append(dir)
     elif os.path.isdir(test_cases_dir + dir):
       for f in os.listdir(test_cases_dir + dir):
-        if f.split('.')[0] == start_testcase:
-          test_cases = []
         if os.path.splitext(f)[1] == '.mx':
           test_cases.append(dir + '/' + f)
   test_cases.sort()
+  for i in range(len(test_cases)):
+    if str(test_cases[i]).startswith(start_testcase):
+      test_cases = test_cases[i:]
+      break
   return test_cases
 
 def process_io(origin_input):
@@ -47,23 +49,19 @@ def compile2exe():
   if (compile_status != 0):
     print("Compile Error when generating exe: " + compile_output)
     return False
-  # builtin2exe = "clang-16 -O2 -S --target=riscv32-unknown-elf " + builtin_c + " -o " + test_dir + "builtin.s"
-  # print("Compiling builtin.c to executable: " + builtin2exe)
-  # compile_status, compile_output = subprocess.getstatusoutput(builtin2exe)
-  # if (compile_status != 0):
-  #   print("Compile Error when generating exe: " + compile_output)
-  #   return False
   return True
 
 def execute(file_io = False, expected_result = 0):
   # example: ./bin/ravel test/output.s test/builtin.s
-  execute = ravel_command  + " " + test_dir + "output.s" + " " + test_dir + "builtin.s"
+  execute = ravel_command  + " " + test_dir + "output.s" + " " + builtin_s
   if file_io:
     execute += " --input-file=" + test_dir + "test.in" + " --output-file=" + test_dir + "test.out"
   print("Executing: " + execute)
-  execute_status, execute_output = subprocess.getstatusoutput(execute)
+  execute_output = subprocess.getoutput(execute)
+  execute_status = int((re.findall(r'exit code: (\d+)', execute_output))[0])
   if (execute_status != expected_result):
-    print("Runtime Error: " + execute_output)
+    print("Runtime Error: expected " + str(expected_result) + ", got " + str(execute_status));
+    print(execute_output)
     return False
   if file_io == False:
     print("Output:")

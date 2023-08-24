@@ -7,8 +7,9 @@ import subprocess
 test_cases_dir = "./tutorial/Compiler-Design-Implementation/testcases/codegen/"
 compile_command = "make"
 execute_command = "./bin/mxc"
+ravel_command = "./bin/ravel"
 test_dir = "./src/test/mx/"
-builtin_c = "./src/main/c/builtin.c"
+builtin_s = "./src/test/mx/builtin.s"
 start_testcase = ""
 
 def collect_test_cases():
@@ -33,12 +34,6 @@ def compile2ll():
   if (compile_status != 0):
     print("Compile Error in input.mx: " + compile_output)
     return False
-  builtin2llvm = "clang-16 -S -c -emit-llvm -O0 " + builtin_c + " -o " + test_dir + "builtin.ll"
-  print("Compiling builtin.c to LLVM IR: " + builtin2llvm)
-  compile_status, compile_output = subprocess.getstatusoutput(builtin2llvm)
-  if (compile_status != 0):
-    print("Compile Error in builtin.c: " + compile_output)
-    return False
   return True
 
 def process_io(origin_input):
@@ -55,22 +50,25 @@ def process_io(origin_input):
   return int(result_text[0])
 
 def compile2exe():
-  llvm2exe = "clang-16 -O2 " + test_dir + "output.ll " + test_dir + "builtin.ll -o " + test_dir + "output"
-  print("Compiling to executable: " + llvm2exe)
-  compile_status, compile_output = subprocess.getstatusoutput(llvm2exe)
+  llvm2asm = "clang-16 -O2 -S --target=riscv32-unknown-elf " + test_dir + "output.ll -o " + test_dir + "output.s"
+  print("Compiling to executable: " + llvm2asm)
+  compile_status, compile_output = subprocess.getstatusoutput(llvm2asm)
   if (compile_status != 0):
     print("Compile Error when generating exe: " + compile_output)
     return False
   return True
 
 def execute(file_io = False, expected_result = 0):
-  execute = test_dir + "output"
+  # example: ./bin/ravel test/output.s test/builtin.s
+  execute = ravel_command  + " " + test_dir + "output.s" + " " + builtin_s
   if file_io:
-    execute += " <" + (test_dir + "test.in") + " >" + (test_dir + "test.out")
+    execute += " --input-file=" + test_dir + "test.in" + " --output-file=" + test_dir + "test.out"
   print("Executing: " + execute)
-  execute_status, execute_output = subprocess.getstatusoutput(execute)
+  execute_output = subprocess.getoutput(execute)
+  execute_status = int((re.findall(r'exit code: (\d+)', execute_output))[0])
   if (execute_status != expected_result):
-    print("Runtime Error: " + execute_output)
+    print("Runtime Error: expected " + str(expected_result) + ", got " + str(execute_status));
+    print(execute_output)
     return False
   if file_io == False:
     print("Output:")
