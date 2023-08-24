@@ -7,6 +7,7 @@ import subprocess
 test_cases_dir = "./tutorial/Compiler-Design-Implementation/testcases/codegen/"
 compile_command = "make"
 execute_command = "./bin/mxc"
+ravel_command = "./bin/ravel"
 test_dir = "./src/test/mx/"
 builtin_c = "./src/main/c/builtin.c"
 start_testcase = ""
@@ -26,21 +27,6 @@ def collect_test_cases():
   test_cases.sort()
   return test_cases
 
-def compile2ll():
-  mx2llvm = execute_command + " <" + (test_dir + "input.mx") + " >" + (test_dir + "output.ll")
-  print("Compiling to LLVM IR: " + mx2llvm)
-  compile_status, compile_output = subprocess.getstatusoutput(mx2llvm)
-  if (compile_status != 0):
-    print("Compile Error in input.mx: " + compile_output)
-    return False
-  builtin2llvm = "clang-16 -S -c -emit-llvm -O0 " + builtin_c + " -o " + test_dir + "builtin.ll"
-  print("Compiling builtin.c to LLVM IR: " + builtin2llvm)
-  compile_status, compile_output = subprocess.getstatusoutput(builtin2llvm)
-  if (compile_status != 0):
-    print("Compile Error in builtin.c: " + compile_output)
-    return False
-  return True
-
 def process_io(origin_input):
   input_file = open(origin_input, 'r')
   input_text = re.findall(r'=== input ===\n([\s\S]*?)\n=== end ===', input_file.read())
@@ -55,18 +41,25 @@ def process_io(origin_input):
   return int(result_text[0])
 
 def compile2exe():
-  llvm2exe = "clang-16 -O2 " + test_dir + "output.ll " + test_dir + "builtin.ll -o " + test_dir + "output"
-  print("Compiling to executable: " + llvm2exe)
-  compile_status, compile_output = subprocess.getstatusoutput(llvm2exe)
+  mx2exe = execute_command + " <" + (test_dir + "input.mx") + " >" + (test_dir + "output.s")
+  print("Compiling to executable: " + mx2exe)
+  compile_status, compile_output = subprocess.getstatusoutput(mx2exe)
   if (compile_status != 0):
     print("Compile Error when generating exe: " + compile_output)
     return False
+  # builtin2exe = "clang-16 -O2 -S --target=riscv32-unknown-elf " + builtin_c + " -o " + test_dir + "builtin.s"
+  # print("Compiling builtin.c to executable: " + builtin2exe)
+  # compile_status, compile_output = subprocess.getstatusoutput(builtin2exe)
+  # if (compile_status != 0):
+  #   print("Compile Error when generating exe: " + compile_output)
+  #   return False
   return True
 
 def execute(file_io = False, expected_result = 0):
-  execute = test_dir + "output"
+  # example: ./bin/ravel test/output.s test/builtin.s
+  execute = ravel_command  + " " + test_dir + "output.s" + " " + test_dir + "builtin.s"
   if file_io:
-    execute += " <" + (test_dir + "test.in") + " >" + (test_dir + "test.out")
+    execute += " --input-file=" + test_dir + "test.in" + " --output-file=" + test_dir + "test.out"
   print("Executing: " + execute)
   execute_status, execute_output = subprocess.getstatusoutput(execute)
   if (execute_status != expected_result):
@@ -81,11 +74,9 @@ def test(test_name):
   input = test_cases_dir + test_name
   print("Running testcase " + test_name)
   subprocess.call("cp " + input + " " + test_dir + "input.mx", shell=True)
-  if compile2ll() == False:
-    return False
-  result = process_io(input)
   if compile2exe() == False:
     return False
+  result = process_io(input)
   if execute(file_io=True, expected_result=result) == False:
     return False
   diff = "diff -bB " + test_dir + "test.out " + test_dir + "test.ans"
@@ -109,12 +100,10 @@ if __name__ == "__main__":
     if arg.startswith("--start="):
       start_testcase = arg.split("=")[1]
     if arg.startswith("--compile-exec"):
-      compile2ll()
       compile2exe()
       execute(file_io=False)
       exit(0)
     if arg.startswith("--exec-only"):
-      compile2exe()
       execute(file_io=False)
       exit(0)
   main()
