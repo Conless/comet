@@ -8,6 +8,7 @@ import dev.conless.comet.frontend.ir.entity.IRLiteral;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRRoot;
 import dev.conless.comet.frontend.ir.node.def.IRFuncDefNode;
+import dev.conless.comet.frontend.ir.node.def.IRStrDefNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.stmt.IRStmtNode;
 import dev.conless.comet.frontend.ir.type.IRType;
@@ -23,18 +24,18 @@ public class IRManager {
   protected BaseScope currentScope;
 
   protected Map<String, Integer> name2Size;
-
-  protected IRRoot programNode;
+  protected Array<IRStrDefNode> strDefs;
   protected IRFuncDefNode initNode;
-
   protected IRCounter counter;
 
   protected IRManager() {
     counter = new IRCounter();
+    initNode = new IRFuncDefNode("global.var.init", new Array<>(), GlobalScope.irVoidType);
     name2Size = new Map<>();
+    strDefs = new Array<>();
     name2Size.put("i32", 4);
-    name2Size.put("ptr", 8); // TODO: 32-bit
-    name2Size.put("i1", 1);
+    name2Size.put("ptr", 4); // TODO: 32-bit
+    name2Size.put("i1", 4);
   }
 
   protected void enterASTNode(ASTNode node) {

@@ -217,23 +217,14 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     var srcInst = (ASMStmtsNode) node.getSrc().accept(this);
     instList.appendNodes(srcInst);
     var srcReg = srcInst.getDest();
-    var dereference = false;
-    for (var index : node.getIndices()) {
-      if (dereference) {
-        instList.addNode(new ASMLoadNode(srcReg, new ASMAddress(srcReg, 0)));
-      } else {
-        dereference = true;
-      }
-      var indexInst = (ASMStmtsNode) index.accept(this);
-      instList.appendNodes(indexInst);
-      var indexReg = indexInst.getDest();
-      instList.addNode(new ASMUnaryNode("slli", indexReg, indexReg, 2));
-      instList.addNode(new ASMBinaryNode("add", srcReg, srcReg, indexReg));
-    }
     var destInst = (ASMStmtsNode) node.getDest().accept(this);
     instList.appendNodes(destInst);
     var destReg = destInst.getDest();
-    instList.addNode(new ASMMoveNode(srcReg, destReg));
+    var indexInst = (ASMStmtsNode) node.getIndices().getLast().accept(this);
+    instList.appendNodes(indexInst);
+    var indexReg = indexInst.getDest();
+    instList.addNode(new ASMUnaryNode("slli", indexReg, indexReg, 2));
+    instList.addNode(new ASMBinaryNode("add", destReg, srcReg, indexReg));
     return instList;
   }
 
@@ -347,7 +338,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   public ASMNode visit(IRLiteral node) throws BaseError {
     var instList = new ASMStmtsNode();
     var destReg = new ASMVirtualReg();
-    instList.addNode(new ASMLoadImmNode(destReg, Integer.valueOf(node.getValue())));
+    instList.addNode(new ASMLoadImmNode(destReg, node.getValue().equals("null") ? 0 : Integer.valueOf(node.getValue())));
     instList.setDest(destReg);
     return instList;
   }

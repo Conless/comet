@@ -51,7 +51,7 @@ public interface BuiltInElements {
   IRFuncDeclareNode irGetStringFunc = new IRFuncDeclareNode("getString", irPtrType, new Array<>());
   IRFuncDeclareNode irGetIntFunc = new IRFuncDeclareNode("getInt", irIntType, new Array<>());
   IRFuncDeclareNode irToStringFunc = new IRFuncDeclareNode("toString", irPtrType, new Array<>(irIntType));
-  IRFuncDeclareNode irMallocFunc = new IRFuncDeclareNode("malloc", irPtrType, new Array<>(new IRType("i64"))); // TODO: change to i32
+  IRFuncDeclareNode irMallocFunc = new IRFuncDeclareNode("malloc", irPtrType, new Array<>(irIntType)); 
   IRFuncDeclareNode irArraySizeFunc = new IRFuncDeclareNode("__builtin_array_size", irIntType, new Array<>(irPtrType));
   IRFuncDeclareNode irStringLengthFunc = new IRFuncDeclareNode("__string_length", irIntType, new Array<>(irPtrType));
   IRFuncDeclareNode irStringSubstringFunc = new IRFuncDeclareNode("__string_substring", irPtrType,

@@ -19,6 +19,10 @@ public class Array<E> extends ArrayList<E> {
     }
   }
 
+  public E getLast() {
+    return this.get(this.size() - 1);
+  }
+
   public String toString(String separator) {
     String str = "";
     boolean first = true;

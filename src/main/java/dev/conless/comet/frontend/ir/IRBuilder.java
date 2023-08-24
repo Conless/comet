@@ -30,7 +30,6 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(ASTRoot node) throws BaseError {
     enterASTNode(node);
     var program = new IRRoot();
-    programNode = program;
     for (var def : node.getDefs()) {
       if (def instanceof ASTClassDefNode) {
         var classNode = (ASTClassDefNode) def;
@@ -52,9 +51,6 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
         }
       }
     }
-    var initFunc = new IRFuncDefNode("global.var.init", new Array<>(), GlobalScope.irVoidType);
-    program.addFunc(initFunc);
-    initNode = initFunc;
     for (var def : node.getDefs()) {
       if (def instanceof ASTVarDefNode) {
         var exprs = (IRStmtNode) def.accept(this);
@@ -65,6 +61,10 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       if (def instanceof ASTFuncDefNode) {
         program.addFunc((IRFuncDefNode) def.accept(this));
       }
+    }
+    program.addFunc(initNode);
+    for (var def : strDefs) {
+      program.addDef(def);
     }
     exitASTNode(node);
     return program;
@@ -491,7 +491,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
           value += c;
         }
       }
-      programNode.addDef(new IRStrDefNode(dest, value));
+      strDefs.add(new IRStrDefNode(dest, value));
       instList.setDest(dest);
     } else if (node.getAtomType() == ASTAtomExprNode.Type.NULL) {
       instList.setDest(new IRLiteral(GlobalScope.irPtrType, 0));
