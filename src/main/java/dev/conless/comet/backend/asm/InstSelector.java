@@ -140,14 +140,22 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
         }
         case "slt" -> instList.addNode(new ASMBinaryNode("slt", destReg, lhsReg, rhsReg));
         case "sle" -> {
-          instList.addNode(new ASMBinaryNode("slt", destReg, lhsReg, rhsReg));
-          instList.addNode(new ASMUnaryNode("seqz", destReg, destReg));
+          var ltReg = new ASMVirtualReg();
+          var eqReg = new ASMVirtualReg();
+          instList.addNode(new ASMBinaryNode("sub", ltReg, lhsReg, rhsReg));
+          instList.addNode(new ASMUnaryNode("seqz", eqReg, ltReg));
+          instList.addNode(new ASMBinaryNode("slt", ltReg, ltReg, regs.getZero()));
+          instList.addNode(new ASMBinaryNode("or", destReg, ltReg, eqReg));
         }
-        case "sgt" -> {
-          instList.addNode(new ASMBinaryNode("slt", destReg, lhsReg, rhsReg));
-          instList.addNode(new ASMUnaryNode("seqz", destReg, destReg));
+        case "sge" -> {
+          var gtReg = new ASMVirtualReg();
+          var eqReg = new ASMVirtualReg();
+          instList.addNode(new ASMBinaryNode("sub", gtReg, rhsReg, lhsReg));
+          instList.addNode(new ASMUnaryNode("seqz", eqReg, gtReg));
+          instList.addNode(new ASMBinaryNode("slt", gtReg, gtReg, regs.getZero()));
+          instList.addNode(new ASMBinaryNode("or", destReg, gtReg, eqReg));
         }
-        case "sge" -> instList.addNode(new ASMBinaryNode("slt", destReg, lhsReg, rhsReg));
+        case "sgt" -> instList.addNode(new ASMBinaryNode("slt", destReg, lhsReg, rhsReg));
         default -> throw new RuntimeError("Unknown comparison operation '" + op + "'");
       }
     }
@@ -208,18 +216,23 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     var srcInst = (ASMStmtsNode) node.getSrc().accept(this);
     instList.appendNodes(srcInst);
     var srcReg = srcInst.getDest();
+    var dereference = false;
     for (var index : node.getIndices()) {
+      if (dereference) {
+        instList.addNode(new ASMLoadNode(srcReg, new ASMAddress(srcReg, 0)));
+      } else {
+        dereference = true;
+      }
       var indexInst = (ASMStmtsNode) index.accept(this);
       instList.appendNodes(indexInst);
       var indexReg = indexInst.getDest();
       instList.addNode(new ASMUnaryNode("slli", indexReg, indexReg, 2));
       instList.addNode(new ASMBinaryNode("add", srcReg, srcReg, indexReg));
-      instList.addNode(new ASMLoadNode(srcReg, new ASMAddress(srcReg, 0)));
     }
     var destInst = (ASMStmtsNode) node.getDest().accept(this);
     instList.appendNodes(destInst);
     var destReg = destInst.getDest();
-    instList.addNode(new ASMMoveNode(destReg, srcReg));
+    instList.addNode(new ASMMoveNode(srcReg, destReg));
     return instList;
   }
 
@@ -235,12 +248,10 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   public ASMNode visit(IRLoadNode node) throws BaseError { // %dest = load type, %src -> lw %dest, 0(%src)
     var instList = new ASMStmtsNode();
     instList.addNode(new ASMCommentNode(node.toString()));
-    var srcInst = (ASMStmtsNode) node.getSrc().accept(this); // regAddr can be freed immediately, reg can be freed after
-                                                             // loading
+    var srcInst = (ASMStmtsNode) node.getSrc().accept(this);
     instList.appendNodes(srcInst);
     var srcReg = srcInst.getDest();
-    var destInst = (ASMStmtsNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
-                                                               // after storing
+    var destInst = (ASMStmtsNode) node.getDest().accept(this);
     instList.appendNodes(destInst);
     var destReg = destInst.getDest();
     instList.addNode(new ASMLoadNode(destReg, new ASMAddress(srcReg, 0)));
@@ -270,8 +281,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   public ASMNode visit(IRStoreNode node) throws BaseError { // store "%"src, %dest -> sw %src, 0(%dest)
     var instList = new ASMStmtsNode();
     instList.addNode(new ASMCommentNode(node.toString()));
-    var srcInst = (ASMStmtsNode) node.getSrc().accept(this); // regAddr can be freed immediately, reg can be freed after
-                                                             // storing
+    var srcInst = (ASMStmtsNode) node.getSrc().accept(this);
     instList.appendNodes(srcInst);
     var srcReg = srcInst.getDest();
     var destInst = (ASMStmtsNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
@@ -317,7 +327,6 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     if (node.isGlobal()) {
       var destReg = new ASMVirtualReg();
       instList.addNode(new ASMLoadAddrNode(destReg, node.getValue().substring(1)));
-      instList.addNode(new ASMLoadNode(destReg, new ASMAddress(destReg, 0)));
       instList.setDest(destReg);
     } else {
       var existReg = counter.name2reg.get(node.getValue());
