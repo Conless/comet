@@ -478,22 +478,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     } else if (node.getAtomType() == ASTAtomExprNode.Type.STRING) {
       var dest = new IRVariable(GlobalScope.irPtrType, "@.string." + String.valueOf(++IRCounter.strCount));
       var str = node.getValue();
-      str = str.substring(1, str.length() - 1);
-      var value = "";
-      for (int i = 0; i < str.length(); ++i) {
-        char c = str.charAt(i);
-        if (c == '\\') {
-          ++i;
-          switch (str.charAt(i)) {
-            case 'n' -> value += '\n';
-            case '\"' -> value += '\"';
-            default -> value += '\\';
-          }
-        } else {
-          value += c;
-        }
-      }
-      strDefs.add(new IRStrDefNode(dest, value));
+      strDefs.add(new IRStrDefNode(dest, str));
       instList.setDest(dest);
     } else if (node.getAtomType() == ASTAtomExprNode.Type.NULL) {
       instList.setDest(new IRLiteral(GlobalScope.irPtrType, 0));

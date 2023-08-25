@@ -311,10 +311,26 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
   @Override
   public ASTNode visitAtomExpr(Comet.AtomExprContext ctx) {
     ASTAtomExprNode.Type atomType;
+    var value = "";
     if (ctx.atom().IntegerLiteral() != null) {
       atomType = ASTAtomExprNode.Type.INT;
     } else if (ctx.atom().StringLiteral() != null) {
       atomType = ASTAtomExprNode.Type.STRING;
+      String str = ctx.atom().getText();
+      str = str.substring(1, str.length() - 1);
+      for (int i = 0; i < str.length(); ++i) {
+        char c = str.charAt(i);
+        if (c == '\\') {
+          ++i;
+          switch (str.charAt(i)) {
+            case 'n' -> value += '\n';
+            case '\"' -> value += '\"';
+            default -> value += '\\';
+          }
+        } else {
+          value += c;
+        }
+      }
     } else if (ctx.atom().True() != null || ctx.atom().False() != null) {
       atomType = ASTAtomExprNode.Type.BOOL;
     } else if (ctx.atom().Null() != null) {
@@ -327,7 +343,7 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
     return ASTAtomExprNode.builder()
         .position(new Position(ctx.start))
         .atomType(atomType)
-        .value(ctx.atom().getText())
+        .value(atomType.equals(ASTAtomExprNode.Type.STRING) ? value : ctx.atom().getText())
         .build();
   }
 

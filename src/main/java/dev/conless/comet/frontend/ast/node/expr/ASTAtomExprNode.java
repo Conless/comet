@@ -4,7 +4,8 @@ import dev.conless.comet.frontend.ast.ASTVisitor;
 import dev.conless.comet.utils.error.BaseError;
 
 /**
- * The AtomExprNode class represents an atomic expression node in an abstract syntax tree (AST) and
+ * The AtomExprNode class represents an atomic expression node in an abstract
+ * syntax tree (AST) and
  * contains information about the atom type and value.
  */
 @lombok.experimental.SuperBuilder
@@ -20,6 +21,15 @@ public final class ASTAtomExprNode extends ASTExprNode {
 
   @Override
   public String toString() {
+    if (atomType == Type.STRING) {
+      return "\"" + value
+          .replace("\\", "\\\\")
+          .replace("\n", "\\n")
+          .replace("\0", "")
+          .replace("\t", "\\t")
+          .replace("\"", "\\\"")
+          + "\"";
+    }
     return value;
   }
 
