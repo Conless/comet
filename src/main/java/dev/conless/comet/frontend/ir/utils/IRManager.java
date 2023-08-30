@@ -10,7 +10,9 @@ import dev.conless.comet.frontend.ir.node.IRRoot;
 import dev.conless.comet.frontend.ir.node.def.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.def.IRStrDefNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
+import dev.conless.comet.frontend.ir.node.stmt.IRBlockStmtNode;
 import dev.conless.comet.frontend.ir.node.stmt.IRStmtNode;
+import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.metadata.TypeInfo;
 import dev.conless.comet.frontend.utils.scope.BaseScope;
@@ -30,12 +32,24 @@ public class IRManager {
 
   protected IRManager() {
     counter = new IRCounter();
-    initNode = new IRFuncDefNode("global.var.init", new Array<>(), GlobalScope.irVoidType);
+    initNode = new IRFuncDefNode("global.var.init", new Array<>(), GlobalScope.irVoidType, new Array<>(new IRBlockStmtNode("entry")));
     name2Size = new Map<>();
     strDefs = new Array<>();
     name2Size.put("i32", 4);
     name2Size.put("ptr", 4);
     name2Size.put("i1", 4);
+  }
+
+  protected Array<IRBlockStmtNode> stmt2Block(IRStmtNode stmt) {
+    var blocks = new Array<IRBlockStmtNode>(new IRBlockStmtNode("entry"));
+    for (var node : stmt.getNodes()) {
+      if (node instanceof IRLabelNode) {
+        blocks.add(new IRBlockStmtNode(((IRLabelNode) node).getName()));
+      } else {
+        blocks.getLast().addNode(node);
+      }
+    }
+    return blocks;
   }
 
   protected void enterASTNode(ASTNode node) {

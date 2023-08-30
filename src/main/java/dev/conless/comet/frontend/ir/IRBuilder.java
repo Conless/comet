@@ -32,29 +32,19 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var program = new IRRoot();
     for (var def : node.getDefs()) {
       if (def instanceof ASTClassDefNode) {
-        var classNode = (ASTClassDefNode) def;
-        var vars = new Array<IRType>();
-        for (var v : classNode.getVarDefs()) {
-          vars.add(new IRType(v.getType()));
-        }
-        var typeName = "%class." + classNode.getName();
-        initSize(typeName, vars);
-        var type = new IRStructType(typeName, vars);
+        var classDef = (IRClassDefNode) def.accept(this);
+        var typeName = "%class." + def.getName();
+        initSize(typeName, classDef.getVars());
+        var type = new IRStructType(typeName, classDef.getVars());
         program.addDef(new IRGlobalDefNode(new IRVariable(type, typeName)));
-      }
-    }
-    for (var def : node.getDefs()) {
-      if (def instanceof ASTClassDefNode) {
-        var funcs = (IRStmtNode) def.accept(this);
-        for (var func : funcs.getNodes()) {
+        for (var func : classDef.getFuncs()) {
           program.addFunc((IRFuncDefNode) func);
         }
       }
     }
     for (var def : node.getDefs()) {
       if (def instanceof ASTVarDefNode) {
-        var exprs = (IRStmtNode) def.accept(this);
-        program.addDef((IRGlobalDefNode) exprs.getNodes().get(0));
+        program.addDef((IRGlobalDefNode) def.accept(this));
       }
     }
     for (var def : node.getDefs()) {
@@ -62,8 +52,9 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
         program.addFunc((IRFuncDefNode) def.accept(this));
       }
     }
+    var initBlock = initNode.getBody().get(0);
+    initBlock.addNode(new IRReturnNode());
     program.addFunc(initNode);
-    initNode.addReturn();
     for (var def : strDefs) {
       program.addDef(def);
     }
@@ -75,6 +66,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   public IRNode visit(ASTFuncDefNode node) throws BaseError {
     resetCounter();
     enterASTNode(node);
+    var funcType = new IRType(node.getReturnType());
     var paramNodes = new Array<IRVariable>();
     for (var param : node.getParams()) {
       if (!param.getName().equals("this")) {
@@ -83,11 +75,14 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       paramNodes
           .add(new IRVariable(new IRType(param.getType()), getVarName(param.getName(), currentScope) + ".param"));
     }
-    var funcNode = new IRFuncDefNode(node.getName(), paramNodes, new IRType(node.getReturnType()));
+    var instList = new IRStmtNode();
     for (var stmt : node.getBlockedBody().getStmts()) {
-      funcNode.getBody().appendNodes((IRStmtNode) stmt.accept(this));
+      instList.appendNodes((IRStmtNode) stmt.accept(this));
     }
-    funcNode.addReturn();
+    if (!(instList.getNodes().getLast() instanceof IRReturnNode)) {
+      instList.addNode(new IRReturnNode(funcType));
+    }
+    var funcNode = new IRFuncDefNode(node.getName(), paramNodes, funcType, stmt2Block(instList));
     exitASTNode(node);
     return funcNode;
   }
@@ -95,20 +90,26 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
   @Override
   public IRNode visit(ASTClassDefNode node) throws BaseError {
     enterASTNode(node);
-    var nodes = new IRStmtNode();
+    var vars = new Array<IRType>();
+    for (var v : node.getVarDefs()) {
+      vars.add(new IRType(v.getType()));
+    }
+    var funcs = new Array<IRFuncDefNode>();
     var ctorDef = node.getConstructor();
-    ctorDef.getParams().add(0, ASTVarDefNode.builder().info(new VarInfo("this", new TypeInfo(node.getName(), 0))).build());
+    ctorDef.getParams().add(0,
+        ASTVarDefNode.builder().info(new VarInfo("this", new TypeInfo(node.getName(), 0))).build());
     var irCtor = (IRFuncDefNode) ctorDef.accept(this);
     irCtor.setName("__class." + node.getName());
-    nodes.addNode(irCtor);
+    funcs.add(irCtor);
     for (var def : node.getFuncDefs()) {
-      def.getParams().add(0, ASTVarDefNode.builder().info(new VarInfo("this", new TypeInfo(node.getName(), 0))).build());
+      def.getParams().add(0,
+          ASTVarDefNode.builder().info(new VarInfo("this", new TypeInfo(node.getName(), 0))).build());
       var irFunc = (IRFuncDefNode) def.accept(this);
       irFunc.setName("__" + node.getName() + "_" + irFunc.getName());
-      nodes.addNode(irFunc);
+      funcs.add(irFunc);
     }
     exitASTNode(node);
-    return nodes;
+    return new IRClassDefNode(vars, funcs);
   }
 
   @Override
@@ -117,11 +118,6 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var instList = new IRStmtNode();
     var var = new IRVariable(new IRType(node.getType()), getVarName(node.getName(), currentScope));
     currentScope.register(node.getName());
-    if (currentScope instanceof GlobalScope) {
-      instList.addNode(new IRGlobalDefNode(var));
-    } else {
-      instList.addNode(new IRAllocaNode(var, new IRType(node.getType())));
-    }
     if (node.getInit() != null) {
       var initExpr = ASTAssignExprNode.builder()
           .position(node.getPosition())
@@ -134,11 +130,16 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
           .build();
       var initInst = (IRStmtNode) initExpr.accept(this);
       if (currentScope instanceof GlobalScope) {
-        initNode.getBody().appendNodes(initInst);
+        initNode.getBody().get(0).appendNodes(initInst);
       } else {
         instList.appendNodes(initInst);
       }
     }
+    if (currentScope instanceof GlobalScope) {
+      exitASTNode(node);
+      return new IRGlobalDefNode(var);
+    }
+    instList.addFront(new IRAllocaNode(var, new IRType(node.getType())));
     exitASTNode(node);
     return instList;
   }
@@ -163,9 +164,10 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       instList.addNode(new IRCommentNode(String.format("%s = malloc %s%s", dest.getValue(), type.getName(),
           "*".repeat(type.getDepth()))));
       var eleType = new TypeInfo(type.getName(), 0);
-      var args = new Array<IREntity>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(eleType).getTypeName())),
-              new IRLiteral(GlobalScope.irIntType, type.getDepth()),
-              new IRLiteral(GlobalScope.irIntType, sizes.size()));
+      var args = new Array<IREntity>(
+          new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(eleType).getTypeName())),
+          new IRLiteral(GlobalScope.irIntType, type.getDepth()),
+          new IRLiteral(GlobalScope.irIntType, sizes.size()));
       args.addAll(sizes);
       instList.addNode(new IRCallNode(dest, GlobalScope.irPtrType, "__array_alloca", args));
       instList.setDest(dest);

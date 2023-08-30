@@ -10,7 +10,7 @@ import dev.conless.comet.utils.error.BaseError;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public final class IRPhiNode extends IRNode {
+public final class IRPhiNode extends IRInstNode {
   private String dest;
   private IRType type;
   private Array<Pair<IREntity, String>> values;

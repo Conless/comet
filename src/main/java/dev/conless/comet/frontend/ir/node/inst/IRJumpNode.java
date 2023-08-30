@@ -6,7 +6,7 @@ import dev.conless.comet.utils.error.BaseError;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public final class IRJumpNode extends IRNode {
+public final class IRJumpNode extends IRInstNode {
   private String label;
 
   public IRJumpNode(String label) {

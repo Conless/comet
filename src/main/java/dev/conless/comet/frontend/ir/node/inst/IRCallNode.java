@@ -11,7 +11,7 @@ import dev.conless.comet.utils.error.BaseError;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public final class IRCallNode extends IRNode {
+public final class IRCallNode extends IRInstNode {
   private IRVariable dest;
   private IRType type;
   private String funcName;

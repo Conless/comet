@@ -10,7 +10,7 @@ import dev.conless.comet.utils.error.RuntimeError;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public final class IRGetElementPtrNode extends IRNode {
+public final class IRGetElementPtrNode extends IRInstNode {
   private IRVariable dest, src;
   private String type;
   private Array<IREntity> indices;

@@ -7,7 +7,7 @@ import dev.conless.comet.utils.error.BaseError;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public final class IRBranchNode extends IRNode {
+public final class IRBranchNode extends IRInstNode {
   private IREntity condition;
   private String trueLabel, falseLabel;
 

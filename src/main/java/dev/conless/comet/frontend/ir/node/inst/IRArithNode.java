@@ -3,14 +3,13 @@ package dev.conless.comet.frontend.ir.node.inst;
 import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public final class IRArithNode extends IRNode {
+public final class IRArithNode extends IRInstNode {
   private IRVariable dest;
   private IREntity lhs, rhs;
   private String op;

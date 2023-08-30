@@ -3,13 +3,14 @@ package dev.conless.comet.frontend.ir.node.stmt;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
+import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.RuntimeError;
 
 @lombok.Getter
 @lombok.Setter
 public class IRStmtNode extends IRNode {
-  private Array<IRNode> nodes;
+  private Array<IRInstNode> nodes;
   private IREntity dest;
   private IRVariable destAddr;
 
@@ -22,19 +23,24 @@ public class IRStmtNode extends IRNode {
     nodes = new Array<>();
   }
 
-  public IRStmtNode(Array<IRNode> nodes) {
+  public IRStmtNode(Array<IRInstNode> nodes) {
     this.nodes = nodes;
   }
 
-  public void addNode(IRNode node) {
-    if (node instanceof IRStmtNode) {
-      throw new RuntimeError("Cannot add IRStmtsNode in function");
-    }
+  public void addNode(IRInstNode node) {
     nodes.add(node);
+  }
+
+  public void addFront(IRInstNode node) {
+    nodes.add(0, node);
   }
 
   public void appendNodes(IRStmtNode nodes) {
     this.nodes.addAll(nodes.getNodes());
+  }
+
+  public void appendFront(IRStmtNode nodes) {
+    this.nodes.addAll(0, nodes.getNodes());
   }
 
   @Override

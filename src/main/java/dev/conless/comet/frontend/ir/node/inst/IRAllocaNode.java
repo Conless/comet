@@ -2,13 +2,12 @@ package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.error.BaseError;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public final class IRAllocaNode extends IRNode {
+public final class IRAllocaNode extends IRInstNode {
   private IRVariable dest;
   private String type;
 

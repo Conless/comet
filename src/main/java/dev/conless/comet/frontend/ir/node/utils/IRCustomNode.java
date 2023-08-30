@@ -1,12 +1,12 @@
 package dev.conless.comet.frontend.ir.node.utils;
 
 import dev.conless.comet.frontend.ir.IRVisitor;
-import dev.conless.comet.frontend.ir.node.IRNode;
+import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
 import dev.conless.comet.utils.error.BaseError;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = false)
-public final class IRCustomNode extends IRNode {
+public final class IRCustomNode extends IRInstNode {
   private String str;
 
   public IRCustomNode(String str) {

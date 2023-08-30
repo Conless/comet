@@ -8,7 +8,7 @@ import dev.conless.comet.utils.error.BaseError;
 
 @lombok.Value
 @lombok.EqualsAndHashCode(callSuper = true)
-public final class IRLoadNode extends IRNode {
+public final class IRLoadNode extends IRInstNode {
   private IRVariable dest, src;
   private IRType type;
 

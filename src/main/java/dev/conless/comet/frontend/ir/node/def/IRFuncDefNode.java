@@ -5,8 +5,10 @@ import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.node.inst.IRAllocaNode;
 import dev.conless.comet.frontend.ir.node.inst.IRCallNode;
+import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
 import dev.conless.comet.frontend.ir.node.inst.IRReturnNode;
 import dev.conless.comet.frontend.ir.node.inst.IRStoreNode;
+import dev.conless.comet.frontend.ir.node.stmt.IRBlockStmtNode;
 import dev.conless.comet.frontend.ir.node.stmt.IRStmtNode;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
 import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
@@ -22,51 +24,40 @@ public class IRFuncDefNode extends IRNode {
   private String name;
   private Array<IRVariable> params;
   private IRType returnType;
-  private IRStmtNode body;
+  private Array<IRBlockStmtNode> body;
 
-  public IRFuncDefNode(String name, Array<IRVariable> params, IRType returnType) {
+  public IRFuncDefNode(String name, Array<IRVariable> params, IRType returnType, Array<IRBlockStmtNode> body) {
     this.name = name;
     this.params = params;
     this.returnType = returnType;
-    this.body = new IRStmtNode();
+    this.body = body;
 
-    addNode(new IRCommentNode("The definition of function " + name));
-    addNode(new IRLabelNode("entry"));
+    var entryBlock = body.get(0);
+    if (!entryBlock.getLabelName().equals("entry")) {
+      throw new RuntimeError("First block must be entry");
+    }
     if (name.equals("main")) {
-      addNode(new IRCallNode("global.var.init", new Array<>()));
-    }
-    for (var param : params) {
-      if (!param.getValue().endsWith(".param")) {
-        throw new RuntimeError("Invalid parameter name: " + param.getValue());
+      entryBlock.addFront(new IRCallNode("global.var.init", new Array<>()));
+    } else if (params.size() > 0) {
+      var instList = new IRStmtNode();
+      for (var param : params) {
+        if (!param.getValue().endsWith(".param")) {
+          throw new RuntimeError("Invalid parameter name: " + param.getValue());
+        }
+        var paramPtr = new IRVariable(GlobalScope.irPtrType, param.getValue().replace(".param", ""));
+        instList.addNode(new IRAllocaNode(paramPtr, param.getType()));
+        instList.addNode(new IRStoreNode(paramPtr, param));
       }
-      var paramPtr = new IRVariable(GlobalScope.irPtrType, param.getValue().replace(".param", ""));
-      addNode(new IRAllocaNode(paramPtr, param.getType()));
-      addNode(new IRStoreNode(paramPtr, param));
+      entryBlock.appendFront(instList);
     }
   }
 
-  public void addNode(IRNode node) {
-    body.addNode(node);
-  }
-
-  public void addReturn() {
-    var endNode = body.getNodes().getLast();
-    if (!(endNode instanceof IRReturnNode)) {
-      body.addNode(new IRReturnNode(returnType));
-    }
-  }
-  
   @Override
   public String toString() {
     String str = "define " + returnType.toString() + " @" + name + "(";
     str += params.toString(", ") + ") {\n";
-    for (var node : body.getNodes()) {
-      if (!(node instanceof IRLabelNode)) {
-        str += "  ";
-      }
-      str += node.toString() + "\n";
-    }
-    str += "}";
+    str += body.toString("\n");
+    str += "\n}";
     return str;
   }
 
