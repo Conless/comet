@@ -11,4 +11,5 @@
 - [x] 08-14 Pass IR (08-18)
 
 ## Code Generation
-To be determined.
+- [x] 08-21 Finish design of codegen structure (08-22)
+- [x] 08-24 Pass codegen

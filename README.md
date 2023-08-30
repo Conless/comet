@@ -21,7 +21,7 @@ Clone this library, or download the ```.jar``` file (unpublished).
 
 ### Build
 
-If you download the source code, you can use ```mvn compile``` to build this project and the output will be generated in ```target/```.
+If you download the source code, you can use ```make``` to build this project and ```bin/mxc``` to execute.
 
 ## Documentation
 
