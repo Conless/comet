@@ -1,6 +1,9 @@
 package dev.conless.comet.backend.asm.utils;
 
 import dev.conless.comet.backend.asm.entity.ASMPhysicalReg;
+import dev.conless.comet.backend.asm.node.inst.ASMReturnNode;
+import dev.conless.comet.backend.asm.node.stmt.ASMBlockStmtNode;
+import dev.conless.comet.backend.asm.node.stmt.ASMStmtNode;
 import dev.conless.comet.utils.container.Set;
 
 public class ASMManager {

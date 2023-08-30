@@ -3,6 +3,7 @@ package dev.conless.comet.backend.asm;
 import dev.conless.comet.backend.asm.node.*;
 import dev.conless.comet.backend.asm.node.global.*;
 import dev.conless.comet.backend.asm.node.inst.*;
+import dev.conless.comet.backend.asm.node.stmt.ASMBlockStmtNode;
 import dev.conless.comet.backend.asm.node.utils.*;
 
 public interface ASMVisitor<T> {
@@ -10,6 +11,7 @@ public interface ASMVisitor<T> {
   public T visit(ASMRoot node);
   
   public T visit(ASMFuncDefNode node);
+  public T visit(ASMBlockStmtNode node);
   public T visit(ASMStrDefNode node);
   public T visit(ASMVarDefNode node);
   
@@ -24,7 +26,6 @@ public interface ASMVisitor<T> {
   public T visit(ASMReturnNode node);
   public T visit(ASMStoreNode node);
   public T visit(ASMUnaryNode node);
-
   public T visit(ASMCommentNode node);
   public T visit(ASMLabelNode node);
 }

@@ -20,7 +20,14 @@ public class Array<E> extends ArrayList<E> {
   }
 
   public E getLast() {
+    if (this.size() == 0) {
+      return null;
+    }
     return this.get(this.size() - 1);
+  }
+
+  public E removeLast() {
+    return this.remove(this.size() - 1);
   }
 
   public String toString(String separator) {

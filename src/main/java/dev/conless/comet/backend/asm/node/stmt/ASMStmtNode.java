@@ -8,11 +8,11 @@ import dev.conless.comet.utils.error.RuntimeError;
 
 @lombok.Getter
 @lombok.Setter
-public final class ASMStmtsNode extends ASMNode {
+public class ASMStmtNode extends ASMNode {
   private Array<ASMInstNode> nodes;
   private ASMReg dest;
 
-  public ASMStmtsNode() {
+  public ASMStmtNode() {
     nodes = new Array<>();
   }
 
@@ -20,7 +20,7 @@ public final class ASMStmtsNode extends ASMNode {
     nodes.add(node);
   }
 
-  public void appendNodes(ASMStmtsNode nodes) {
+  public void appendNodes(ASMStmtNode nodes) {
     this.nodes.addAll(nodes.nodes);
   }
   

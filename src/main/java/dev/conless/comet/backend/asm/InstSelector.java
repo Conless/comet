@@ -19,6 +19,7 @@ import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.*;
 import dev.conless.comet.frontend.ir.node.def.*;
 import dev.conless.comet.frontend.ir.node.inst.*;
+import dev.conless.comet.frontend.ir.node.stmt.IRBlockStmtNode;
 import dev.conless.comet.frontend.ir.node.utils.*;
 import dev.conless.comet.frontend.ir.type.IRStructType;
 import dev.conless.comet.utils.container.Pair;
@@ -27,8 +28,7 @@ import dev.conless.comet.utils.error.*;
 public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   @Override
   public ASMNode visit(IRNode node) throws BaseError {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    throw new RuntimeError("ASMBuilder.visit(IRNode) should not be called");
   }
 
   @Override
@@ -65,12 +65,20 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
       paramCount++;
     }
     ASMVirtualReg.resetCount();
-    for (var inst : node.getBody().getNodes()) {
-      var instList = (ASMStmtsNode) inst.accept(this);
-      func.getBody().appendNodes(instList);
+    for (var stmt : node.getBody()) {
+      func.addBlock((ASMBlockStmtNode) stmt.accept(this));
     }
     func.setMemUsed(new Pair<>(counter.allocaCount, ASMVirtualReg.getCount()));
     return func;
+  }
+
+  @Override
+  public ASMNode visit(IRBlockStmtNode node) throws BaseError {
+    var block = new ASMBlockStmtNode(new ASMLabelNode(getLabelName(node.getLabelName())));
+    for (var inst : node.getNodes()) {
+      block.appendNodes((ASMStmtNode) inst.accept(this));
+    }
+    return block;
   }
 
   @Override
@@ -94,24 +102,24 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRAllocaNode node) throws BaseError {
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMCommentNode(node.toString()));
-    var destInst = (ASMStmtsNode) node.getDest().accept(this);
+    var destInst = (ASMStmtNode) node.getDest().accept(this);
     instList.addNode(new ASMUnaryNode("addi", destInst.getDest(), regs.getSp(), 4 * (counter.allocaCount++)));
     return instList;
   }
 
   @Override
   public ASMNode visit(IRArithNode node) throws BaseError {
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMCommentNode(node.toString()));
-    var lhsInst = (ASMStmtsNode) node.getLhs().accept(this);
+    var lhsInst = (ASMStmtNode) node.getLhs().accept(this);
     instList.appendNodes(lhsInst);
     var lhsReg = lhsInst.getDest();
-    var rhsInst = (ASMStmtsNode) node.getRhs().accept(this);
+    var rhsInst = (ASMStmtNode) node.getRhs().accept(this);
     instList.appendNodes(rhsInst);
     var rhsReg = rhsInst.getDest();
-    var destInst = (ASMStmtsNode) node.getDest().accept(this);
+    var destInst = (ASMStmtNode) node.getDest().accept(this);
     instList.appendNodes(destInst);
     var destReg = (ASMVirtualReg) destInst.getDest();
     var op = node.getOp();
@@ -166,9 +174,9 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   @Override
   public ASMNode visit(IRBranchNode node) throws BaseError { // notice that the first label of IRBranchNode would be the
                                                              // next node of it
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMCommentNode(node.toString()));
-    var condInst = (ASMStmtsNode) node.getCondition().accept(this); // regAddr can be freed immediately, reg can be
+    var condInst = (ASMStmtNode) node.getCondition().accept(this); // regAddr can be freed immediately, reg can be
                                                                     // freed after branch
     instList.appendNodes(condInst);
     var condReg = condInst.getDest();
@@ -179,14 +187,14 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRCallNode node) throws BaseError {
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMCommentNode(node.toString()));
     instList.addNode(new ASMStoreNode(regs.getRa(), new ASMAddress(regs.getSp(), -4)));
     var args = node.getArgs();
     var argCount = 0;
     var stackOffset = 1;
     for (var arg : args) {
-      var argInst = (ASMStmtsNode) arg.accept(this); // regAddr can be freed immediately, reg can be freed after call
+      var argInst = (ASMStmtNode) arg.accept(this); // regAddr can be freed immediately, reg can be freed after call
       instList.appendNodes(argInst);
       var argReg = argInst.getDest();
       if (argCount < 6) {
@@ -199,7 +207,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     instList.addNode(new ASMCallNode(node.getFuncName()));
     instList.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), stackOffset * 4));
     if (node.getDest() != null) {
-      var destInst = (ASMStmtsNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
+      var destInst = (ASMStmtNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
                                                                  // after call
       instList.appendNodes(destInst);
       var destReg = destInst.getDest();
@@ -212,15 +220,15 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRGetElementPtrNode node) throws BaseError {
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMCommentNode(node.toString()));
-    var srcInst = (ASMStmtsNode) node.getSrc().accept(this);
+    var srcInst = (ASMStmtNode) node.getSrc().accept(this);
     instList.appendNodes(srcInst);
     var srcReg = srcInst.getDest();
-    var destInst = (ASMStmtsNode) node.getDest().accept(this);
+    var destInst = (ASMStmtNode) node.getDest().accept(this);
     instList.appendNodes(destInst);
     var destReg = destInst.getDest();
-    var indexInst = (ASMStmtsNode) node.getIndices().getLast().accept(this);
+    var indexInst = (ASMStmtNode) node.getIndices().getLast().accept(this);
     instList.appendNodes(indexInst);
     var indexReg = indexInst.getDest();
     instList.addNode(new ASMUnaryNode("slli", indexReg, indexReg, 2));
@@ -230,7 +238,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRJumpNode node) throws BaseError {
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMCommentNode(node.toString()));
     instList.addNode(new ASMJumpNode(getLabelName(node.getLabel())));
     return instList;
@@ -238,12 +246,12 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRLoadNode node) throws BaseError { // %dest = load type, %src -> lw %dest, 0(%src)
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMCommentNode(node.toString()));
-    var srcInst = (ASMStmtsNode) node.getSrc().accept(this);
+    var srcInst = (ASMStmtNode) node.getSrc().accept(this);
     instList.appendNodes(srcInst);
     var srcReg = srcInst.getDest();
-    var destInst = (ASMStmtsNode) node.getDest().accept(this);
+    var destInst = (ASMStmtNode) node.getDest().accept(this);
     instList.appendNodes(destInst);
     var destReg = destInst.getDest();
     instList.addNode(new ASMLoadNode(destReg, new ASMAddress(srcReg, 0)));
@@ -257,10 +265,10 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRReturnNode node) throws BaseError {
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMCommentNode(node.toString()));
     if (node.getValue() != null) {
-      var valueInst = (ASMStmtsNode) node.getValue().accept(this);
+      var valueInst = (ASMStmtNode) node.getValue().accept(this);
       instList.appendNodes(valueInst);
       var valueReg = valueInst.getDest();
       instList.addNode(new ASMMoveNode(valueReg, regs.getA0()));
@@ -271,12 +279,12 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRStoreNode node) throws BaseError { // store "%"src, %dest -> sw %src, 0(%dest)
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMCommentNode(node.toString()));
-    var srcInst = (ASMStmtsNode) node.getSrc().accept(this);
+    var srcInst = (ASMStmtNode) node.getSrc().accept(this);
     instList.appendNodes(srcInst);
     var srcReg = srcInst.getDest();
-    var destInst = (ASMStmtsNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
+    var destInst = (ASMStmtNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
                                                                // after storing
     instList.appendNodes(destInst);
     var dest = destInst.getDest();
@@ -286,7 +294,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRCommentNode node) throws BaseError {
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMCommentNode(node.getComment()));
     return instList;
   }
@@ -298,7 +306,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRLabelNode node) throws BaseError {
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     instList.addNode(new ASMLabelNode(getLabelName(node.getName())));
     return instList;
   }
@@ -310,7 +318,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRVariable node) throws BaseError {
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     if (node.getValue().endsWith(".param") && !(counter.param2Addr.get(node.getValue()).getBase()).equals(regs.getSp())) {
       var addr = counter.param2Addr.get(node.getValue());
       instList.setDest(addr.getBase());
@@ -336,7 +344,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRLiteral node) throws BaseError {
-    var instList = new ASMStmtsNode();
+    var instList = new ASMStmtNode();
     var destReg = new ASMVirtualReg();
     instList.addNode(new ASMLoadImmNode(destReg, node.getValue().equals("null") ? 0 : Integer.valueOf(node.getValue())));
     instList.setDest(destReg);
