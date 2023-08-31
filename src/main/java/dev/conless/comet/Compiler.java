@@ -39,9 +39,9 @@ public class Compiler {
       // output.println(asmProgram);
       // output.close();
       new BasicAllocator().visit((ASMRoot) asmProgram);
-      output = new PrintStream(new FileOutputStream("src/test/mx/output.s"));
-      output.println(asmProgram);
-      output.close();
+      // output = new PrintStream(new FileOutputStream("src/test/mx/output.s"));
+      // output.println(asmProgram);
+      // output.close();
       System.out.println(asmProgram);
     // } catch (BaseError e) {
     //   System.err.println(e.getMessage());

@@ -78,6 +78,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     for (var inst : node.getNodes()) {
       block.appendNodes((ASMStmtNode) inst.accept(this));
     }
+    block.appendNodes((ASMStmtNode) node.getExitInst().accept(this));
     return block;
   }
 
