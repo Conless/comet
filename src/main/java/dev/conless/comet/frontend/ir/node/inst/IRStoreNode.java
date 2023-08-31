@@ -3,8 +3,8 @@ package dev.conless.comet.frontend.ir.node.inst;
 import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 
@@ -23,6 +23,23 @@ public final class IRStoreNode extends IRInstNode {
     }
     this.dest = dest;
     this.src = src;
+  }
+
+  @Override
+  public IRVariable getDef() {
+    return null;
+  }
+
+  @Override
+  public Array<IRVariable> getUses() {
+    var uses = new Array<IRVariable>();
+    if (src instanceof IRVariable) {
+      uses.add((IRVariable) src);
+    }
+    if (dest instanceof IRVariable) {
+      uses.add((IRVariable) dest);
+    }
+    return uses;
   }
 
   @Override

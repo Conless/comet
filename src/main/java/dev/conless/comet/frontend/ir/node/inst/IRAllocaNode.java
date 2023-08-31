@@ -3,6 +3,7 @@ package dev.conless.comet.frontend.ir.node.inst;
 import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.type.IRType;
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 
 @lombok.Value
@@ -19,6 +20,16 @@ public final class IRAllocaNode extends IRInstNode {
   public IRAllocaNode(IRVariable dest, String type) {
     this.type = type;
     this.dest = dest;
+  }
+
+  @Override
+  public IRVariable getDef() {
+    return dest;
+  }
+
+  @Override
+  public Array<IRVariable> getUses() {
+    return new Array<>();
   }
 
   @Override

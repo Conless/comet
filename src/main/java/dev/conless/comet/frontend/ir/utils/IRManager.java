@@ -6,7 +6,6 @@ import dev.conless.comet.frontend.ast.node.utils.ASTNodeWithScope;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRLiteral;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
-import dev.conless.comet.frontend.ir.node.IRRoot;
 import dev.conless.comet.frontend.ir.node.def.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.def.IRStrDefNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
@@ -40,14 +39,27 @@ public class IRManager {
     name2Size.put("i1", 4);
   }
 
-  protected Array<IRBlockStmtNode> stmt2Block(IRStmtNode stmt) {
+  protected Array<IRBlockStmtNode> stmt2Block(IRStmtNode stmt, IRType type) {
     var blocks = new Array<IRBlockStmtNode>(new IRBlockStmtNode("entry"));
     for (var node : stmt.getNodes()) {
       if (node instanceof IRLabelNode) {
+        if (blocks.getLast().getExitInst() == null) {
+          throw new RuntimeError("Every block should end with an exit inst");
+        }
         blocks.add(new IRBlockStmtNode(((IRLabelNode) node).getName()));
       } else {
-        blocks.getLast().addNode(node);
+        if (blocks.getLast().getExitInst() != null) {
+          continue;
+        }
+        if (node instanceof IRJumpNode || node instanceof IRBranchNode || node instanceof IRReturnNode) {
+          blocks.getLast().setExitInst(node);
+        } else {
+          blocks.getLast().addNode(node);
+        }
       }
+    }
+    if (blocks.getLast().getExitInst() == null) {
+      blocks.getLast().setExitInst(new IRReturnNode(type));
     }
     return blocks;
   }

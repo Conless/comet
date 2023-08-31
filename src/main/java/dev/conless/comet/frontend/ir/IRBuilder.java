@@ -62,7 +62,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       }
     }
     var initBlock = initNode.getBody().get(0);
-    initBlock.addNode(new IRReturnNode());
+    initBlock.setExitInst(new IRReturnNode());
     program.addFunc(initNode);
     for (var def : strDefs) {
       program.addDef(def);
@@ -88,10 +88,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     for (var stmt : node.getBlockedBody().getStmts()) {
       instList.appendNodes((IRStmtNode) stmt.accept(this));
     }
-    if (!(instList.getNodes().getLast() instanceof IRReturnNode)) {
-      instList.addNode(new IRReturnNode(funcType));
-    }
-    var funcNode = new IRFuncDefNode(node.getName(), paramNodes, funcType, stmt2Block(instList));
+    var funcNode = new IRFuncDefNode(node.getName(), paramNodes, funcType, stmt2Block(instList, funcType));
     exitASTNode(node);
     return funcNode;
   }

@@ -32,6 +32,22 @@ public final class IRCallNode extends IRInstNode {
   }
 
   @Override
+  public IRVariable getDef() {
+    return dest;
+  }
+
+  @Override
+  public Array<IRVariable> getUses() {
+    var uses = new Array<IRVariable>();
+    for (var arg : args) {
+      if (arg instanceof IRVariable) {
+        uses.add((IRVariable) arg);
+      }
+    }
+    return uses;
+  }
+
+  @Override
   public String toString() {
     String str = (dest == null ? "" : dest.getValue() + " = ") + "call " + type.toString();
     if (funcName.equals("__array_alloca")) {

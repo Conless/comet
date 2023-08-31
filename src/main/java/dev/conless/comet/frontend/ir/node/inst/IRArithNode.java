@@ -4,6 +4,7 @@ import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 
@@ -19,7 +20,8 @@ public final class IRArithNode extends IRInstNode {
     if (!lhs.getType().equals(rhs.getType())) {
       throw new RuntimeError("Cannot perform arithmetic on two different types");
     }
-    if (op.equals("eq") || op.equals("ne") || op.equals("sgt") || op.equals("sge") || op.equals("slt") || op.equals("sle")) {
+    if (op.equals("eq") || op.equals("ne") || op.equals("sgt") || op.equals("sge") || op.equals("slt")
+        || op.equals("sle")) {
       if (!dest.getType().equals(GlobalScope.irBoolType)) {
         throw new RuntimeError("Cannot perform comparison on non-boolean type");
       }
@@ -37,6 +39,23 @@ public final class IRArithNode extends IRInstNode {
     this.lhs = lhs;
     this.rhs = rhs;
     this.op = op;
+  }
+  
+  @Override
+  public IRVariable getDef() {
+    return dest;
+  }
+
+  @Override
+  public Array<IRVariable> getUses() {
+    var uses = new Array<IRVariable>();
+    if (lhs instanceof IRVariable) {
+      uses.add((IRVariable) lhs);
+    }
+    if (rhs instanceof IRVariable) {
+      uses.add((IRVariable) rhs);
+    }
+    return uses;
   }
 
   @Override

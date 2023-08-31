@@ -1,7 +1,8 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.IRVisitor;
-import dev.conless.comet.frontend.ir.node.IRNode;
+import dev.conless.comet.frontend.ir.entity.IRVariable;
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 
 @lombok.Value
@@ -11,6 +12,16 @@ public final class IRJumpNode extends IRInstNode {
 
   public IRJumpNode(String label) {
     this.label = label;
+  }
+
+  @Override
+  public IRVariable getDef() {
+    return null;
+  }
+
+  @Override
+  public Array<IRVariable> getUses() {
+    return new Array<>();
   }
 
   @Override

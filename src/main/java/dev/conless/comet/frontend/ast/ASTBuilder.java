@@ -188,11 +188,15 @@ public class ASTBuilder extends CometBaseVisitor<ASTNode> {
         lengths.add((ASTExprNode) visit(unit.expr()));
       }
     }
-    return ASTNewExprNode.builder()
+    var newExpr = ASTNewExprNode.builder()
         .position(new Position(ctx.start))
         .type(new TypeInfo(ctx.type().getText(), ctx.arrayUnit().size()))
         .lengths(lengths)
         .build();
+    for (var length : lengths) {
+      length.setParent(newExpr);
+    }
+    return newExpr;
   }
 
   @Override

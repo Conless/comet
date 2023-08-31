@@ -26,6 +26,25 @@ public final class IRGetElementPtrNode extends IRInstNode {
   }
 
   @Override
+  public IRVariable getDef() {
+    return dest;
+  }
+
+  @Override
+  public Array<IRVariable> getUses() {
+    var uses = new Array<IRVariable>();
+    if (src instanceof IRVariable) {
+      uses.add((IRVariable) src);
+    }
+    for (var index : indices) {
+      if (index instanceof IRVariable) {
+        uses.add((IRVariable) index);
+      }
+    }
+    return uses;
+  }
+
+  @Override
   public String toString() {
     return dest.getValue() + " = getelementptr " + type.toString() + ", " + src.toString() + ", " + indices.toString(", ");
   }
