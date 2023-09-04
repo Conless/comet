@@ -40,7 +40,7 @@ public class IRBlockStmtNode extends IRStmtNode {
 
   @Override
   public String toString() {
-    return labelName + ":\n" + getNodes().toString("  ", "\n") + exitInst.toString();
+    return labelName + ":\n" + getNodes().toString("  ", "\n", "\n") + "  " + exitInst.toString();
   }
 
   @Override

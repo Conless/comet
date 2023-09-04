@@ -40,7 +40,9 @@ public class IRManager {
   }
 
   protected Array<IRBlockStmtNode> stmt2Block(IRStmtNode stmt, IRType type) {
-    var blocks = new Array<IRBlockStmtNode>(new IRBlockStmtNode("entry"));
+    var blocks = new Array<IRBlockStmtNode>(new IRBlockStmtNode("entry"), new IRBlockStmtNode("start"));
+    var entryBlock = blocks.get(0);
+    entryBlock.setExitInst(new IRJumpNode("start"));
     for (var node : stmt.getNodes()) {
       if (node instanceof IRLabelNode) {
         if (blocks.getLast().getExitInst() == null) {
@@ -53,6 +55,8 @@ public class IRManager {
         }
         if (node instanceof IRJumpNode || node instanceof IRBranchNode || node instanceof IRReturnNode) {
           blocks.getLast().setExitInst(node);
+        } else if (node instanceof IRAllocaNode) {
+          entryBlock.addNode(node);
         } else {
           blocks.getLast().addNode(node);
         }
