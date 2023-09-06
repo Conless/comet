@@ -39,7 +39,17 @@ public final class IRPhiNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return dest + " = phi " + type.toString() + " " + values.toString();
+    var str = dest.getValue() + " = phi " + type.toString() + " ";
+    boolean first = true;
+    for (var value : values) {
+      if (first) {
+        first = false;
+      } else {
+        str += ", ";
+      }
+      str += "[ " + value.a.getValue() + ", " + value.b + " ]";
+    }
+    return str;
   }
 
   @Override

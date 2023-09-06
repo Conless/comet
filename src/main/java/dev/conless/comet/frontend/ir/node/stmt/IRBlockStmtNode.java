@@ -1,8 +1,15 @@
 package dev.conless.comet.frontend.ir.node.stmt;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
+import javax.print.DocFlavor.STRING;
+
 import dev.conless.comet.frontend.ir.IRVisitor;
+import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
+import dev.conless.comet.frontend.ir.node.inst.IRPhiNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Set;
 import dev.conless.comet.utils.error.BaseError;
@@ -16,10 +23,18 @@ public class IRBlockStmtNode extends IRStmtNode {
   // For CFG
   private Array<IRBlockStmtNode> predecessors;
   private Array<IRBlockStmtNode> successors;
+  private HashMap<IRVariable, IREntity> defs;
+  private HashMap<IRVariable, IRVariable> uses;
+
+  // For Dominance Tree
+  private HashSet<IRBlockStmtNode> dom;
+  private IRBlockStmtNode idom;
+  private HashSet<IRBlockStmtNode> df;
+
+  // For Phi
+  private HashMap<String, IRPhiNode> phiMap;
 
   // For Liveness Analysis
-  private Set<IRVariable> defs;
-  private Set<IRVariable> uses;
   private Set<IRVariable> liveIn;
   private Set<IRVariable> liveOut;
 
@@ -28,6 +43,12 @@ public class IRBlockStmtNode extends IRStmtNode {
     this.exitInst = null;
     this.predecessors = new Array<>();
     this.successors = new Array<>();
+    this.defs = new HashMap<>();
+    this.uses = new HashMap<>();
+    this.dom = new HashSet<>();
+    this.dom.add(this);
+    this.df = new HashSet<>();
+    this.phiMap = new HashMap<>();
   }
 
   public void addPrev(IRBlockStmtNode node) {
@@ -40,7 +61,12 @@ public class IRBlockStmtNode extends IRStmtNode {
 
   @Override
   public String toString() {
-    return labelName + ":\n" + getNodes().toString("  ", "\n", "\n") + "  " + exitInst.toString();
+    var str = labelName + ":\n";
+    for (var phi : phiMap.values()) {
+      str += "  " + phi.toString() + "\n";
+    }
+    str += getNodes().toString("  ", "\n", "\n") + "  " + exitInst.toString();
+    return str;
   }
 
   @Override
