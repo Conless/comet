@@ -1,8 +1,10 @@
 package dev.conless.comet.frontend.ir.node.stmt;
 
+import dev.conless.comet.frontend.ir.entity.IRLiteral;
 import dev.conless.comet.frontend.ir.node.inst.IRBranchNode;
 import dev.conless.comet.frontend.ir.node.inst.IRJumpNode;
 import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
+import dev.conless.comet.frontend.utils.scope.GlobalScope;
 
 public class IRLoopStmtNode extends IRStmtNode {
   public static int count = 0;
@@ -26,7 +28,7 @@ public class IRLoopStmtNode extends IRStmtNode {
       appendNodes(cond);
       addNode(new IRBranchNode(cond.getDest(), bodyTag.getName(), endTag.getName()));
     } else {
-      addNode(new IRJumpNode(bodyTag.getName()));
+      addNode(new IRBranchNode(new IRLiteral(GlobalScope.irBoolType, 1), bodyTag.getName(), endTag.getName()));
     }
     addNode(bodyTag);
     appendNodes(body);
