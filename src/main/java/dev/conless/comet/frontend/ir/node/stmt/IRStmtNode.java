@@ -4,6 +4,7 @@ import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRNode;
 import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
+import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.RuntimeError;
 
@@ -41,6 +42,15 @@ public class IRStmtNode extends IRNode {
 
   public void appendFront(IRStmtNode nodes) {
     this.nodes.addAll(0, nodes.getNodes());
+  }
+  
+  public String getLastLabel() {
+    for (var i = nodes.size() - 1; i >= 0; --i) {
+      if (nodes.get(i) instanceof IRLabelNode) {
+        return ((IRLabelNode) nodes.get(i)).getName();
+      }
+    }
+    return null;
   }
 
   @Override

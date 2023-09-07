@@ -1,12 +1,13 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.IRVisitor;
+import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 
-@lombok.Value
-@lombok.EqualsAndHashCode(callSuper = true)
+@lombok.Setter
+@lombok.Getter
 public final class IRJumpNode extends IRInstNode {
   private String label;
 
@@ -22,6 +23,11 @@ public final class IRJumpNode extends IRInstNode {
   @Override
   public Array<IRVariable> getUses() {
     return new Array<>();
+  }
+
+  @Override
+  public void replaceUse(IREntity old, IREntity newEntity) {
+    // do nothing
   }
 
   @Override

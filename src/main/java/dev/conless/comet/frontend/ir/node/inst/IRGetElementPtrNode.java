@@ -8,8 +8,8 @@ import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 
-@lombok.Value
-@lombok.EqualsAndHashCode(callSuper = true)
+@lombok.Setter
+@lombok.Getter
 public final class IRGetElementPtrNode extends IRInstNode {
   private IRVariable dest, src;
   private String type;
@@ -42,6 +42,18 @@ public final class IRGetElementPtrNode extends IRInstNode {
       }
     }
     return uses;
+  }
+
+  @Override
+  public void replaceUse(IREntity old, IREntity newEntity) {
+    if (src.equals(old)) {
+      src = (IRVariable) newEntity;
+    }
+    for (int i = 0; i < indices.size(); i++) {
+      if (indices.get(i).equals(old)) {
+        indices.set(i, newEntity);
+      }
+    }
   }
 
   @Override

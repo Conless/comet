@@ -38,6 +38,15 @@ public final class IRPhiNode extends IRInstNode {
   }
 
   @Override
+  public void replaceUse(IREntity old, IREntity newEntity) {
+    for (var value : values) {
+      if (value.a.equals(old)) {
+        value.a = newEntity;
+      }
+    }
+  }
+
+  @Override
   public String toString() {
     var str = dest.getValue() + " = phi " + type.toString() + " ";
     boolean first = true;
@@ -47,7 +56,7 @@ public final class IRPhiNode extends IRInstNode {
       } else {
         str += ", ";
       }
-      str += "[ " + value.a.getValue() + ", " + value.b + " ]";
+      str += "[ " + value.a.getValue() + ", %" + value.b + " ]";
     }
     return str;
   }

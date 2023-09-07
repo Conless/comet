@@ -26,9 +26,8 @@ public class IRBlockStmtNode extends IRStmtNode {
   private HashMap<IRVariable, IREntity> defs;
   private HashMap<IRVariable, IRVariable> uses;
 
-  // For Dominance Tree
-  private HashSet<IRBlockStmtNode> dom;
   private IRBlockStmtNode idom;
+  private HashSet<IRBlockStmtNode> children;
   private HashSet<IRBlockStmtNode> df;
 
   // For Phi
@@ -45,8 +44,7 @@ public class IRBlockStmtNode extends IRStmtNode {
     this.successors = new Array<>();
     this.defs = new HashMap<>();
     this.uses = new HashMap<>();
-    this.dom = new HashSet<>();
-    this.dom.add(this);
+    this.children = new HashSet<>();
     this.df = new HashSet<>();
     this.phiMap = new HashMap<>();
   }

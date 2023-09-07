@@ -9,8 +9,8 @@ import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 
-@lombok.Value
-@lombok.EqualsAndHashCode(callSuper = true)
+@lombok.Setter
+@lombok.Getter
 public final class IRCallNode extends IRInstNode {
   private IRVariable dest;
   private IRType type;
@@ -45,6 +45,15 @@ public final class IRCallNode extends IRInstNode {
       }
     }
     return uses;
+  }
+
+  @Override
+  public void replaceUse(IREntity old, IREntity newEntity) {
+    for (int i = 0; i < args.size(); i++) {
+      if (args.get(i).equals(old)) {
+        args.set(i, newEntity);
+      }
+    }
   }
 
   @Override

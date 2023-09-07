@@ -1,6 +1,7 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.IRVisitor;
+import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.container.Array;
@@ -30,6 +31,11 @@ public final class IRAllocaNode extends IRInstNode {
   @Override
   public Array<IRVariable> getUses() {
     return new Array<>();
+  }
+
+  @Override
+  public void replaceUse(IREntity old, IREntity newEntity) {
+    // do nothing
   }
 
   @Override

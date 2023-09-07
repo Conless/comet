@@ -1,6 +1,7 @@
 package dev.conless.comet.frontend.ir.node.utils;
 
 import dev.conless.comet.frontend.ir.IRVisitor;
+import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
 import dev.conless.comet.utils.container.Array;
@@ -33,5 +34,10 @@ public final class IRCommentNode extends IRInstNode {
   @Override
   public <T> T accept(IRVisitor<T> visitor) throws BaseError {
     return visitor.visit(this);
+  }
+
+  @Override
+  public void replaceUse(IREntity old, IREntity newEntity) {
+    // do nothing
   }
 }

@@ -1,13 +1,14 @@
 package dev.conless.comet.frontend.ir.node.inst;
 
 import dev.conless.comet.frontend.ir.IRVisitor;
+import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 
-@lombok.Value
-@lombok.EqualsAndHashCode(callSuper = true)
+@lombok.Setter
+@lombok.Getter
 public final class IRLoadNode extends IRInstNode {
   private IRVariable dest, src;
   private IRType type;
@@ -30,6 +31,13 @@ public final class IRLoadNode extends IRInstNode {
       uses.add((IRVariable) src);
     }
     return uses;
+  }
+
+  @Override
+  public void replaceUse(IREntity old, IREntity newEntity) {
+    if (src.equals(old)) {
+      src = (IRVariable) newEntity;
+    }
   }
 
   @Override

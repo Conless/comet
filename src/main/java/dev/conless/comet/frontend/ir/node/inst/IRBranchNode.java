@@ -6,8 +6,8 @@ import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.error.BaseError;
 
-@lombok.Value
-@lombok.EqualsAndHashCode(callSuper = true)
+@lombok.Setter
+@lombok.Getter
 public final class IRBranchNode extends IRInstNode {
   private IREntity condition;
   private String trueLabel, falseLabel;
@@ -26,6 +26,13 @@ public final class IRBranchNode extends IRInstNode {
   @Override
   public Array<IRVariable> getUses() {
     return condition instanceof IRVariable ? new Array<>((IRVariable) condition) : new Array<>();
+  }
+
+  @Override
+  public void replaceUse(IREntity old, IREntity newEntity) {
+    if (condition.equals(old)) {
+      condition = newEntity;
+    }
   }
 
   @Override
