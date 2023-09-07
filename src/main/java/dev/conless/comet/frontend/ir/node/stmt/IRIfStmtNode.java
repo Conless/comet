@@ -23,9 +23,9 @@ public class IRIfStmtNode extends IRStmtNode {
     var elseLabel = new IRLabelNode("if." + String.valueOf(num) + ".else");
     var endLabel = new IRLabelNode("if." + String.valueOf(num) + ".end");
     addNode(new IRJumpNode(condLabel.getName()));
-    addNode(condLabel);
-    this.condLabel = condLabel.getName();
+    cond.addFront(condLabel);
     appendNodes(cond);
+    this.condLabel = cond.getLastLabel();
     addNode(
         new IRBranchNode(cond.getDest(), body == null ? endLabel.getName() : bodyLabel.getName(),
             elseBody == null ? endLabel.getName() : elseLabel.getName()));

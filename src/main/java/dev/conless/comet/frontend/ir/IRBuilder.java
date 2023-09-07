@@ -367,6 +367,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
       } else {
         stmt = new IRIfStmtNode(count, lhsInst, null, rhsInst);
       }
+      instList.appendNodes(stmt);
       var trueLiteral = new IRLiteral(GlobalScope.irBoolType, 1);
       var falseLiteral = new IRLiteral(GlobalScope.irBoolType, 0);
       if (node.getOp().equals("&&")) {

@@ -1,5 +1,7 @@
 package dev.conless.comet.frontend.ir.utils;
 
+import java.util.HashMap;
+
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.ast.node.stmt.ASTIfStmtNode;
 import dev.conless.comet.frontend.ast.node.utils.ASTNodeWithScope;
@@ -31,7 +33,8 @@ public class IRManager {
 
   protected IRManager() {
     counter = new IRCounter();
-    initNode = new IRFuncDefNode("global.var.init", new Array<>(), GlobalScope.irVoidType, new Array<>(new IRBlockStmtNode("entry")));
+    initNode = new IRFuncDefNode("global.var.init", new Array<>(), GlobalScope.irVoidType,
+        new Array<>(new IRBlockStmtNode("entry")));
     name2Size = new Map<>();
     strDefs = new Array<>();
     name2Size.put("i32", 4);
@@ -40,9 +43,10 @@ public class IRManager {
   }
 
   protected Array<IRBlockStmtNode> stmt2Block(IRStmtNode stmt, IRType type) {
-    var blocks = new Array<IRBlockStmtNode>(new IRBlockStmtNode("entry"), new IRBlockStmtNode("start"));
-    var entryBlock = blocks.get(0);
-    entryBlock.setExitInst(new IRJumpNode("start"));
+    var blocks = new Array<IRBlockStmtNode>(new IRBlockStmtNode("start"));
+    var entryBlock = new IRBlockStmtNode("entry");
+    var startBlock = blocks.get(0);
+    var globalSet = new HashMap<String, IRType>();
     for (var node : stmt.getNodes()) {
       if (node instanceof IRLabelNode) {
         if (blocks.getLast().getExitInst() == null) {
@@ -53,10 +57,23 @@ public class IRManager {
         if (blocks.getLast().getExitInst() != null) {
           continue;
         }
+        // if (node instanceof IRStoreNode) {
+        //   if (((IRStoreNode) node).getDest() instanceof IRVariable) {
+        //     var dest = (IRVariable) ((IRStoreNode) node).getDest();
+        //     if (dest.isGlobal()) {
+        //       globalSet.put(dest.getValue(), ((IRStoreNode) node).getSrc().getType());
+        //     }
+        //   }
+        // } else if (node instanceof IRLoadNode) {
+        //   if (((IRLoadNode) node).getSrc() instanceof IRVariable) {
+        //     var src = (IRVariable) ((IRLoadNode) node).getSrc();
+        //     if (src.isGlobal()) {
+        //       globalSet.put(src.getValue(), ((IRLoadNode) node).getDest().getType());
+        //     }
+        //   }
+        // }
         if (node instanceof IRJumpNode || node instanceof IRBranchNode || node instanceof IRReturnNode) {
           blocks.getLast().setExitInst(node);
-        } else if (node instanceof IRAllocaNode) {
-          entryBlock.addNode(node);
         } else {
           blocks.getLast().addNode(node);
         }
@@ -65,6 +82,30 @@ public class IRManager {
     if (blocks.getLast().getExitInst() == null) {
       blocks.getLast().setExitInst(new IRReturnNode(type));
     }
+    // for (var global : globalSet.entrySet()) {
+    //   var newVar = new IRVariable(GlobalScope.irPtrType, global.getKey().replace("@", "%"));
+    //   var tempVar = new IRVariable(global.getValue(), newVar.getValue() + ".temp.0");
+    //   entryBlock.addNode(new IRLoadNode(tempVar, new IRVariable(GlobalScope.irPtrType, global.getKey())));
+    //   entryBlock.addNode(new IRAllocaNode(newVar, global.getValue()));
+    //   entryBlock.addNode(new IRStoreNode(newVar, tempVar));
+    // }
+    // var counter = 0;
+    // for (var block : blocks) {
+    //   if (!(block.getExitInst() instanceof IRReturnNode)) {
+    //     continue;
+    //   }
+    //   var exitNodes = new IRStmtNode();
+    //   for (var global : globalSet.entrySet()) {
+    //     var newVar = new IRVariable(GlobalScope.irPtrType, global.getKey().replace("@", "%"));
+    //     var tempVar = new IRVariable(global.getValue(), newVar.getValue() + ".temp." + ++counter);
+    //     exitNodes.addNode(new IRLoadNode(tempVar, newVar));
+    //     exitNodes.addNode(new IRStoreNode(new IRVariable(GlobalScope.irPtrType, global.getKey()), tempVar));
+    //   }
+    //   block.appendNodes(exitNodes);
+    // }
+    entryBlock.appendNodes(startBlock);
+    entryBlock.setExitInst(startBlock.getExitInst());
+    blocks.set(0, entryBlock);
     return blocks;
   }
 
