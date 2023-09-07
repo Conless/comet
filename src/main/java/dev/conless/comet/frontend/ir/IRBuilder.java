@@ -14,10 +14,12 @@ import dev.conless.comet.frontend.ir.node.def.*;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.stmt.*;
 import dev.conless.comet.frontend.ir.node.utils.IRCommentNode;
+import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 import dev.conless.comet.frontend.ir.type.*;
 import dev.conless.comet.frontend.ir.utils.IRCounter;
 import dev.conless.comet.frontend.ir.utils.IRManager;
 import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.error.*;
 
 public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
@@ -339,21 +341,39 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     var resultType = new IRType((TypeInfo) node.getInfo().getType());
     var dest = new IRVariable(resultType, "%.arith." + String.valueOf(counter.arithCount++));
     if (node.getOp().equals("&&") || node.getOp().equals("||")) { // circuiting
-      var num = IRIfStmtNode.addCount();
+      var count = IRIfStmtNode.addCount();
+      // var lhsLabel = new IRLabelNode("if." + count + ".cond");
+      // var rhsLabel = new IRLabelNode("if." + count + ".body");
+      // var endLabel = new IRLabelNode("if." + count + ".end");
+      // instList.addNode(new IRJumpNode(lhsLabel.getName()));
       var lhsInst = (IRStmtNode) node.getLhs().accept(this);
-      var destAddr = new IRVariable(GlobalScope.irPtrType, "%.arith." + String.valueOf(counter.arithCount++));
-      lhsInst.addNode(new IRAllocaNode(destAddr, GlobalScope.irBoolType));
+      // lhsInst.addFront(lhsLabel);
+      // var lhsLastBlock = getLastLabel(lhsInst);
+      // instList.appendNodes(lhsInst);
+      // if (node.getOp().equals("&&")) {
+      //   instList.addNode(new IRBranchNode(lhsInst.getDest(), rhsLabel.getName(), endLabel.getName()));
+      // } else {
+      //   instList.addNode(new IRBranchNode(lhsInst.getDest(), endLabel.getName(), rhsLabel.getName()));
+      // }
       var rhsInst = (IRStmtNode) node.getRhs().accept(this);
+      // rhsInst.addFront(rhsLabel);
+      // var rhsLastBlock = getLastLabel(rhsInst);
+      // instList.appendNodes(rhsInst);
+      // instList.addNode(new IRJumpNode(endLabel.getName()));
+      var rhsDest = rhsInst.getDest();
+      IRIfStmtNode stmt;
       if (node.getOp().equals("&&")) {
-        instList.appendNodes(
-            new IRIfStmtNode(num, lhsInst, rhsInst, new IRStmtNode(new IRLiteral(GlobalScope.irBoolType, 0)),
-                destAddr));
+        stmt = new IRIfStmtNode(count, lhsInst, rhsInst, null);
       } else {
-        instList.appendNodes(
-            new IRIfStmtNode(num, lhsInst, new IRStmtNode(new IRLiteral(GlobalScope.irBoolType, 1)), rhsInst,
-                destAddr));
+        stmt = new IRIfStmtNode(count, lhsInst, null, rhsInst);
       }
-      instList.addNode(new IRLoadNode(dest, destAddr));
+      var trueLiteral = new IRLiteral(GlobalScope.irBoolType, 1);
+      var falseLiteral = new IRLiteral(GlobalScope.irBoolType, 0);
+      if (node.getOp().equals("&&")) {
+        instList.addNode(new IRPhiNode(dest, GlobalScope.irBoolType, new Array<Pair<IREntity, String>>(new Pair<>(rhsDest, stmt.getBodyLabel()), new Pair<>(falseLiteral, stmt.getCondLabel()))));
+      } else {
+        instList.addNode(new IRPhiNode(dest, GlobalScope.irBoolType, new Array<Pair<IREntity, String>>(new Pair<>(trueLiteral, stmt.getCondLabel()), new Pair<>(rhsDest, stmt.getElseLabel()))));
+      }
       instList.setDest(dest);
       exitASTNode(node);
       return instList;
@@ -427,11 +447,10 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     if (trueInst.getDest() == null) {
       instList.appendNodes(new IRIfStmtNode(num, condInst, trueInst, falseInst));
     } else {
-      var destAddr = new IRVariable(GlobalScope.irPtrType, "%.arith." + String.valueOf(counter.arithCount++));
-      instList.addNode(new IRAllocaNode(destAddr, trueInst.getDest().getType()));
-      instList.appendNodes(new IRIfStmtNode(num, condInst, trueInst, falseInst, destAddr));
+      var stmt = new IRIfStmtNode(num, condInst, trueInst, falseInst);
       var dest = new IRVariable(trueInst.getDest().getType(), "%.arith." + String.valueOf(counter.arithCount++));
-      instList.addNode(new IRLoadNode(dest, destAddr));
+      instList.addNode(new IRPhiNode(dest, trueInst.getDest().getType(), new Array<Pair<IREntity, String>>(
+          new Pair<>(trueInst.getDest(), stmt.getBodyLabel()), new Pair<>(falseInst.getDest(), stmt.getElseLabel()))));
       instList.setDest(dest);
     }
     exitASTNode(node);
