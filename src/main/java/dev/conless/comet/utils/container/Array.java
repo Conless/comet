@@ -11,6 +11,11 @@ public class Array<E> extends ArrayList<E> {
     super((ArrayList<E>) tags);
   }
 
+  public Array(E firstTag) {
+    super();
+    this.add(firstTag);
+  }
+
   public Array(E firstTag, E... tags) {
     super();
     this.add(firstTag);

@@ -5,9 +5,9 @@ import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 
-@lombok.Value
-@lombok.EqualsAndHashCode(callSuper = true)
-public final class IRVariable extends IREntity {
+@lombok.Setter
+@lombok.Getter
+public final class IRVariable extends IREntity implements Comparable<IRVariable> {
   public IRVariable(IRType type, String value) {
     super(type, value);
     if (!value.contains("@") && !value.contains("%")) {
@@ -27,9 +27,14 @@ public final class IRVariable extends IREntity {
   public String toString() {
     return getType().toString() + " " + getValue();
   }
-  
+
   @Override
   public <T> T accept(IRVisitor<T> visitor) throws BaseError {
     return visitor.visit(this);
+  }
+
+  @Override
+  public int compareTo(IRVariable o) {
+    return getValue().compareTo(((IRVariable) o).getValue());
   }
 }

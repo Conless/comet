@@ -1,7 +1,7 @@
 package dev.conless.comet.frontend.ir.node.stmt;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import dev.conless.comet.utils.container.Map;
+import dev.conless.comet.utils.container.Set;
 
 import javax.print.DocFlavor.STRING;
 
@@ -16,22 +16,22 @@ import dev.conless.comet.utils.error.BaseError;
 
 @lombok.Getter
 @lombok.Setter
-public class IRBlockStmtNode extends IRStmtNode {
+public class IRBlockStmtNode extends IRStmtNode implements Comparable<IRBlockStmtNode> {
   private String labelName;
   private IRInstNode exitInst;
 
   // For CFG
   private Array<IRBlockStmtNode> predecessors;
   private Array<IRBlockStmtNode> successors;
-  private HashMap<IRVariable, IREntity> defs;
-  private HashMap<IRVariable, IRVariable> uses;
+  private Map<IRVariable, IREntity> defs;
+  private Map<IRVariable, IRVariable> uses;
 
   private IRBlockStmtNode idom;
-  private HashSet<IRBlockStmtNode> children;
-  private HashSet<IRBlockStmtNode> df;
+  private Set<IRBlockStmtNode> children;
+  private Set<IRBlockStmtNode> df;
 
   // For Phi
-  private HashMap<String, IRPhiNode> phiMap;
+  private Map<String, IRPhiNode> phiMap;
 
   // For Liveness Analysis
   private Set<IRVariable> liveIn;
@@ -42,11 +42,11 @@ public class IRBlockStmtNode extends IRStmtNode {
     this.exitInst = null;
     this.predecessors = new Array<>();
     this.successors = new Array<>();
-    this.defs = new HashMap<>();
-    this.uses = new HashMap<>();
-    this.children = new HashSet<>();
-    this.df = new HashSet<>();
-    this.phiMap = new HashMap<>();
+    this.defs = new Map<>();
+    this.uses = new Map<>();
+    this.children = new Set<>();
+    this.df = new Set<>();
+    this.phiMap = new Map<>();
   }
 
   public void addPrev(IRBlockStmtNode node) {
@@ -70,5 +70,10 @@ public class IRBlockStmtNode extends IRStmtNode {
   @Override
   public <T> T accept(IRVisitor<T> visitor) throws BaseError {
     return visitor.visit(this);
+  }
+
+  @Override
+  public int compareTo(IRBlockStmtNode o) {
+    return labelName.compareTo(((IRBlockStmtNode) o).getLabelName());
   }
 }

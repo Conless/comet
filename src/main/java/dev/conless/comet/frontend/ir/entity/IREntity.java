@@ -4,6 +4,7 @@ import dev.conless.comet.frontend.ir.IRVisitor;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.utils.error.BaseError;
 
+@lombok.Setter
 @lombok.Getter
 public abstract class IREntity {
   private IRType type;
@@ -18,5 +19,13 @@ public abstract class IREntity {
 
   public <T> T accept(IRVisitor<T> visitor) throws BaseError {
     return visitor.visit(this);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof IREntity) {
+      return ((IREntity) obj).getValue().equals(getValue());
+    }
+    return false;
   }
 }
