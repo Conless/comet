@@ -3,6 +3,8 @@ package dev.conless.comet.middleend.optimize;
 import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.container.Set;
 
+import java.util.LinkedList;
+
 import dev.conless.comet.frontend.ir.entity.IREntity;
 import dev.conless.comet.frontend.ir.entity.IRLiteral;
 import dev.conless.comet.frontend.ir.entity.IRVariable;
@@ -67,7 +69,8 @@ public class Mem2Reg {
     }
 
     // for (var block : func.getBody()) {
-    //   System.out.println(block.getLabelName() + " " + block.getIdom().getLabelName());
+    // System.out.println(block.getLabelName() + " " +
+    // block.getIdom().getLabelName());
     // }
 
     for (var block : func.getBody()) {
@@ -78,11 +81,11 @@ public class Mem2Reg {
     }
 
     // for (var block : func.getBody()) {
-    //   var str = block.getLabelName() + ":";
-    //   for (var df : block.getDf()) {
-    //     str += " " + df.getLabelName();
-    //   }
-    //   System.out.println(str);
+    // var str = block.getLabelName() + ":";
+    // for (var df : block.getDf()) {
+    // str += " " + df.getLabelName();
+    // }
+    // System.out.println(str);
     // }
   }
 
@@ -134,29 +137,64 @@ public class Mem2Reg {
     return x;
   }
 
+  Map<IRVariable, Pair<IRType, Set<IRBlockStmtNode>>> globalNames;
+
   void insertPhi(IRFuncDefNode node) {
-    for (var block : node.getBody()) {
-      solveDef(block);
+    collectGlobalNames(node);
+    for (var global : globalNames.entrySet()) {
+      var blocks = global.getValue().b;
+      var workList = new LinkedList<IRBlockStmtNode>();
+      var inList = new Set<IRBlockStmtNode>();
+      for (var block : blocks) {
+        workList.add(block);
+        inList.add(block);
+      }
+      while (!workList.isEmpty()) {
+        var block = workList.poll();
+        for (var df : block.getDf()) {
+          if (df.getPhiMap().containsKey(global.getKey().getValue())) {
+            continue;
+          }
+          var newVar = new IRVariable(global.getValue().a,
+              global.getKey().getValue() + ".block." + block2order.get(df));
+          var phi = new IRPhiNode(newVar, newVar.getType(), new Array<>());
+          df.getPhiMap().put(global.getKey().getValue(), phi);
+          if (!inList.contains(df)) {
+            workList.add(df);
+            inList.add(df);
+          }
+        }
+      }
     }
   }
 
-  void solveDef(IRBlockStmtNode block) {
-    for (var df : block.getDf()) {
-      for (var var : block.getDefs().entrySet()) {
-        var newVar = new IRVariable(var.getValue().getType(),
-            var.getKey().getValue() + ".block." + block2order.get(df));
-        if (!df.getPhiMap().containsKey(newVar.getValue())) {
-          var phi = new IRPhiNode(newVar, var.getValue().getType(),
-              new Array<>(new Pair<>(var.getValue(), block.getLabelName())));
-          df.getPhiMap().put(newVar.getValue(), phi);
-        } else {
-          df.getPhiMap().get(newVar.getValue()).getValues().add(new Pair<>(var.getValue(), block.getLabelName()));
+  void collectGlobalNames(IRFuncDefNode node) {
+    globalNames = new Map<>();
+    var entryBlock = node.getBody().get(0);
+    for (var inst : entryBlock.getNodes()) {
+      if (inst instanceof IRAllocaNode allocaInst) {
+        var dest = allocaInst.getDest();
+        if (!globalNames.containsKey(dest)) {
+          globalNames.put(dest, new Pair<>(allocaInst.getType(), new Set<>()));
+        }
+      }
+    }
+    for (var block : node.getBody()) {
+      for (var inst : block.getNodes()) {
+        if (inst instanceof IRStoreNode storeInst) {
+          var dest = storeInst.getDest();
+          if (globalNames.containsKey(dest)) {
+            globalNames.get(dest).b.add(block);
+          }
         }
       }
     }
   }
 
   void rename(IRFuncDefNode node) {
+    if (node.getName().equals("__Heap_Node_maxHeapify")) {
+      System.out.println("here");
+    }
     var var2name = new Map<String, IREntity>();
     for (var inst : node.getBody().get(0).getNodes()) {
       if (inst instanceof IRAllocaNode) {
@@ -168,52 +206,57 @@ public class Mem2Reg {
 
   void renameBlock(IRBlockStmtNode node, Map<String, IREntity> var2name) {
     for (var phi : node.getPhiMap().entrySet()) {
-      if (phi.getValue().getValues().size() == 1) {
-        var2name.put(phi.getKey(), phi.getValue().getValues().get(0).a);
-        node.getPhiMap().remove(phi.getKey());
-      } else {
-        var2name.put(phi.getKey(), phi.getValue().getDest());
-      }
+      var2name.put(phi.getKey(), phi.getValue().getDest());
     }
     var reg2name = new Map<IRVariable, IREntity>();
     for (var inst : node.getNodes()) {
       if (inst instanceof IRLoadNode) {
         var loadInst = (IRLoadNode) inst;
-        if (!loadInst.getSrc().isGlobal()) {
+        if (loadInst.getSrc().isVar()) {
           if (!var2name.containsKey(loadInst.getSrc().getValue())) {
             throw new RuntimeError("Variable not defined: " + loadInst.getSrc().getValue());
           }
           var name = var2name.get(loadInst.getSrc().getValue());
           if (name == null) {
-            name = new IRLiteral(loadInst.getSrc().getType(), 0);
+            name = new IRLiteral(loadInst.getDest().getType(), 0);
+          } else if (name instanceof IRVariable nameVar && reg2name.containsKey(nameVar)) {
+            name = reg2name.get(nameVar);
           }
           reg2name.put(loadInst.getDest(), name);
         }
       } else if (inst instanceof IRStoreNode) {
         var storeInst = (IRStoreNode) inst;
-        if (!storeInst.getDest().isGlobal()) {
+        if (storeInst.getDest().isVar()) {
           if (!var2name.containsKey(storeInst.getDest().getValue())) {
             throw new RuntimeError("Variable not defined: " + storeInst.getDest().getValue());
           }
-          var2name.put(storeInst.getDest().getValue(), storeInst.getSrc());
+          var src = storeInst.getSrc();
+          if (src instanceof IRVariable srcVar && reg2name.containsKey(srcVar)) {
+            src = reg2name.get(srcVar);
+          }
+          var2name.put(storeInst.getDest().getValue(), src);
         }
       }
     }
     var newNodes = new Array<IRInstNode>();
     for (var inst : node.getNodes()) {
       if (inst instanceof IRLoadNode) {
-        if (!((IRLoadNode) inst).getSrc().isGlobal()) {
+        if (((IRLoadNode) inst).getSrc().isVar()) {
           continue;
         }
       } else if (inst instanceof IRStoreNode) {
-        if (!((IRStoreNode) inst).getDest().isGlobal()) {
+        if (((IRStoreNode) inst).getDest().isVar()) {
           continue;
         }
       }
+      var useList = new Set<IRVariable>();
       for (var use : inst.getUses()) {
         if (reg2name.containsKey(use)) {
-          inst.replaceUse(use, reg2name.get(use));
+          useList.add(use);
         }
+      }
+      for (var use : useList) {
+        inst.replaceUse(use, reg2name.get(use));
       }
       newNodes.add(inst);
     }
@@ -225,11 +268,11 @@ public class Mem2Reg {
     }
     for (var succ : node.getSuccessors()) {
       for (var phi : succ.getPhiMap().entrySet()) {
-        for (var value : phi.getValue().getValues()) {
-          if (value.b.equals(node.getLabelName())) {
-            phi.getValue().replaceUse(phi.getValue().getDest(), reg2name.get(phi.getValue().getDest()));
-          }
+        var varName = var2name.get(phi.getKey());
+        if (varName == null) {
+          varName = new IRLiteral(phi.getValue().getDest().getType(), 0);
         }
+        phi.getValue().getValues().add(new Pair<>(varName, node.getLabelName()));
       }
     }
     var backupVar2name = var2name.clone();

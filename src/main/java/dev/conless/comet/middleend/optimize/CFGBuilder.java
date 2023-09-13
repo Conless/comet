@@ -27,6 +27,22 @@ public class CFGBuilder {
     for (var block : blocks) {
       visit(block);
     }
+    var deadBlock = new Set<IRBlockStmtNode>();
+    for (var block : blocks) {
+      if (block.getLabelName().equals("entry")) {
+        continue;
+      }
+      if (block.getPredecessors().size() == 0) {
+        deadBlock.add(block);
+        for (var next : block.getSuccessors()) {
+          next.getPredecessors().remove(block);
+        }
+      }
+    }
+    for (var block : deadBlock) {
+      blocks.remove(block);
+    }
+
     // for (var block : blocks) {
     //   var str = "succ: ";
     //   for (var next : block.getSuccessors()) {
@@ -43,16 +59,10 @@ public class CFGBuilder {
 
   private void visit(IRBlockStmtNode node) {
     for (var inst : node.getNodes()) {
-      if (inst instanceof IRLoadNode) {
-        var loadInst = (IRLoadNode) inst;
-        if (!(loadInst.getSrc()).isGlobal()) {
-          node.getUses().put(loadInst.getSrc(), null);
-        }
-        node.getUses().put(((IRLoadNode) inst).getSrc(), null);
-      } else if (inst instanceof IRStoreNode) {
+      if (inst instanceof IRStoreNode) {
         var storeInst = (IRStoreNode) inst;
-        if (!(storeInst.getDest()).isGlobal()) {
-          node.getUses().put(storeInst.getDest(), null);
+        if (storeInst.getDest().isVar()) {
+          node.getDefs().put(storeInst.getDest(), storeInst.getSrc());
         }
       }
     }
@@ -72,22 +82,6 @@ public class CFGBuilder {
       // do nothing
     } else {
       throw new RuntimeError("Unknown exit instruction type");
-    }
-    var labelName = node.getLabelName();
-    if (labelName.startsWith("if.") && (labelName.endsWith(".body") || labelName.endsWith(".else"))) {
-      var endLabelName = labelName.replace(".body", ".end").replace(".else", ".end");
-      var target = label2Block.get(endLabelName);
-      var targetAdded = false;
-      for (var added : node.getSuccessors()) {
-        if (target == added) {
-          targetAdded = true;
-          break;
-        }
-      }
-      if (!targetAdded) {
-        node.addNext(target);
-        target.addPrev(node);
-      }
     }
   }
 }
