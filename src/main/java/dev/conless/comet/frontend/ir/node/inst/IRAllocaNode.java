@@ -11,14 +11,9 @@ import dev.conless.comet.utils.error.BaseError;
 @lombok.EqualsAndHashCode(callSuper = true)
 public final class IRAllocaNode extends IRInstNode {
   private IRVariable dest;
-  private String type;
+  private IRType type;
 
   public IRAllocaNode(IRVariable dest, IRType type) {
-    this.type = type.getTypeName();
-    this.dest = dest;
-  }
-
-  public IRAllocaNode(IRVariable dest, String type) {
     this.type = type;
     this.dest = dest;
   }
@@ -40,7 +35,7 @@ public final class IRAllocaNode extends IRInstNode {
 
   @Override
   public String toString() {
-    return dest.getValue() + " = alloca " + type;
+    return dest.getValue() + " = alloca " + type.getTypeName();
   }
 
   @Override

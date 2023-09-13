@@ -23,6 +23,10 @@ public final class IRVariable extends IREntity implements Comparable<IRVariable>
     return getValue().startsWith("%.");
   }
 
+  public boolean isVar() {
+    return !isGlobal() && !isTemp();
+  }
+
   @Override
   public String toString() {
     return getType().toString() + " " + getValue();

@@ -14,6 +14,7 @@ import dev.conless.comet.frontend.grammar.*;
 import dev.conless.comet.frontend.ir.*;
 import dev.conless.comet.frontend.ir.node.*;
 import dev.conless.comet.frontend.semantic.*;
+import dev.conless.comet.middleend.optimize.IROptimizer;
 import dev.conless.comet.utils.error.*;
 
 public class Compiler {
@@ -31,18 +32,19 @@ public class Compiler {
       ASTNode astProgram = new ASTBuilder().visit(parser.program());
       new SemanticChecker().visit((ASTRoot) astProgram);
       IRNode irProgram = new IRBuilder().visit((ASTRoot) astProgram);
+      new IROptimizer().visit((IRRoot) irProgram);
       var output = new PrintStream(new FileOutputStream("src/test/mx/output.ll"));
       output.println(irProgram);
       output.close();
-      ASMNode asmProgram = new InstSelector().visit((IRRoot) irProgram);
+      // ASMNode asmProgram = new InstSelector().visit((IRRoot) irProgram);
       // output = new PrintStream(new FileOutputStream("src/test/mx/output.raw.s"));
       // output.println(asmProgram);
       // output.close();
-      new BasicAllocator().visit((ASMRoot) asmProgram);
+      // new BasicAllocator().visit((ASMRoot) asmProgram);
       // output = new PrintStream(new FileOutputStream("src/test/mx/output.s"));
       // output.println(asmProgram);
       // output.close();
-      System.out.println(asmProgram);
+      // System.out.println(irProgram);
     // } catch (BaseError e) {
     //   System.err.println(e.getMessage());
     //   System.exit(1);

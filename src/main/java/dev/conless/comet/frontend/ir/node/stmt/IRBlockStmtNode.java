@@ -24,7 +24,6 @@ public class IRBlockStmtNode extends IRStmtNode implements Comparable<IRBlockStm
   private Array<IRBlockStmtNode> predecessors;
   private Array<IRBlockStmtNode> successors;
   private Map<IRVariable, IREntity> defs;
-  private Map<IRVariable, IRVariable> uses;
 
   private IRBlockStmtNode idom;
   private Set<IRBlockStmtNode> children;
@@ -43,7 +42,6 @@ public class IRBlockStmtNode extends IRStmtNode implements Comparable<IRBlockStm
     this.predecessors = new Array<>();
     this.successors = new Array<>();
     this.defs = new Map<>();
-    this.uses = new Map<>();
     this.children = new Set<>();
     this.df = new Set<>();
     this.phiMap = new Map<>();

@@ -11,7 +11,8 @@ import dev.conless.comet.utils.error.RuntimeError;
 @lombok.Setter
 @lombok.Getter
 public final class IRGetElementPtrNode extends IRInstNode {
-  private IRVariable dest, src;
+  private IRVariable dest;
+  private IREntity src;
   private String type;
   private Array<IREntity> indices;
 
@@ -47,7 +48,7 @@ public final class IRGetElementPtrNode extends IRInstNode {
   @Override
   public void replaceUse(IREntity old, IREntity newEntity) {
     if (src.equals(old)) {
-      src = (IRVariable) newEntity;
+      src = newEntity;
     }
     for (int i = 0; i < indices.size(); i++) {
       if (indices.get(i).equals(old)) {

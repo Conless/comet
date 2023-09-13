@@ -1,6 +1,6 @@
 package dev.conless.comet.frontend.ir.utils;
 
-import java.util.HashMap;
+import dev.conless.comet.utils.container.Map;
 
 import dev.conless.comet.frontend.ast.node.ASTNode;
 import dev.conless.comet.frontend.ast.node.stmt.ASTIfStmtNode;
@@ -46,7 +46,7 @@ public class IRManager {
     var blocks = new Array<IRBlockStmtNode>(new IRBlockStmtNode("start"));
     var entryBlock = new IRBlockStmtNode("entry");
     var startBlock = blocks.get(0);
-    var globalSet = new HashMap<String, IRType>();
+    var globalSet = new Map<String, IRType>();
     for (var node : stmt.getNodes()) {
       if (node instanceof IRLabelNode) {
         if (blocks.getLast().getExitInst() == null) {
@@ -57,23 +57,25 @@ public class IRManager {
         if (blocks.getLast().getExitInst() != null) {
           continue;
         }
-        // if (node instanceof IRStoreNode) {
-        //   if (((IRStoreNode) node).getDest() instanceof IRVariable) {
-        //     var dest = (IRVariable) ((IRStoreNode) node).getDest();
-        //     if (dest.isGlobal()) {
-        //       globalSet.put(dest.getValue(), ((IRStoreNode) node).getSrc().getType());
-        //     }
-        //   }
-        // } else if (node instanceof IRLoadNode) {
-        //   if (((IRLoadNode) node).getSrc() instanceof IRVariable) {
-        //     var src = (IRVariable) ((IRLoadNode) node).getSrc();
-        //     if (src.isGlobal()) {
-        //       globalSet.put(src.getValue(), ((IRLoadNode) node).getDest().getType());
-        //     }
-        //   }
-        // }
+        if (node instanceof IRStoreNode) {
+          if (((IRStoreNode) node).getDest() instanceof IRVariable) {
+            var dest = (IRVariable) ((IRStoreNode) node).getDest();
+            if (dest.isGlobal()) {
+              globalSet.put(dest.getValue(), ((IRStoreNode) node).getSrc().getType());
+            }
+          }
+        } else if (node instanceof IRLoadNode) {
+          if (((IRLoadNode) node).getSrc() instanceof IRVariable) {
+            var src = (IRVariable) ((IRLoadNode) node).getSrc();
+            if (src.isGlobal()) {
+              globalSet.put(src.getValue(), ((IRLoadNode) node).getDest().getType());
+            }
+          }
+        }
         if (node instanceof IRJumpNode || node instanceof IRBranchNode || node instanceof IRReturnNode) {
           blocks.getLast().setExitInst(node);
+        } else if (node instanceof IRAllocaNode) {
+          entryBlock.addNode(node);
         } else {
           blocks.getLast().addNode(node);
         }
