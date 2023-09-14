@@ -1,7 +1,7 @@
 package dev.conless.comet.middleend.optimize;
 
 import dev.conless.comet.utils.container.Set;
-
+import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRRoot;
 import dev.conless.comet.frontend.ir.node.def.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
@@ -59,10 +59,13 @@ public class CFGBuilder {
 
   private void visit(IRBlockStmtNode node) {
     for (var inst : node.getNodes()) {
-      if (inst instanceof IRStoreNode) {
-        var storeInst = (IRStoreNode) inst;
+      if (inst instanceof IRStoreNode storeInst) {
         if (storeInst.getDest().isVar()) {
           node.getDefs().put(storeInst.getDest(), storeInst.getSrc());
+        }
+      } else if (inst instanceof IRCallNode callInst && callInst.getFuncName().equals("__string_copy")) {
+        if (((IRVariable) callInst.getArgs().get(0)).isVar()) {
+          node.getDefs().put((IRVariable) callInst.getArgs().get(0), callInst.getArgs().get(1));
         }
       }
     }

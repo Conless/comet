@@ -11,6 +11,7 @@ import dev.conless.comet.frontend.ir.entity.IRVariable;
 import dev.conless.comet.frontend.ir.node.IRRoot;
 import dev.conless.comet.frontend.ir.node.def.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.inst.IRAllocaNode;
+import dev.conless.comet.frontend.ir.node.inst.IRCallNode;
 import dev.conless.comet.frontend.ir.node.inst.IRInstNode;
 import dev.conless.comet.frontend.ir.node.inst.IRLoadNode;
 import dev.conless.comet.frontend.ir.node.inst.IRPhiNode;
@@ -186,15 +187,17 @@ public class Mem2Reg {
           if (globalNames.containsKey(dest)) {
             globalNames.get(dest).b.add(block);
           }
+        } else if (inst instanceof IRCallNode callInst && callInst.getFuncName().equals("__string_copy")) {
+          var dest = (IRVariable) callInst.getArgs().get(0);
+          if (globalNames.containsKey(dest)) {
+            globalNames.get(dest).b.add(block);
+          }
         }
       }
     }
   }
 
   void rename(IRFuncDefNode node) {
-    if (node.getName().equals("__Heap_Node_maxHeapify")) {
-      System.out.println("here");
-    }
     var var2name = new Map<String, IREntity>();
     for (var inst : node.getBody().get(0).getNodes()) {
       if (inst instanceof IRAllocaNode) {
@@ -210,8 +213,7 @@ public class Mem2Reg {
     }
     var reg2name = new Map<IRVariable, IREntity>();
     for (var inst : node.getNodes()) {
-      if (inst instanceof IRLoadNode) {
-        var loadInst = (IRLoadNode) inst;
+      if (inst instanceof IRLoadNode loadInst) {
         if (loadInst.getSrc().isVar()) {
           if (!var2name.containsKey(loadInst.getSrc().getValue())) {
             throw new RuntimeError("Variable not defined: " + loadInst.getSrc().getValue());
@@ -224,8 +226,7 @@ public class Mem2Reg {
           }
           reg2name.put(loadInst.getDest(), name);
         }
-      } else if (inst instanceof IRStoreNode) {
-        var storeInst = (IRStoreNode) inst;
+      } else if (inst instanceof IRStoreNode storeInst) {
         if (storeInst.getDest().isVar()) {
           if (!var2name.containsKey(storeInst.getDest().getValue())) {
             throw new RuntimeError("Variable not defined: " + storeInst.getDest().getValue());
@@ -235,6 +236,18 @@ public class Mem2Reg {
             src = reg2name.get(srcVar);
           }
           var2name.put(storeInst.getDest().getValue(), src);
+        }
+      } else if (inst instanceof IRCallNode callInst && callInst.getFuncName().equals("__string_copy")) {
+        var dest = (IRVariable) callInst.getArgs().get(0);
+        var src = callInst.getArgs().get(1);
+        if (dest.isVar()) {
+          if (!var2name.containsKey(dest.getValue())) {
+            throw new RuntimeError("Variable not defined: " + dest.getValue());
+          }
+          if (src instanceof IRVariable srcVar && reg2name.containsKey(srcVar)) {
+            src = reg2name.get(srcVar);
+          }
+          var2name.put(dest.getValue(), src);
         }
       }
     }
@@ -246,6 +259,11 @@ public class Mem2Reg {
         }
       } else if (inst instanceof IRStoreNode) {
         if (((IRStoreNode) inst).getDest().isVar()) {
+          continue;
+        }
+      } else if (inst instanceof IRCallNode callInst && callInst.getFuncName().equals("__string_copy")) {
+        var dest = (IRVariable) callInst.getArgs().get(0);
+        if (dest.isVar()) {
           continue;
         }
       }
