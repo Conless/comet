@@ -275,8 +275,8 @@ public class Mem2Reg {
         phi.getValue().getValues().add(new Pair<>(varName, node.getLabelName()));
       }
     }
-    var backupVar2name = var2name.clone();
     for (var child : node.getChildren()) {
+      var backupVar2name = var2name.clone();
       renameBlock(child, backupVar2name);
     }
   }
