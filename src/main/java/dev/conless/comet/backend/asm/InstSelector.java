@@ -22,6 +22,7 @@ import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.stmt.IRBlockStmtNode;
 import dev.conless.comet.frontend.ir.node.utils.*;
 import dev.conless.comet.frontend.ir.type.IRStructType;
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.error.*;
 
@@ -65,8 +66,13 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
       paramCount++;
     }
     ASMVirtualReg.resetCount();
-    for (var stmt : node.getBody()) {
-      func.addBlock((ASMBlockStmtNode) stmt.accept(this));
+    for (var block : node.getBody()) {
+      func.addBlock((ASMBlockStmtNode) block.accept(this));
+    }
+    for (var block : node.getBody()) {
+      for (var phi : block.getPhiMap().values()) {
+        phi.accept(this);
+      }
     }
     func.setMemUsed(new Pair<>(counter.allocaCount, ASMVirtualReg.getCount()));
     return func;
@@ -75,10 +81,11 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   @Override
   public ASMNode visit(IRBlockStmtNode node) throws BaseError {
     var block = new ASMBlockStmtNode(new ASMLabelNode(getLabelName(node.getLabelName())));
+    name2Block.put(node.getLabelName(), block);
     for (var inst : node.getNodes()) {
       block.appendNodes((ASMStmtNode) inst.accept(this));
     }
-    block.appendNodes((ASMStmtNode) node.getExitInst().accept(this));
+    block.setExitInst((ASMStmtNode) node.getExitInst().accept(this));
     return block;
   }
 
@@ -261,7 +268,17 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
 
   @Override
   public ASMNode visit(IRPhiNode node) throws BaseError {
-    throw new RuntimeError("ASMBuilder.visit(IRPhiNode) should not be called");
+    var destInst = (ASMStmtNode) node.getDest().accept(this);
+    var destReg = destInst.getDest();
+    destInst.addNode(new ASMCommentNode(node.toString()));
+    for (var pair : node.getValues()) {
+      var srcInst = (ASMStmtNode) pair.a.accept(this);
+      var targetBlock = name2Block.get(pair.b);
+      targetBlock.appendNodes(srcInst);
+      targetBlock.appendNodes(destInst);
+      targetBlock.addNode(new ASMMoveNode(srcInst.getDest(), destReg));
+    }
+    return new ASMStmtNode();
   }
 
   @Override

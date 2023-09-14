@@ -65,10 +65,10 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
     }
     blocks.add(0, begin);
     for (var block : blocks) { // the ret instruction can only appear in the last
-      if (block.getNodes().getLast() instanceof ASMReturnNode) {
-        block.getNodes().removeLast();
-        block.appendNodes(end);
-        block.addNode(new ASMReturnNode());
+      if (block.getExitInst().getNodes().getLast() instanceof ASMReturnNode) {
+        block.getExitInst().getNodes().removeLast();
+        block.getExitInst().appendNodes(end);
+        block.getExitInst().addNode(new ASMReturnNode());
       }
     }
     node.setBlocks(blocks);
@@ -78,24 +78,25 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
   @Override
   public ASMNode visit(ASMBlockStmtNode node) {
     var stmts = new ASMStmtNode();
-    for (var stmt : node.getNodes()) {
-      var newStmt = stmt.accept(this);
-      if (newStmt instanceof ASMStmtNode) {
-        var newStmts = (ASMStmtNode) newStmt;
-        for (var newStmt2 : newStmts.getNodes()) {
-          stmts.addNode((ASMInstNode) newStmt2);
-          if (newStmt2 instanceof ASMReturnNode) {
-            break;
-          }
-        }
+    for (var inst : node.getNodes()) {
+      var newStmt = inst.accept(this);
+      if (newStmt instanceof ASMStmtNode newStmts) {
+        stmts.appendNodes(newStmts);
       } else {
         stmts.addNode((ASMInstNode) newStmt);
-        if (newStmt instanceof ASMReturnNode) {
-          break;
-        }
       }
     }
     node.setNodes(stmts.getNodes());
+    var exitInst = new ASMStmtNode();
+    for (var inst : node.getExitInst().getNodes()) {
+      var newStmt = inst.accept(this);
+      if (newStmt instanceof ASMStmtNode newStmts) {
+        exitInst.appendNodes(newStmts);
+      } else {
+        exitInst.addNode((ASMInstNode) newStmt);
+      }
+    }
+    node.setExitInst(exitInst);
     return node;
   }
 
@@ -236,7 +237,8 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
       throw new RuntimeError("No more clean registers");
     }
     usedRegs.add(newReg);
-    nodes.addNode(new ASMLoadNode(newReg, new ASMAddress(regs.getSp(), 4 * (allocatedMem + ((ASMVirtualReg) reg).getID()))));
+    nodes.addNode(
+        new ASMLoadNode(newReg, new ASMAddress(regs.getSp(), 4 * (allocatedMem + ((ASMVirtualReg) reg).getID()))));
     return newReg;
   }
 
@@ -254,7 +256,7 @@ public class BasicAllocator extends ASMManager implements RegAllocator {
     usedRegs.add(newReg);
     return newReg;
   }
-  
+
   @Override
   public void evictReg(ASMStmtNode nodes, ASMPhysicalReg... dirtyRegs) {
     for (var reg : dirtyRegs) {

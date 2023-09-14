@@ -9,9 +9,11 @@ import dev.conless.comet.utils.error.RuntimeError;
 @lombok.Setter
 public class ASMBlockStmtNode extends ASMStmtNode {
   private ASMLabelNode label;
+  private ASMStmtNode exitInst;
 
   public ASMBlockStmtNode(ASMLabelNode label) {
     this.label = label;
+    this.exitInst = new ASMStmtNode();
   }
 
   @Override
@@ -21,6 +23,13 @@ public class ASMBlockStmtNode extends ASMStmtNode {
       if (node instanceof ASMLabelNode) {
         throw new RuntimeError("ASMLabelNode should not appear in ASMBlockStmtNode");
       }
+      if (node instanceof ASMCommentNode) {
+        str += node.toString() + "\n";
+      } else {
+        str += "  " + node.toString() + "\n";
+      }
+    }
+    for (var node : exitInst.getNodes()) {
       if (node instanceof ASMCommentNode) {
         str += node.toString() + "\n";
       } else {

@@ -36,15 +36,15 @@ public class Compiler {
       var output = new PrintStream(new FileOutputStream("src/test/mx/output.ll"));
       output.println(irProgram);
       output.close();
-      // ASMNode asmProgram = new InstSelector().visit((IRRoot) irProgram);
-      // output = new PrintStream(new FileOutputStream("src/test/mx/output.raw.s"));
-      // output.println(asmProgram);
-      // output.close();
-      // new BasicAllocator().visit((ASMRoot) asmProgram);
-      // output = new PrintStream(new FileOutputStream("src/test/mx/output.s"));
-      // output.println(asmProgram);
-      // output.close();
-      // System.out.println(irProgram);
+      ASMNode asmProgram = new InstSelector().visit((IRRoot) irProgram);
+      output = new PrintStream(new FileOutputStream("src/test/mx/output.raw.s"));
+      output.println(asmProgram);
+      output.close();
+      new BasicAllocator().visit((ASMRoot) asmProgram);
+      output = new PrintStream(new FileOutputStream("src/test/mx/output.s"));
+      output.println(asmProgram);
+      output.close();
+      System.out.println(asmProgram);
     // } catch (BaseError e) {
     //   System.err.println(e.getMessage());
     //   System.exit(1);

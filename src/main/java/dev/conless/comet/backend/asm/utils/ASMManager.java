@@ -1,11 +1,14 @@
 package dev.conless.comet.backend.asm.utils;
 
 import dev.conless.comet.backend.asm.entity.ASMPhysicalReg;
+import dev.conless.comet.backend.asm.node.stmt.ASMBlockStmtNode;
+import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.container.Set;
 
 public class ASMManager {
   protected ASMCounter counter; // for instruction selection
   protected BuiltInRegs regs;
+  protected Map<String, ASMBlockStmtNode> name2Block;
 
   protected int allocatedMem; // for register allocation
   protected Set<ASMPhysicalReg> usedRegs;
@@ -13,7 +16,7 @@ public class ASMManager {
   protected ASMManager() {
     this.counter = new ASMCounter();
     this.regs = new BuiltInRegs();
-    
+    this.name2Block = new Map<>();
   }
 
   protected String getLabelName(String str) {
