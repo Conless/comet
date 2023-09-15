@@ -253,7 +253,9 @@ public class Mem2Reg {
     }
     var newNodes = new Array<IRInstNode>();
     for (var inst : node.getNodes()) {
-      if (inst instanceof IRLoadNode) {
+      if (inst instanceof IRAllocaNode) {
+        continue;
+      } else if (inst instanceof IRLoadNode) {
         if (((IRLoadNode) inst).getSrc().isVar()) {
           continue;
         }

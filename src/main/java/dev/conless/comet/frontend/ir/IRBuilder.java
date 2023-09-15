@@ -450,6 +450,7 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     } else {
       var stmt = new IRIfStmtNode(num, condInst, trueInst, falseInst);
       var dest = new IRVariable(trueInst.getDest().getType(), "%.arith." + String.valueOf(counter.arithCount++));
+      instList.appendNodes(stmt);
       instList.addNode(new IRPhiNode(dest, trueInst.getDest().getType(), new Array<Pair<IREntity, String>>(
           new Pair<>(trueInst.getDest(), stmt.getBodyLabel()), new Pair<>(falseInst.getDest(), stmt.getElseLabel()))));
       instList.setDest(dest);
