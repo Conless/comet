@@ -23,6 +23,7 @@ import dev.conless.comet.frontend.ir.node.stmt.IRBlockStmtNode;
 import dev.conless.comet.frontend.ir.node.utils.*;
 import dev.conless.comet.frontend.ir.type.IRStructType;
 import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.error.*;
 
@@ -55,17 +56,22 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   public ASMNode visit(IRFuncDefNode node) throws BaseError {
     var func = new ASMFuncDefNode(node.getName());
     counter = new ASMCounter();
+    name2Block = new Map<>();
+    ASMVirtualReg.resetCount();
     var paramCount = 0;
     var paramSum = node.getParams().size();
+    var paramStmt = new ASMBlockStmtNode(new ASMLabelNode(getLabelName("init")));
     for (var param : node.getParams()) {
+      var paramInst = (ASMStmtNode) param.accept(this);
+      var paramDest = paramInst.getDest();
       if (paramCount < 8) {
-        counter.param2Addr.put(param.getValue(), new ASMAddress(regs.getArgRegs().get(paramCount), 0));
+        paramStmt.addNode(new ASMMoveNode(regs.getArgRegs().get(paramCount), paramDest));
       } else {
-        counter.param2Addr.put(param.getValue(), new ASMAddress(regs.getS0(), 4 * (paramSum - paramCount + 1)));
+        paramStmt.addNode(new ASMLoadNode(paramDest, new ASMAddress(regs.getS0(), 4 * (paramSum - paramCount + 1))));
       }
       paramCount++;
     }
-    ASMVirtualReg.resetCount();
+    func.addBlock(paramStmt);
     for (var block : node.getBody()) {
       func.addBlock((ASMBlockStmtNode) block.accept(this));
     }
@@ -239,8 +245,9 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     var indexInst = (ASMStmtNode) node.getIndices().getLast().accept(this);
     instList.appendNodes(indexInst);
     var indexReg = indexInst.getDest();
-    instList.addNode(new ASMUnaryNode("slli", indexReg, indexReg, 2));
-    instList.addNode(new ASMBinaryNode("add", destReg, srcReg, indexReg));
+    var memIndexReg = new ASMVirtualReg();
+    instList.addNode(new ASMUnaryNode("slli", memIndexReg, indexReg, 2));
+    instList.addNode(new ASMBinaryNode("add", destReg, srcReg, memIndexReg));
     return instList;
   }
 
@@ -270,10 +277,10 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   public ASMNode visit(IRPhiNode node) throws BaseError {
     var destInst = (ASMStmtNode) node.getDest().accept(this);
     var destReg = destInst.getDest();
-    destInst.addNode(new ASMCommentNode(node.toString()));
     for (var pair : node.getValues()) {
       var srcInst = (ASMStmtNode) pair.a.accept(this);
       var targetBlock = name2Block.get(pair.b);
+      targetBlock.addNode(new ASMCommentNode(node.toString()));
       targetBlock.appendNodes(srcInst);
       targetBlock.appendNodes(destInst);
       targetBlock.addNode(new ASMMoveNode(srcInst.getDest(), destReg));
@@ -337,11 +344,6 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
   @Override
   public ASMNode visit(IRVariable node) throws BaseError {
     var instList = new ASMStmtNode();
-    if (node.getValue().endsWith(".param") && !(counter.param2Addr.get(node.getValue()).getBase()).equals(regs.getSp())) {
-      var addr = counter.param2Addr.get(node.getValue());
-      instList.setDest(addr.getBase());
-      return instList;
-    }
     if (node.isGlobal()) {
       var destReg = new ASMVirtualReg();
       instList.addNode(new ASMLoadAddrNode(destReg, node.getValue().substring(1)));
