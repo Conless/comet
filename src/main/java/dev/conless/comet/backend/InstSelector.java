@@ -1,4 +1,4 @@
-package dev.conless.comet.backend.asm;
+package dev.conless.comet.backend;
 
 import dev.conless.comet.backend.asm.entity.ASMAddress;
 import dev.conless.comet.backend.asm.entity.ASMVirtualReg;

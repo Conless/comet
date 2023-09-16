@@ -36,9 +36,7 @@ public class IRFuncDefNode extends IRNode {
     if (!entryBlock.getLabelName().equals("entry")) {
       throw new RuntimeError("First block must be entry");
     }
-    if (name.equals("main")) {
-      entryBlock.addFront(new IRCallNode("global.var.init", new Array<>()));
-    } else if (params.size() > 0) {
+    if (params.size() > 0) {
       var instList = new IRStmtNode();
       for (var param : params) {
         if (!param.getValue().endsWith(".param")) {

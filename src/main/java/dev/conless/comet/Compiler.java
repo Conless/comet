@@ -4,10 +4,10 @@ import java.io.*;
 
 import org.antlr.v4.runtime.*;
 
-import dev.conless.comet.backend.asm.InstSelector;
+import dev.conless.comet.backend.BasicAllocator;
+import dev.conless.comet.backend.InstSelector;
 import dev.conless.comet.backend.asm.node.ASMNode;
 import dev.conless.comet.backend.asm.node.ASMRoot;
-import dev.conless.comet.backend.asm.utils.BasicAllocator;
 import dev.conless.comet.frontend.ast.*;
 import dev.conless.comet.frontend.ast.node.*;
 import dev.conless.comet.frontend.grammar.*;
@@ -19,9 +19,9 @@ import dev.conless.comet.utils.error.*;
 
 public class Compiler {
   public static void main(String[] args) throws Exception {
-    try {
-      var input = CharStreams.fromStream(System.in);
-      // var input = CharStreams.fromStream(new FileInputStream("src/test/mx/input.mx"));
+    // try {
+      // var input = CharStreams.fromStream(System.in);
+      var input = CharStreams.fromStream(new FileInputStream("src/test/mx/input.mx"));
       Meteor lexer = new Meteor(input);
       lexer.removeErrorListeners();
       lexer.addErrorListener(new CometErrorListener());
@@ -45,9 +45,9 @@ public class Compiler {
       // output.println(asmProgram);
       // output.close();
       System.out.println(asmProgram);
-    } catch (BaseError e) {
-      System.err.println(e.getMessage());
-      System.exit(1);
-    }
+    // } catch (BaseError e) {
+    //   System.err.println(e.getMessage());
+    //   System.exit(1);
+    // }
   }
 }

@@ -60,7 +60,11 @@ public class IRBuilder extends IRManager implements ASTVisitor<IRNode> {
     }
     for (var def : node.getDefs()) {
       if (def instanceof ASTFuncDefNode) {
-        program.addFunc((IRFuncDefNode) def.accept(this));
+        var func = (IRFuncDefNode) def.accept(this);
+        if (def.getName().equals("main")) {
+          func.getBody().get(0).addFront(new IRCallNode("global.var.init", new Array<>()));
+        }
+        program.addFunc(func);
       }
     }
     var initBlock = initNode.getBody().get(0);
