@@ -10,9 +10,6 @@ public class ASMManager {
   protected BuiltInRegs regs;
   protected Map<String, ASMBlockStmtNode> name2Block;
 
-  protected int allocatedMem; // for register allocation
-  protected Set<ASMPhysicalReg> usedRegs;
-
   protected ASMManager() {
     this.counter = new ASMCounter();
     this.regs = new BuiltInRegs();
