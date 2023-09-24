@@ -1,8 +1,10 @@
 package dev.conless.comet.backend.asm.node.stmt;
 
 import dev.conless.comet.backend.asm.ASMVisitor;
+import dev.conless.comet.backend.asm.entity.ASMVirtualReg;
 import dev.conless.comet.backend.asm.node.utils.ASMCommentNode;
 import dev.conless.comet.backend.asm.node.utils.ASMLabelNode;
+import dev.conless.comet.utils.container.Set;
 import dev.conless.comet.utils.error.RuntimeError;
 
 @lombok.Getter
@@ -10,6 +12,8 @@ import dev.conless.comet.utils.error.RuntimeError;
 public class ASMBlockStmtNode extends ASMStmtNode {
   private ASMLabelNode label;
   private ASMStmtNode exitInst;
+  private Set<ASMVirtualReg> uses;
+  private Set<ASMVirtualReg> defs;
 
   public ASMBlockStmtNode(ASMLabelNode label) {
     this.label = label;
@@ -19,7 +23,7 @@ public class ASMBlockStmtNode extends ASMStmtNode {
   @Override
   public String toString() {
     var str = label.toString() + "\n";
-    for (var node : getNodes()) {
+    for (var node : getInsts()) {
       if (node instanceof ASMLabelNode) {
         throw new RuntimeError("ASMLabelNode should not appear in ASMBlockStmtNode");
       }
@@ -29,7 +33,7 @@ public class ASMBlockStmtNode extends ASMStmtNode {
         str += "  " + node.toString() + "\n";
       }
     }
-    for (var node : exitInst.getNodes()) {
+    for (var node : exitInst.getInsts()) {
       if (node instanceof ASMCommentNode) {
         str += node.toString() + "\n";
       } else {

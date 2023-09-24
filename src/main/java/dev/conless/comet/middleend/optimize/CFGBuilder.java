@@ -6,11 +6,14 @@ import dev.conless.comet.frontend.ir.node.IRRoot;
 import dev.conless.comet.frontend.ir.node.def.IRFuncDefNode;
 import dev.conless.comet.frontend.ir.node.inst.*;
 import dev.conless.comet.frontend.ir.node.stmt.IRBlockStmtNode;
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.error.RuntimeError;
 
 public class CFGBuilder {
   private Map<String, IRBlockStmtNode> label2Block;
+  private Set<IRBlockStmtNode> visited = new Set<>();
+  private IRFuncDefNode currentFunc;
 
   public void visit(IRRoot node) {
     for (var func : node.getFuncs()) {
@@ -19,7 +22,7 @@ public class CFGBuilder {
   }
 
   private void visit(IRFuncDefNode node) {
-    var blocks = node.getBody();
+    var blocks = node.getBlocks();
     label2Block = new Map<>();
     for (var block : blocks) {
       label2Block.put(block.getLabelName(), block);
@@ -42,6 +45,8 @@ public class CFGBuilder {
     for (var block : deadBlock) {
       blocks.remove(block);
     }
+    currentFunc = node;
+    calcRpo(node.getBlocks().get(0));
 
     // for (var block : blocks) {
     //   var str = "succ: ";
@@ -57,8 +62,19 @@ public class CFGBuilder {
     // }
   }
 
+  void calcRpo(IRBlockStmtNode block) {
+    visited.add(block);
+    for (var succ : block.getSuccessors()) {
+      if (!visited.contains(succ)) {
+        calcRpo(succ);
+      }
+    }
+    currentFunc.getBlock2order().put(block, currentFunc.getBlock2order().size());
+    currentFunc.getOrder2block().add(0, block);
+  }
+
   private void visit(IRBlockStmtNode node) {
-    for (var inst : node.getNodes()) {
+    for (var inst : node.getInsts()) {
       if (inst instanceof IRStoreNode storeInst) {
         if (storeInst.getDest().isVar()) {
           node.getDefs().put(storeInst.getDest(), storeInst.getSrc());

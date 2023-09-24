@@ -22,25 +22,25 @@ public class IRIfStmtNode extends IRStmtNode {
     var bodyLabel = new IRLabelNode("if." + String.valueOf(num) + ".body");
     var elseLabel = new IRLabelNode("if." + String.valueOf(num) + ".else");
     var endLabel = new IRLabelNode("if." + String.valueOf(num) + ".end");
-    addNode(new IRJumpNode(condLabel.getName()));
+    addInst(new IRJumpNode(condLabel.getName()));
     cond.addFront(condLabel);
-    appendNodes(cond);
+    appendInsts(cond);
     this.condLabel = cond.getLastLabel();
-    addNode(
+    addInst(
         new IRBranchNode(cond.getDest(), body == null ? endLabel.getName() : bodyLabel.getName(),
             elseBody == null ? endLabel.getName() : elseLabel.getName()));
     if (body != null) {
       body.addFront(bodyLabel);
       this.bodyLabel = body.getLastLabel();
-      appendNodes(body);
-      addNode(new IRJumpNode(endLabel.getName()));
+      appendInsts(body);
+      addInst(new IRJumpNode(endLabel.getName()));
     }
     if (elseBody != null) {
       elseBody.addFront(elseLabel);
       this.elseLabel = elseBody.getLastLabel();
-      appendNodes(elseBody);
-      addNode(new IRJumpNode(endLabel.getName()));
+      appendInsts(elseBody);
+      addInst(new IRJumpNode(endLabel.getName()));
     }
-    addNode(endLabel);
+    addInst(endLabel);
   }
 }

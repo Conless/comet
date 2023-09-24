@@ -61,7 +61,7 @@ public class IRBlockStmtNode extends IRStmtNode implements Comparable<IRBlockStm
     for (var phi : phiMap.values()) {
       str += "  " + phi.toString() + "\n";
     }
-    str += getNodes().toString("  ", "\n", "\n") + "  " + exitInst.toString();
+    str += getInsts().toString("  ", "\n", "\n") + "  " + exitInst.toString();
     return str;
   }
 

@@ -49,23 +49,23 @@ public class StackManager extends ASMManager implements ASMVisitor<ASMNode> {
     var end = new ASMStmtNode();
     var totalMem = node.getSpilled() + node.getUsedRegs().size();
     if (totalMem != 0) {
-      begin.addNode(new ASMMoveNode(regs.getSp(), regs.getS8()));
-      begin.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), -4 * totalMem));
+      begin.addInst(new ASMMoveNode(regs.getSp(), regs.getS8()));
+      begin.addInst(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), -4 * totalMem));
       var regsCount = 0;
       for (var reg : node.getUsedRegs()) {
-        begin.addNode(new ASMStoreNode(reg, new ASMAddress(regs.getSp(), 4 * (node.getSpilled() + regsCount))));
-        end.addNode(new ASMLoadNode(reg, new ASMAddress(regs.getSp(), 4 * (node.getSpilled() + regsCount))));
+        begin.addInst(new ASMStoreNode(reg, new ASMAddress(regs.getSp(), 4 * (node.getSpilled() + regsCount))));
+        end.addInst(new ASMLoadNode(reg, new ASMAddress(regs.getSp(), 4 * (node.getSpilled() + regsCount))));
         regsCount++;
       }
-      end.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), 4 * totalMem));
+      end.addInst(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), 4 * totalMem));
     }
-    begin.getNodes().addAll(blocks.get(0).getNodes());
-    blocks.get(0).setNodes(begin.getNodes());
+    begin.getInsts().addAll(blocks.get(0).getInsts());
+    blocks.get(0).setInsts(begin.getInsts());
     for (var block : blocks) { // the ret instruction can only appear in the last
-      if (block.getExitInst().getNodes().getLast() instanceof ASMReturnNode) {
-        block.getExitInst().getNodes().removeLast();
-        block.getExitInst().appendNodes(end);
-        block.getExitInst().addNode(new ASMReturnNode());
+      if (block.getExitInst().getInsts().getLast() instanceof ASMReturnNode) {
+        block.getExitInst().getInsts().removeLast();
+        block.getExitInst().appendInsts(end);
+        block.getExitInst().addInst(new ASMReturnNode());
       }
     }
     return node;

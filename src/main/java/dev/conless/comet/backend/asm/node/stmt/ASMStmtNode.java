@@ -9,19 +9,19 @@ import dev.conless.comet.utils.error.RuntimeError;
 @lombok.Getter
 @lombok.Setter
 public class ASMStmtNode extends ASMNode {
-  private Array<ASMInstNode> nodes;
+  private Array<ASMInstNode> insts;
   private ASMReg dest;
 
   public ASMStmtNode() {
-    nodes = new Array<>();
+    insts = new Array<>();
   }
 
-  public void addNode(ASMInstNode node) {
-    nodes.add(node);
+  public void addInst(ASMInstNode inst) {
+    insts.add(inst);
   }
 
-  public void appendNodes(ASMStmtNode nodes) {
-    this.nodes.addAll(nodes.nodes);
+  public void appendInsts(ASMStmtNode nodes) {
+    this.insts.addAll(nodes.insts);
   }
   
   @Override

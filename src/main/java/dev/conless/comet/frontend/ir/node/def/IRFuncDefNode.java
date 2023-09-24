@@ -15,6 +15,7 @@ import dev.conless.comet.frontend.ir.node.utils.IRLabelNode;
 import dev.conless.comet.frontend.ir.type.IRType;
 import dev.conless.comet.frontend.utils.scope.GlobalScope;
 import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.error.BaseError;
 import dev.conless.comet.utils.error.RuntimeError;
 
@@ -24,15 +25,17 @@ public class IRFuncDefNode extends IRNode {
   private String name;
   private Array<IRVariable> params;
   private IRType returnType;
-  private Array<IRBlockStmtNode> body;
+  private Array<IRBlockStmtNode> blocks;
+  Map<IRBlockStmtNode, Integer> block2order = new Map<>();
+  Array<IRBlockStmtNode> order2block = new Array<>();
 
-  public IRFuncDefNode(String name, Array<IRVariable> params, IRType returnType, Array<IRBlockStmtNode> body) {
+  public IRFuncDefNode(String name, Array<IRVariable> params, IRType returnType, Array<IRBlockStmtNode> blocks) {
     this.name = name;
     this.params = params;
     this.returnType = returnType;
-    this.body = body;
+    this.blocks = blocks;
 
-    var entryBlock = body.get(0);
+    var entryBlock = blocks.get(0);
     if (!entryBlock.getLabelName().equals("entry")) {
       throw new RuntimeError("First block must be entry");
     }
@@ -43,8 +46,8 @@ public class IRFuncDefNode extends IRNode {
           throw new RuntimeError("Invalid parameter name: " + param.getValue());
         }
         var paramPtr = new IRVariable(GlobalScope.irPtrType, param.getValue().replace(".param", ""));
-        instList.addNode(new IRAllocaNode(paramPtr, param.getType()));
-        instList.addNode(new IRStoreNode(paramPtr, param));
+        instList.addInst(new IRAllocaNode(paramPtr, param.getType()));
+        instList.addInst(new IRStoreNode(paramPtr, param));
       }
       entryBlock.appendFront(instList);
     }
@@ -54,7 +57,7 @@ public class IRFuncDefNode extends IRNode {
   public String toString() {
     String str = "define " + returnType.toString() + " @" + name + "(";
     str += params.toString(", ") + ") {\n";
-    str += body.toString("\n");
+    str += blocks.toString("\n");
     str += "\n}";
     return str;
   }

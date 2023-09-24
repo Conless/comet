@@ -19,6 +19,13 @@ public class ASMPhysicalReg extends ASMReg implements java.lang.Comparable<ASMPh
 
   @Override
   public int compareTo(ASMPhysicalReg o) {
-    return this.getName().compareTo(o.getName());
+    var str1 = getName().substring(1);
+    var str2 = o.getName().substring(1);
+
+    try {
+      return Integer.parseInt(str1) - Integer.parseInt(str2);
+    } catch (NumberFormatException e) {
+      return getName().compareTo(o.getName());
+    }
   }
 }

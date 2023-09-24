@@ -97,7 +97,7 @@ public class LinearScanAllocator extends RegAllocator {
     int position = 0;
     for (var block : node.getBlocks()) {
       if (block.getLabel().getLabel().endsWith("init")) {
-        for (var inst : block.getNodes()) {
+        for (var inst : block.getInsts()) {
           var def = inst.getDef();
           if (def != null) {
             var interval = new LiveInterval(def, -1, -1);
@@ -106,7 +106,7 @@ public class LinearScanAllocator extends RegAllocator {
         }
         continue;
       }
-      for (var inst : block.getNodes()) {
+      for (var inst : block.getInsts()) {
         position++;
         var uses = inst.getUses();
         for (var use : uses) {
@@ -124,7 +124,7 @@ public class LinearScanAllocator extends RegAllocator {
           }
         }
       }
-      for (var inst : block.getExitInst().getNodes()) {
+      for (var inst : block.getExitInst().getInsts()) {
         position++;
         var uses = inst.getUses();
         for (var use : uses) {
@@ -187,7 +187,7 @@ public class LinearScanAllocator extends RegAllocator {
   }
 
   @Override
-  public ASMPhysicalReg getRValueReg(ASMReg reg, ASMStmtNode nodes) {
+  public ASMPhysicalReg getRValueReg(ASMReg reg, ASMStmtNode insts) {
     if (reg instanceof ASMPhysicalReg phyReg) {
       return phyReg;
     }
@@ -199,7 +199,7 @@ public class LinearScanAllocator extends RegAllocator {
       return (ASMPhysicalReg) addr.getBase();
     }
     var newReg = cleanRegs.pollFirst();
-    nodes.addNode(new ASMLoadNode(newReg, addr));
+    insts.addInst(new ASMLoadNode(newReg, addr));
     newReg.setVirtualID(addr.getOffset());
     return newReg;
   }
@@ -223,13 +223,13 @@ public class LinearScanAllocator extends RegAllocator {
   }
 
   @Override
-  public void evictReg(ASMStmtNode nodes, ASMPhysicalReg... dirtyRegs) {
+  public void evictReg(ASMStmtNode insts, ASMPhysicalReg... dirtyRegs) {
     for (var reg : dirtyRegs) {
       if (!regs.getTempRegs().contains(reg)) {
         continue;
       }
       if (reg.isDirty()) {
-        nodes.addNode(new ASMStoreNode(reg, new ASMAddress(regs.getSp(), reg.getVirtualID())));
+        insts.addInst(new ASMStoreNode(reg, new ASMAddress(regs.getSp(), reg.getVirtualID())));
         reg.setDirty(false);
         reg.setVirtualID(-1);
       }

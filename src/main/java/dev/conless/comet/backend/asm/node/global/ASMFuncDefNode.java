@@ -16,19 +16,25 @@ import dev.conless.comet.utils.container.Set;
 @lombok.Setter
 public final class ASMFuncDefNode extends ASMNode {
   private String name;
+  private int paramCount;
   private Array<ASMBlockStmtNode> blocks;
   private Set<ASMPhysicalReg> usedRegs;
-  private int memUsed;
+  private int spilled;
 
-  public ASMFuncDefNode(String name) {
+  public ASMFuncDefNode(String name, int paramCount) {
     this.name = name;
-    this.memUsed = 0;
+    this.paramCount = paramCount;
+    this.spilled = 0;
     this.blocks = new Array<>();
     this.usedRegs = new Set<>();
   }
 
   public void addBlock(ASMBlockStmtNode block) {
     blocks.add(block);
+  }
+
+  public void addSpilled() {
+    this.spilled++;
   }
 
   @Override

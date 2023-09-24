@@ -20,24 +20,24 @@ public class IRLoopStmtNode extends IRStmtNode {
     var bodyTag = new IRLabelNode("loop." + String.valueOf(num) + ".body");
     var endTag = new IRLabelNode("loop." + String.valueOf(num) + ".end");
     if (init != null) {
-      appendNodes(init);
+      appendInsts(init);
     }
-    addNode(new IRJumpNode(condTag.getName()));
-    addNode(condTag);
+    addInst(new IRJumpNode(condTag.getName()));
+    addInst(condTag);
     if (cond != null) {
-      appendNodes(cond);
-      addNode(new IRBranchNode(cond.getDest(), bodyTag.getName(), endTag.getName()));
+      appendInsts(cond);
+      addInst(new IRBranchNode(cond.getDest(), bodyTag.getName(), endTag.getName()));
     } else {
-      addNode(new IRBranchNode(new IRLiteral(GlobalScope.irBoolType, 1), bodyTag.getName(), endTag.getName()));
+      addInst(new IRBranchNode(new IRLiteral(GlobalScope.irBoolType, 1), bodyTag.getName(), endTag.getName()));
     }
-    addNode(bodyTag);
-    appendNodes(body);
-    addNode(new IRJumpNode(updateTag.getName()));
-    addNode(updateTag);
+    addInst(bodyTag);
+    appendInsts(body);
+    addInst(new IRJumpNode(updateTag.getName()));
+    addInst(updateTag);
     if (update != null) {
-      appendNodes(update);
+      appendInsts(update);
     }
-    addNode(new IRJumpNode(condTag.getName()));
-    addNode(endTag);
+    addInst(new IRJumpNode(condTag.getName()));
+    addInst(endTag);
   }
 }

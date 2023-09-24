@@ -47,7 +47,7 @@ public class IRManager {
     var entryBlock = new IRBlockStmtNode("entry");
     var startBlock = blocks.get(0);
     var globalSet = new Map<String, IRType>();
-    for (var node : stmt.getNodes()) {
+    for (var node : stmt.getInsts()) {
       if (node instanceof IRLabelNode) {
         if (blocks.getLast().getExitInst() == null) {
           throw new RuntimeError("Every block should end with an exit inst");
@@ -75,9 +75,9 @@ public class IRManager {
         if (node instanceof IRJumpNode || node instanceof IRBranchNode || node instanceof IRReturnNode) {
           blocks.getLast().setExitInst(node);
         } else if (node instanceof IRAllocaNode) {
-          entryBlock.addNode(node);
+          entryBlock.addInst(node);
         } else {
-          blocks.getLast().addNode(node);
+          blocks.getLast().addInst(node);
         }
       }
     }
@@ -87,9 +87,9 @@ public class IRManager {
     // for (var global : globalSet.entrySet()) {
     //   var newVar = new IRVariable(GlobalScope.irPtrType, global.getKey().replace("@", "%"));
     //   var tempVar = new IRVariable(global.getValue(), newVar.getValue() + ".temp.0");
-    //   entryBlock.addNode(new IRLoadNode(tempVar, new IRVariable(GlobalScope.irPtrType, global.getKey())));
-    //   entryBlock.addNode(new IRAllocaNode(newVar, global.getValue()));
-    //   entryBlock.addNode(new IRStoreNode(newVar, tempVar));
+    //   entryBlock.addInst(new IRLoadNode(tempVar, new IRVariable(GlobalScope.irPtrType, global.getKey())));
+    //   entryBlock.addInst(new IRAllocaNode(newVar, global.getValue()));
+    //   entryBlock.addInst(new IRStoreNode(newVar, tempVar));
     // }
     // var counter = 0;
     // for (var block : blocks) {
@@ -100,12 +100,12 @@ public class IRManager {
     //   for (var global : globalSet.entrySet()) {
     //     var newVar = new IRVariable(GlobalScope.irPtrType, global.getKey().replace("@", "%"));
     //     var tempVar = new IRVariable(global.getValue(), newVar.getValue() + ".temp." + ++counter);
-    //     exitNodes.addNode(new IRLoadNode(tempVar, newVar));
-    //     exitNodes.addNode(new IRStoreNode(new IRVariable(GlobalScope.irPtrType, global.getKey()), tempVar));
+    //     exitNodes.addInst(new IRLoadNode(tempVar, newVar));
+    //     exitNodes.addInst(new IRStoreNode(new IRVariable(GlobalScope.irPtrType, global.getKey()), tempVar));
     //   }
-    //   block.appendNodes(exitNodes);
+    //   block.appendInsts(exitNodes);
     // }
-    entryBlock.appendNodes(startBlock);
+    entryBlock.appendInsts(startBlock);
     entryBlock.setExitInst(startBlock.getExitInst());
     blocks.set(0, entryBlock);
     return blocks;
@@ -178,9 +178,9 @@ public class IRManager {
     var allocaVar = new IRVariable(GlobalScope.irPtrType, "%.alloca." + String.valueOf(counter.allocaCount++));
     var alloca = new IRCallNode(allocaVar, GlobalScope.irPtrType, "malloc",
         new Array<>(new IRLiteral(GlobalScope.irIntType, name2Size.get(new IRType(typeInfo, true).getTypeName()))));
-    instList.addNode(alloca);
+    instList.addInst(alloca);
     if (!typeInfo.isBuiltIn()) {
-      instList.addNode(
+      instList.addInst(
           new IRCallNode(String.format("__class.%s", typeInfo.getName(), typeInfo.getName()), new Array<>(allocaVar)));
     }
     instList.setDest(allocaVar);

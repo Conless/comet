@@ -30,22 +30,22 @@ public abstract class RegAllocator extends ASMManager implements ASMVisitor<ASMN
   @Override
   public ASMNode visit(ASMBlockStmtNode node) {
     var stmts = new ASMStmtNode();
-    for (var inst : node.getNodes()) {
+    for (var inst : node.getInsts()) {
       var newStmt = inst.accept(this);
       if (newStmt instanceof ASMStmtNode newStmts) {
-        stmts.appendNodes(newStmts);
+        stmts.appendInsts(newStmts);
       } else {
-        stmts.addNode((ASMInstNode) newStmt);
+        stmts.addInst((ASMInstNode) newStmt);
       }
     }
-    node.setNodes(stmts.getNodes());
+    node.setInsts(stmts.getInsts());
     var exitInst = new ASMStmtNode();
-    for (var inst : node.getExitInst().getNodes()) {
+    for (var inst : node.getExitInst().getInsts()) {
       var newStmt = inst.accept(this);
       if (newStmt instanceof ASMStmtNode newStmts) {
-        exitInst.appendNodes(newStmts);
+        exitInst.appendInsts(newStmts);
       } else {
-        exitInst.addNode((ASMInstNode) newStmt);
+        exitInst.addInst((ASMInstNode) newStmt);
       }
     }
     node.setExitInst(exitInst);
@@ -67,7 +67,7 @@ public abstract class RegAllocator extends ASMManager implements ASMVisitor<ASMN
     var instList = new ASMStmtNode();
     var reg = getRValueReg(node.getEntity(), instList);
     node.setEntity(reg);
-    instList.addNode(node);
+    instList.addInst(node);
     evictReg(instList, reg);
     return instList;
   }
@@ -81,7 +81,7 @@ public abstract class RegAllocator extends ASMManager implements ASMVisitor<ASMN
     node.setLhs(lhs);
     node.setRhs(rhs);
     node.setDest(dest);
-    instList.addNode(node);
+    instList.addInst(node);
     evictReg(instList, lhs, rhs, dest);
     return instList;
   }
@@ -102,7 +102,7 @@ public abstract class RegAllocator extends ASMManager implements ASMVisitor<ASMN
     var instList = new ASMStmtNode();
     var dest = getLValueReg(node.getDest());
     node.setDest(dest);
-    instList.addNode(node);
+    instList.addInst(node);
     evictReg(instList, dest);
     return instList;
   }
@@ -112,7 +112,7 @@ public abstract class RegAllocator extends ASMManager implements ASMVisitor<ASMN
     var instList = new ASMStmtNode();
     var dest = getLValueReg(node.getDest());
     node.setDest(dest);
-    instList.addNode(node);
+    instList.addInst(node);
     evictReg(instList, dest);
     return instList;
   }
@@ -124,7 +124,7 @@ public abstract class RegAllocator extends ASMManager implements ASMVisitor<ASMN
     var addr = getRValueReg(node.getSrc().getBase(), instList);
     node.setDest(dest);
     node.setSrc(new ASMAddress(addr, node.getSrc().getOffset()));
-    instList.addNode(node);
+    instList.addInst(node);
     evictReg(instList, dest, addr);
     return instList;
   }
@@ -136,7 +136,7 @@ public abstract class RegAllocator extends ASMManager implements ASMVisitor<ASMN
     var dest = getLValueReg(node.getDest());
     node.setSrc(src);
     node.setDest(dest);
-    instList.addNode(node);
+    instList.addInst(node);
     evictReg(instList, src, dest);
     return instList;
   }
@@ -153,7 +153,7 @@ public abstract class RegAllocator extends ASMManager implements ASMVisitor<ASMN
     var dest = getRValueReg(node.getDest().getBase(), instList);
     node.setSrc(src);
     node.setDest(new ASMAddress(dest, node.getDest().getOffset()));
-    instList.addNode(node);
+    instList.addInst(node);
     evictReg(instList, src, dest);
     return instList;
   }
@@ -165,7 +165,7 @@ public abstract class RegAllocator extends ASMManager implements ASMVisitor<ASMN
     var dest = getLValueReg(node.getDest());
     node.setOperand(src);
     node.setDest(dest);
-    instList.addNode(node);
+    instList.addInst(node);
     evictReg(instList, src, dest);
     return instList;
   }
@@ -183,6 +183,6 @@ public abstract class RegAllocator extends ASMManager implements ASMVisitor<ASMN
   public abstract ASMPhysicalReg getRValueReg(ASMReg reg, ASMStmtNode nodes);
 
   public abstract ASMPhysicalReg getLValueReg(ASMReg reg);
-  
+
   public abstract void evictReg(ASMStmtNode nodes, ASMPhysicalReg... dirtyRegs);
 }

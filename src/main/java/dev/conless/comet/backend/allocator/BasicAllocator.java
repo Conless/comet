@@ -53,7 +53,7 @@ public class BasicAllocator extends RegAllocator {
   }
 
   @Override
-  public ASMPhysicalReg getRValueReg(ASMReg reg, ASMStmtNode nodes) {
+  public ASMPhysicalReg getRValueReg(ASMReg reg, ASMStmtNode insts) {
     if (reg instanceof ASMPhysicalReg) {
       return (ASMPhysicalReg) reg;
     }
@@ -61,7 +61,7 @@ public class BasicAllocator extends RegAllocator {
     if (newReg == null) {
       throw new RuntimeError("No more clean registers");
     }
-    nodes.addNode(
+    insts.addInst(
         new ASMLoadNode(newReg, new ASMAddress(regs.getSp(), 4 * ((ASMVirtualReg) reg).getID())));
     currentFunc.getUsedRegs().add(newReg);
     return newReg;
@@ -84,13 +84,13 @@ public class BasicAllocator extends RegAllocator {
   }
 
   @Override
-  public void evictReg(ASMStmtNode nodes, ASMPhysicalReg... dirtyRegs) {
+  public void evictReg(ASMStmtNode insts, ASMPhysicalReg... dirtyRegs) {
     for (var reg : dirtyRegs) {
       if (!regs.getTempRegs().contains(reg)) {
         continue;
       }
       if (reg.isDirty()) {
-        nodes.addNode(new ASMStoreNode(reg, new ASMAddress(regs.getSp(), 4 * reg.getVirtualID())));
+        insts.addInst(new ASMStoreNode(reg, new ASMAddress(regs.getSp(), 4 * reg.getVirtualID())));
         reg.setDirty(false);
         reg.setVirtualID(-1);
       }
