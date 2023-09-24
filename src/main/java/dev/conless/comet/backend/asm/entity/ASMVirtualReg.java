@@ -1,7 +1,7 @@
 package dev.conless.comet.backend.asm.entity;
 
 @lombok.Getter
-public class ASMVirtualReg extends ASMReg {
+public class ASMVirtualReg extends ASMReg implements Comparable<ASMVirtualReg> {
   private static int count = 0;
 
   public ASMVirtualReg() {
@@ -23,5 +23,10 @@ public class ASMVirtualReg extends ASMReg {
   @Override
   public String toString() {
     return "%" + getName();
+  }
+
+  @Override
+  public int compareTo(ASMVirtualReg o) {
+    return this.getID() - o.getID();
   }
 }

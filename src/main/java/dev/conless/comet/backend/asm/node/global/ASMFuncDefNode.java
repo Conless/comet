@@ -1,6 +1,7 @@
 package dev.conless.comet.backend.asm.node.global;
 
 import dev.conless.comet.backend.asm.ASMVisitor;
+import dev.conless.comet.backend.asm.entity.ASMPhysicalReg;
 import dev.conless.comet.backend.asm.node.ASMNode;
 import dev.conless.comet.backend.asm.node.inst.ASMReturnNode;
 import dev.conless.comet.backend.asm.node.stmt.ASMBlockStmtNode;
@@ -9,18 +10,21 @@ import dev.conless.comet.backend.asm.node.utils.ASMCommentNode;
 import dev.conless.comet.backend.asm.node.utils.ASMLabelNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Pair;
+import dev.conless.comet.utils.container.Set;
 
 @lombok.Getter
 @lombok.Setter
 public final class ASMFuncDefNode extends ASMNode {
   private String name;
   private Array<ASMBlockStmtNode> blocks;
-  private Pair<Integer, Integer> memUsed;
+  private Set<ASMPhysicalReg> usedRegs;
+  private int memUsed;
 
   public ASMFuncDefNode(String name) {
     this.name = name;
-    this.memUsed = null;
+    this.memUsed = 0;
     this.blocks = new Array<>();
+    this.usedRegs = new Set<>();
   }
 
   public void addBlock(ASMBlockStmtNode block) {

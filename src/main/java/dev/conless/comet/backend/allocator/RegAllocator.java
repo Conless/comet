@@ -1,4 +1,4 @@
-package dev.conless.comet.backend;
+package dev.conless.comet.backend.allocator;
 
 import dev.conless.comet.backend.asm.ASMVisitor;
 import dev.conless.comet.backend.asm.entity.ASMPhysicalReg;
