@@ -47,14 +47,14 @@ public class StackManager extends ASMManager implements ASMVisitor<ASMNode> {
     var blocks = node.getBlocks();
     var begin = new ASMStmtNode();
     var end = new ASMStmtNode();
-    var totalMem = node.getMemUsed() + node.getUsedRegs().size();
+    var totalMem = node.getSpilled() + node.getUsedRegs().size();
     if (totalMem != 0) {
       begin.addNode(new ASMMoveNode(regs.getSp(), regs.getS8()));
       begin.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), -4 * totalMem));
       var regsCount = 0;
       for (var reg : node.getUsedRegs()) {
-        begin.addNode(new ASMStoreNode(reg, new ASMAddress(regs.getSp(), 4 * (node.getMemUsed() + regsCount))));
-        end.addNode(new ASMLoadNode(reg, new ASMAddress(regs.getSp(), 4 * (node.getMemUsed() + regsCount))));
+        begin.addNode(new ASMStoreNode(reg, new ASMAddress(regs.getSp(), 4 * (node.getSpilled() + regsCount))));
+        end.addNode(new ASMLoadNode(reg, new ASMAddress(regs.getSp(), 4 * (node.getSpilled() + regsCount))));
         regsCount++;
       }
       end.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), 4 * totalMem));

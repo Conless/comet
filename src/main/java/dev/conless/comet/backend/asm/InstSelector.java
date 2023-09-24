@@ -206,7 +206,8 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     var args = node.getArgs();
     var argCount = 0;
     var stackOffset = 0;
-    if (args.size() == 0 && !node.getType().equals(GlobalScope.irVoidType)) {
+    var isVoid = node.getType().equals(GlobalScope.irVoidType);
+    if (args.size() == 0 && !isVoid) {
       instList.addNode(new ASMMoveNode(regs.getA0(), regs.getS0()));
     }
     for (var arg : args) {
@@ -227,20 +228,21 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     if (stackOffset != 0) {
       instList.addNode(new ASMUnaryNode("addi", regs.getSp(), regs.getSp(), stackOffset * 4));
     }
+    if (!isVoid) {
+      instList.addNode(new ASMMoveNode(regs.getA0(), regs.getS8()));
+      instList.addNode(new ASMMoveNode(regs.getS0(), regs.getA0()));
+    }
+    for (var i = isVoid ? 0 : 1; i < args.size() && i < 8; i++) {
+      instList.addNode(new ASMMoveNode(regs.getSaveRegs().get(i), regs.getArgRegs().get(i)));
+    }
     if (node.getDest() != null) {
       var destInst = (ASMStmtNode) node.getDest().accept(this); // reg can be freed immediately, regAddr can be freed
                                                                 // after call
       instList.appendNodes(destInst);
       var destReg = destInst.getDest();
-      var rv = regs.getA0();
-      instList.addNode(new ASMMoveNode(rv, destReg));
+      instList.addNode(new ASMMoveNode(regs.getS8(), destReg));
     }
-    if (args.size() == 0 && !node.getType().equals(GlobalScope.irVoidType)) {
-      instList.addNode(new ASMMoveNode(regs.getS0(), regs.getA0()));
-    }
-    for (var i = 0; i < args.size() && i < 8; i++) {
-      instList.addNode(new ASMMoveNode(regs.getSaveRegs().get(i), regs.getArgRegs().get(i)));
-    }
+    
     return instList;
   }
 
