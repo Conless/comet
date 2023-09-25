@@ -68,7 +68,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
       if (paramCount < 8) {
         initStmt.addInst(new ASMMoveNode(regs.getArgRegs().get(paramCount), paramDest));
       } else {
-        initStmt.addInst(new ASMLoadNode(paramDest, new ASMAddress(regs.getS8(), 4 * (paramSum - paramCount + 1))));
+        initStmt.addInst(new ASMLoadNode(paramDest, new ASMAddress(regs.getT0(), 4 * (paramSum - paramCount + 1))));
       }
       paramCount++;
     }
@@ -76,6 +76,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     for (var block : node.getBlocks()) {
       func.addBlock((ASMBlockStmtNode) block.accept(this));
     }
+    initStmt.getExitInst().addInst(new ASMJumpNode(func.getBlocks().get(1).getLabel().getLabel()));
     for (var block : node.getBlocks()) {
       for (var phi : block.getPhiMap().values()) {
         phi.accept(this);
@@ -207,9 +208,6 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
     var argCount = 0;
     var stackOffset = 0;
     var isVoid = node.getType().equals(GlobalScope.irVoidType);
-    if (args.size() == 0 && !isVoid) {
-      instList.addInst(new ASMMoveNode(regs.getA0(), regs.getS0()));
-    }
     for (var arg : args) {
       var argInst = (ASMStmtNode) arg.accept(this); // regAddr can be freed immediately, reg can be freed after call
       instList.appendInsts(argInst);
