@@ -1,5 +1,9 @@
 package dev.conless.comet.backend.allocator;
 
+import java.util.function.Function;
+
+import org.antlr.v4.runtime.misc.Pair;
+
 import dev.conless.comet.backend.asm.entity.*;
 import dev.conless.comet.backend.asm.node.ASMNode;
 import dev.conless.comet.backend.asm.node.ASMRoot;
@@ -39,21 +43,6 @@ public class LinearScanAllocator extends RegAllocator {
   private Map<ASMPhysicalReg, LiveInterval> reg2interval;
   private Array<LiveInterval> intervals;
 
-  public LinearScanAllocator() {
-    cleanRegs = new Set<>();
-    freeRegs = new Set<>();
-    for (var reg : regs.getTempRegs()) {
-      cleanRegs.add(reg);
-    }
-    for (var reg : regs.getFreeRegs()) {
-      freeRegs.add(reg);
-    }
-    virtual2reg = new Map<>();
-    virtual2interval = new Map<>();
-    reg2interval = new Map<>();
-    intervals = new Array<>();
-  }
-
   @Override
   public ASMNode visit(ASMNode node) {
     throw new RuntimeError("LinearScanAllocator.visit(ASMNode) should not be called");
@@ -72,6 +61,18 @@ public class LinearScanAllocator extends RegAllocator {
   @Override
   public ASMNode visit(ASMFuncDefNode node) {
     currentFunc = node;
+    cleanRegs = new Set<>();
+    freeRegs = new Set<>();
+    for (var reg : regs.getTempRegs()) {
+      cleanRegs.add(reg);
+    }
+    for (var reg : regs.getFreeRegs()) {
+      freeRegs.add(reg);
+    }
+    virtual2reg = new Map<>();
+    virtual2interval = new Map<>();
+    reg2interval = new Map<>();
+    intervals = new Array<>();
     collectInterval(node);
     int position = -1;
     for (var interval : intervals) {
@@ -94,53 +95,48 @@ public class LinearScanAllocator extends RegAllocator {
   }
 
   public void collectInterval(ASMFuncDefNode node) {
-    int position = 0;
-    for (var block : node.getBlocks()) {
+    var position = 0;
+    for (var block : node.getOrder2Block()) {
       if (block.getLabel().getLabel().endsWith("init")) {
-        for (var inst : block.getInsts()) {
-          var def = inst.getDef();
-          if (def != null) {
-            var interval = new LiveInterval(def, -1, -1);
-            virtual2interval.put(def, interval);
-          }
+        for (var def : block.getLiveOut()) {
+          var interval = new LiveInterval(def, -1, -1);
+          virtual2interval.put(def, interval);
         }
         continue;
       }
-      for (var inst : block.getInsts()) {
-        position++;
-        var uses = inst.getUses();
+      Function<Pair<ASMInstNode, Integer>, Void> visitUses = (inst) -> {
+        var uses = inst.a.getLiveOut();
         for (var use : uses) {
-          virtual2interval.get(use).updateEnd(position);
-        }
-        position++;
-        var def = inst.getDef();
-        if (def != null) {
-          var interval = virtual2interval.get(def);
+          var interval = virtual2interval.get(use);
           if (interval == null) {
-            interval = new LiveInterval(def, position, position);
-            virtual2interval.put(def, interval);
+            interval = new LiveInterval(use, inst.b, inst.b);
+            virtual2interval.put(use, interval);
           } else {
-            interval.updateBegin(position);
+            interval.updateEnd(inst.b);
           }
         }
+        return null;
+      };
+      Function<Pair<ASMInstNode, Integer>, Void> visitDefs = (inst) -> {
+        var defs = inst.a.getLiveIn();
+        for (var def : defs) {
+          var interval = virtual2interval.get(def);
+          if (interval == null) {
+            interval = new LiveInterval(def, inst.b, inst.b);
+            virtual2interval.put(def, interval);
+          } else {
+            interval.updateBegin(inst.b);
+          }
+        }
+        return null;
+      };
+      for (var inst : block.getInsts()) {
+        visitUses.apply(new Pair<>(inst, ++position));
+        visitDefs.apply(new Pair<>(inst, ++position));
       }
       for (var inst : block.getExitInst().getInsts()) {
-        position++;
-        var uses = inst.getUses();
-        for (var use : uses) {
-          virtual2interval.get(use).updateEnd(position);
-        }
-        position++;
-        var def = inst.getDef();
-        if (def != null) {
-          var interval = virtual2interval.get(def);
-          if (interval == null) {
-            interval = new LiveInterval(def, position, position);
-            virtual2interval.put(def, interval);
-          } else {
-            interval.updateBegin(position);
-          }
-        }
+        visitUses.apply(new Pair<>(inst, ++position));
+        visitDefs.apply(new Pair<>(inst, ++position));
       }
     }
     intervals.addAll(virtual2interval.values());
