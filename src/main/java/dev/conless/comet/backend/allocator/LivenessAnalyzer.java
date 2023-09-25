@@ -10,6 +10,7 @@ import dev.conless.comet.backend.asm.node.inst.ASMInstNode;
 import dev.conless.comet.backend.asm.node.inst.ASMJumpNode;
 import dev.conless.comet.backend.asm.node.stmt.ASMBlockStmtNode;
 import dev.conless.comet.frontend.ir.node.stmt.IRBlockStmtNode;
+import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.container.Set;
 
@@ -110,14 +111,18 @@ public class LivenessAnalyzer {
   }
 
   public void visit(ASMBlockStmtNode node) {
-    System.out.println(node.getLabel().getLabel());
+    removeDeadCode(node);
     var live = new Set<ASMVirtualReg>(node.getLiveOut());
     Function<ASMInstNode, Void> visitInst = (inst) -> {
       inst.setLiveOut(new Set<ASMVirtualReg>(live));
-      live.addAll(inst.getUses());
       if (inst.getDef() != null) {
-        live.remove(inst.getDef());
+        if (!live.contains(inst.getDef())) {
+          return null;
+        } else {
+          live.remove(inst.getDef());
+        }
       }
+      live.addAll(inst.getUses());
       inst.setLiveIn(new Set<ASMVirtualReg>(live));
       return null;
     };
@@ -128,4 +133,37 @@ public class LivenessAnalyzer {
       visitInst.apply(node.getInsts().get(i));
     }
   }
-}
+  
+  public void removeDeadCode(ASMBlockStmtNode node) {
+    var live = new Set<ASMVirtualReg>(node.getLiveOut());
+    var newInsts = new Array<ASMInstNode>();
+    for (var i = node.getExitInst().getInsts().size() - 1; i >= 0; i--) {
+      var inst = node.getExitInst().getInsts().get(i);
+      var def = inst.getDef();
+      if (def != null) {
+        if (!live.contains(def)) {
+          continue;
+        } else {
+          live.remove(def);
+        }
+      }
+      live.addAll(inst.getUses());
+      newInsts.add(0, inst);
+    }
+    node.getExitInst().setInsts(newInsts);
+    newInsts = new Array<ASMInstNode>();
+    for (var i = node.getInsts().size() - 1; i >= 0; i--) {
+      var inst = node.getInsts().get(i);
+      var def = inst.getDef();
+      if (def != null) {
+        if (!live.contains(def)) {
+          continue;
+        } else {
+          live.remove(def);
+        }
+      }
+      live.addAll(inst.getUses());
+      newInsts.add(0, inst);
+    }
+    node.setInsts(newInsts);
+ }}
