@@ -12,6 +12,7 @@ import dev.conless.comet.backend.asm.node.stmt.ASMBlockStmtNode;
 import dev.conless.comet.frontend.ir.node.stmt.IRBlockStmtNode;
 import dev.conless.comet.utils.container.Array;
 import dev.conless.comet.utils.container.Map;
+import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.container.Set;
 
 public class LivenessAnalyzer {
@@ -46,8 +47,10 @@ public class LivenessAnalyzer {
       }
     }
     for (var block : node.getBlocks()) {
+      // System.out.println(block.getLabel().getLabel() + " " + block.getLiveIn() + " " + block.getLiveOut());
       visit(block);
     }
+    // System.exit(0);
   }
 
   void calcRpo(ASMBlockStmtNode block) {
@@ -106,7 +109,6 @@ public class LivenessAnalyzer {
     node.getLiveIn().addAll(node.getUses());
     node.getLiveIn().addAll(node.getLiveOut());
     node.getLiveIn().removeAll(node.getDefs());
-    node.getLiveOut().removeAll(node.getDefs());
     return !node.getLiveIn().equals(oldIn) || !node.getLiveOut().equals(oldOut);
   }
 
@@ -136,34 +138,27 @@ public class LivenessAnalyzer {
   
   public void removeDeadCode(ASMBlockStmtNode node) {
     var live = new Set<ASMVirtualReg>(node.getLiveOut());
-    var newInsts = new Array<ASMInstNode>();
-    for (var i = node.getExitInst().getInsts().size() - 1; i >= 0; i--) {
-      var inst = node.getExitInst().getInsts().get(i);
-      var def = inst.getDef();
+    Function<Pair<ASMInstNode, Array<ASMInstNode>>, Void> visitInst = (inst) -> {
+      var def = inst.a.getDef();
       if (def != null) {
         if (!live.contains(def)) {
-          continue;
+          return null;
         } else {
           live.remove(def);
         }
       }
-      live.addAll(inst.getUses());
-      newInsts.add(0, inst);
+      live.addAll(inst.a.getUses());
+      inst.b.add(0, inst.a);
+      return null;
+    };
+    var newInsts = new Array<ASMInstNode>();
+    for (var i = node.getExitInst().getInsts().size() - 1; i >= 0; i--) {
+      visitInst.apply(new Pair<>(node.getExitInst().getInsts().get(i), newInsts));
     }
     node.getExitInst().setInsts(newInsts);
     newInsts = new Array<ASMInstNode>();
     for (var i = node.getInsts().size() - 1; i >= 0; i--) {
-      var inst = node.getInsts().get(i);
-      var def = inst.getDef();
-      if (def != null) {
-        if (!live.contains(def)) {
-          continue;
-        } else {
-          live.remove(def);
-        }
-      }
-      live.addAll(inst.getUses());
-      newInsts.add(0, inst);
+      visitInst.apply(new Pair<>(node.getInsts().get(i), newInsts));
     }
     node.setInsts(newInsts);
  }}
