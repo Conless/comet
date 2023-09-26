@@ -50,7 +50,7 @@ public class Mem2Reg {
     entryBlock.setIdom(entryBlock);
     while (changed) {
       changed = false;
-      for (var block : func.getOrder2block()) {
+      for (var block : func.getOrder2Block()) {
         if (block == entryBlock) {
           continue;
         }
@@ -111,11 +111,11 @@ public class Mem2Reg {
   IRBlockStmtNode intersect(IRBlockStmtNode x, IRBlockStmtNode y) {
     while (x != y) {
       // System.out.println(x.getLabelName() + " " + y.getLabelName());
-      while (currentFunc.getBlock2order().get(x) < currentFunc.getBlock2order().get(y)) {
+      while (currentFunc.getBlock2Order().get(x) < currentFunc.getBlock2Order().get(y)) {
         x = x.getIdom();
         // System.out.println(x.getLabelName() + " " + y.getLabelName());
       }
-      while (currentFunc.getBlock2order().get(y) < currentFunc.getBlock2order().get(x)) {
+      while (currentFunc.getBlock2Order().get(y) < currentFunc.getBlock2Order().get(x)) {
         if (y.getIdom() == null) {
           throw new RuntimeError("Invalid block " + y.getLabelName());
         }
@@ -144,7 +144,7 @@ public class Mem2Reg {
             continue;
           }
           var newVar = new IRVariable(global.getValue().a,
-              global.getKey().getValue() + ".block." + currentFunc.getBlock2order().get(df));
+              global.getKey().getValue() + ".block." + currentFunc.getBlock2Order().get(df));
           var phi = new IRPhiNode(newVar, newVar.getType(), new Array<>());
           df.getPhiMap().put(global.getKey().getValue(), phi);
           if (!inList.contains(df)) {

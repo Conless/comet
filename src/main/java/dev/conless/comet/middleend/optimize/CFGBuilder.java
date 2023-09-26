@@ -69,8 +69,8 @@ public class CFGBuilder {
         calcRpo(succ);
       }
     }
-    currentFunc.getBlock2order().put(block, currentFunc.getBlock2order().size());
-    currentFunc.getOrder2block().add(0, block);
+    currentFunc.getBlock2Order().put(block, currentFunc.getBlock2Order().size());
+    currentFunc.getOrder2Block().add(0, block);
   }
 
   private void visit(IRBlockStmtNode node) {

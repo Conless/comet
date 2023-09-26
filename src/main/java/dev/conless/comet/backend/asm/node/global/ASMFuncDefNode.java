@@ -8,7 +8,9 @@ import dev.conless.comet.backend.asm.node.stmt.ASMBlockStmtNode;
 import dev.conless.comet.backend.asm.node.stmt.ASMStmtNode;
 import dev.conless.comet.backend.asm.node.utils.ASMCommentNode;
 import dev.conless.comet.backend.asm.node.utils.ASMLabelNode;
+import dev.conless.comet.frontend.ir.node.stmt.IRBlockStmtNode;
 import dev.conless.comet.utils.container.Array;
+import dev.conless.comet.utils.container.Map;
 import dev.conless.comet.utils.container.Pair;
 import dev.conless.comet.utils.container.Set;
 
@@ -20,6 +22,8 @@ public final class ASMFuncDefNode extends ASMNode {
   private Array<ASMBlockStmtNode> blocks;
   private Set<ASMPhysicalReg> usedRegs;
   private int spilled;
+  private Map<ASMBlockStmtNode, Integer> block2Order = new Map<>();
+  private Array<ASMBlockStmtNode> order2Block = new Array<>();
 
   public ASMFuncDefNode(String name, int paramCount) {
     this.name = name;

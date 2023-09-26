@@ -26,8 +26,8 @@ public class IRFuncDefNode extends IRNode {
   private Array<IRVariable> params;
   private IRType returnType;
   private Array<IRBlockStmtNode> blocks;
-  Map<IRBlockStmtNode, Integer> block2order = new Map<>();
-  Array<IRBlockStmtNode> order2block = new Array<>();
+  private Map<IRBlockStmtNode, Integer> block2Order = new Map<>();
+  private Array<IRBlockStmtNode> order2Block = new Array<>();
 
   public IRFuncDefNode(String name, Array<IRVariable> params, IRType returnType, Array<IRBlockStmtNode> blocks) {
     this.name = name;

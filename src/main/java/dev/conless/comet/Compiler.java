@@ -4,8 +4,11 @@ import java.io.*;
 
 import org.antlr.v4.runtime.*;
 
-import dev.conless.comet.backend.BasicAllocator;
-import dev.conless.comet.backend.InstSelector;
+import dev.conless.comet.backend.allocator.BasicAllocator;
+import dev.conless.comet.backend.allocator.LinearScanAllocator;
+import dev.conless.comet.backend.allocator.LivenessAnalyzer;
+import dev.conless.comet.backend.allocator.StackManager;
+import dev.conless.comet.backend.asm.InstSelector;
 import dev.conless.comet.backend.asm.node.ASMNode;
 import dev.conless.comet.backend.asm.node.ASMRoot;
 import dev.conless.comet.frontend.ast.*;
@@ -33,17 +36,19 @@ public class Compiler {
       new SemanticChecker().visit((ASTRoot) astProgram);
       IRNode irProgram = new IRBuilder().visit((ASTRoot) astProgram);
       new IROptimizer().visit((IRRoot) irProgram);
-      // var output = new PrintStream(new FileOutputStream("src/test/mx/output.ll"));
-      // output.println(irProgram);
-      // output.close();
+      var output = new PrintStream(new FileOutputStream("src/test/mx/output.ll"));
+      output.println(irProgram);
+      output.close();
       ASMNode asmProgram = new InstSelector().visit((IRRoot) irProgram);
-      // output = new PrintStream(new FileOutputStream("src/test/mx/output.raw.s"));
-      // output.println(asmProgram);
-      // output.close();
-      new BasicAllocator().visit((ASMRoot) asmProgram);
-      // output = new PrintStream(new FileOutputStream("src/test/mx/output.s"));
-      // output.println(asmProgram);
-      // output.close();
+      output = new PrintStream(new FileOutputStream("src/test/mx/output.raw.s"));
+      output.println(asmProgram);
+      output.close();
+      new LivenessAnalyzer().visit((ASMRoot) asmProgram);
+      new LinearScanAllocator().visit((ASMRoot) asmProgram);
+      new StackManager().visit((ASMRoot) asmProgram);
+      output = new PrintStream(new FileOutputStream("src/test/mx/output.s"));
+      output.println(asmProgram);
+      output.close();
       System.out.println(asmProgram);
     // } catch (BaseError e) {
     //   System.err.println(e.getMessage());
