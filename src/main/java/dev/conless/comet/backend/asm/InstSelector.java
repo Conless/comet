@@ -68,7 +68,7 @@ public class InstSelector extends ASMManager implements IRVisitor<ASMNode> {
       if (paramCount < 8) {
         initStmt.addInst(new ASMMoveNode(regs.getArgRegs().get(paramCount), paramDest));
       } else {
-        initStmt.addInst(new ASMLoadNode(paramDest, new ASMAddress(regs.getT0(), 4 * (paramSum - paramCount + 1))));
+        initStmt.addInst(new ASMLoadNode(paramDest, new ASMAddress(regs.getGp(), 4 * (paramSum - paramCount - 1))));
       }
       paramCount++;
     }
