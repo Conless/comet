@@ -1,14 +1,19 @@
 package dev.conless.comet.utils.container;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Array<E> extends ArrayList<E> {
   public Array() {
     super();
   }
-
+  
   public Array(Array<E> tags) {
     super((ArrayList<E>) tags);
+  }
+  
+  public Array(List<E> tags) {
+    super(tags);
   }
 
   public Array(E firstTag) {
