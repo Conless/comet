@@ -97,12 +97,14 @@ public class Inliner {
         returnPhi = new IRPhiNode(returnValue, callInst.getType(), new Array<>());
       }
       var inlineBlocks = inline(func2def.get(callInst.getFuncName()), callInst);
-      block.setInsts(prevInsts);
-      block.setExitInst(new IRJumpNode(inlineBlocks.get(0).getLabelName()));
       var succBlock = new IRBlockStmtNode("inline." + inlineCount);
       succBlock.setExitInst(block.getExitInst());
       succBlock.setInsts(succInsts);
-      succBlock.addFront(returnPhi);
+      block.setInsts(prevInsts);
+      block.setExitInst(new IRJumpNode(inlineBlocks.get(0).getLabelName()));
+      if (returnValue != null) {
+        succBlock.addFront(returnPhi);
+      }
       inlineBlocks.add(succBlock);
       node.getBlocks().addAll(i + 1, inlineBlocks);
     }

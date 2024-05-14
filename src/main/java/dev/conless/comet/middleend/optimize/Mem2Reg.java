@@ -186,9 +186,11 @@ public class Mem2Reg {
 
   void rename(IRFuncDefNode node) {
     var var2name = new Map<String, IREntity>();
-    for (var inst : node.getBlocks().get(0).getInsts()) {
-      if (inst instanceof IRAllocaNode) {
-        var2name.put(((IRAllocaNode) inst).getDest().getValue(), null);
+    for (var block: node.getBlocks()) {
+      for (var inst : block.getInsts()) {
+        if (inst instanceof IRAllocaNode) {
+          var2name.put(((IRAllocaNode) inst).getDest().getValue(), null);
+        }
       }
     }
     renameBlock(node.getBlocks().get(0), var2name);
